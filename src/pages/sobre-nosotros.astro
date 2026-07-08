@@ -1,0 +1,184 @@
+---
+import Layout from '../layouts/Layout.astro';
+import '../styles/about.css';
+import bannerImage from '../assets/bannerHome.png';
+import { socialLinks } from '../data/socialLinks';
+
+const bannerImageUrl = typeof bannerImage === 'string' ? bannerImage : bannerImage.src;
+
+const values = [
+	{
+		title: 'Oración',
+		description:
+			'Entendemos el canto como una forma de rezar juntos y ayudar a la asamblea a entrar en la celebración.',
+	},
+	{
+		title: 'Servicio',
+		description:
+			'Preparamos cada participación con sencillez, responsabilidad y disponibilidad para la comunidad.',
+	},
+	{
+		title: 'Comunión',
+		description:
+			'Buscamos que cada voz, instrumento y persona encuentre su lugar dentro del ministerio.',
+	},
+];
+
+const ministryWork = [
+	'Seleccionamos cantos según el tiempo litúrgico y el momento de la misa.',
+	'Organizamos recursos para que músicos y cantores puedan ensayar con claridad.',
+	'Cuidamos que el repertorio ayude a la participación de la asamblea.',
+	'Compartimos materiales para que otros coros puedan preparar sus celebraciones.',
+];
+
+const parishes = [
+	{
+		name: 'Parroquia Santa María Magdalena',
+		location: 'Saltillo, Coahuila',
+		description:
+			'Acompañamos la celebración con cantos preparados para cada tiempo litúrgico y momento de la misa.',
+	},
+	{
+		name: 'Parroquia Santiago Apóstol',
+		location: 'Saltillo, Coahuila',
+		description:
+			'Servimos a la comunidad con música litúrgica, ensayo y repertorio organizado para las celebraciones.',
+	},
+];
+
+---
+
+<Layout>
+	<div class="about-page">
+		<section
+			class="about-hero"
+			style={`--about-hero-bg: url(${bannerImageUrl});`}
+		>
+			<div class="about-hero-inner">
+				<p class="about-label">Coro Beatus Dei</p>
+				<h1>Servimos a Dios y a la comunidad a través del canto litúrgico</h1>
+				<p>
+					Somos un ministerio que acompaña la celebración de la fe con música,
+					oración y recursos pensados para preparar mejor cada misa.
+				</p>
+			</div>
+		</section>
+
+		<section class="about-intro">
+			<div class="about-copy">
+				<p class="about-label">Nuestra misión</p>
+				<h2>Que cada canto ayude a celebrar con más profundidad</h2>
+				<p>
+					El Cantoral Coro Beatus Dei nace como un espacio para reunir cantos,
+					partituras, acordes, videos y planeaciones que faciliten el servicio
+					musical dentro de la liturgia. Queremos que el coro pueda preparar sus
+					ensayos con orden y que la comunidad encuentre en la música un camino
+					de encuentro con Dios.
+				</p>
+			</div>
+
+			<div class="about-highlight">
+				<span>Ministerio</span>
+				<strong>Música al servicio de la liturgia</strong>
+				<p>
+					No buscamos llenar silencios: buscamos acompañar los signos, la Palabra
+					y la oración de la Iglesia.
+				</p>
+			</div>
+		</section>
+
+		<section class="about-section parishes-section">
+			<div class="about-section-head">
+				<p class="about-label">Parroquias donde servimos</p>
+				<h2>Nuestro servicio nace en comunidad</h2>
+				<p>
+					El Coro Beatus Dei acompaña celebraciones en parroquias de Saltillo,
+					Coahuila, cuidando que cada canto ayude a vivir la liturgia con fe y
+					participación.
+				</p>
+			</div>
+
+			<div class="parishes-grid">
+				{parishes.map(parish => (
+					<article class="parish-card">
+						<span class="parish-icon">✚</span>
+						<div>
+							<h3>{parish.name}</h3>
+							<p class="parish-location">{parish.location}</p>
+							<p>{parish.description}</p>
+						</div>
+					</article>
+				))}
+			</div>
+		</section>
+
+		<section class="about-section">
+			<div class="about-section-head">
+				<p class="about-label">Lo que nos mueve</p>
+				<h2>Una forma sencilla de servir</h2>
+			</div>
+
+			<div class="values-grid">
+				{values.map(value => (
+					<article class="value-card">
+						<h3>{value.title}</h3>
+						<p>{value.description}</p>
+					</article>
+				))}
+			</div>
+		</section>
+
+		<section class="about-band">
+			<div>
+				<p class="about-label">Cómo trabajamos</p>
+				<h2>Preparar, ensayar y celebrar</h2>
+			</div>
+
+			<ul class="ministry-list">
+				{ministryWork.map(item => (
+					<li>{item}</li>
+				))}
+			</ul>
+		</section>
+
+		<section class="contact-section">
+			<div class="contact-copy">
+				<p class="about-label">Contacto</p>
+				<h2>Conecta con nosotros y sigue el servicio del coro</h2>
+				<p>
+					Escríbenos para compartir recursos, preparar una celebración o seguir
+					el contenido que publicamos para la comunidad.
+				</p>
+				<a href="mailto:hola@cantemosalsenor.com">hola@cantemosalsenor.com</a>
+			</div>
+
+			<div class="social-grid" aria-label="Redes sociales del coro">
+				{socialLinks.map(link => (
+					<a class="social-card" href={link.href} target="_blank" rel="noreferrer">
+						<span class="social-icon">{link.icon}</span>
+						<span>
+							<strong>{link.name}</strong>
+							<small>{link.handle}</small>
+						</span>
+					</a>
+				))}
+			</div>
+		</section>
+
+		<section class="about-cta">
+			<div>
+				<p class="about-label">Participa</p>
+				<h2>Este cantoral también quiere servir a tu comunidad</h2>
+				<p>
+					Explora los cantos, revisa los tiempos litúrgicos o comparte recursos
+					que puedan ayudar a preparar mejor la música de la celebración.
+				</p>
+			</div>
+
+			<div class="about-actions">
+				<a class="about-button primary" href="/cantos">Ver cantos</a>
+				<a class="about-button secondary" href="/recursos">Ver recursos</a>
+			</div>
+		</section>
+	</div>
+</Layout>

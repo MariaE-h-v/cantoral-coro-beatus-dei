@@ -1,0 +1,119 @@
+---
+import Layout from '../layouts/Layout.astro';
+import '../styles/donations.css';
+import bannerImage from '../assets/bannerHome.png';
+
+const bannerImageUrl = typeof bannerImage === 'string' ? bannerImage : bannerImage.src;
+const mercadoPagoDonationUrl = import.meta.env.PUBLIC_MERCADO_PAGO_DONATION_URL ?? '';
+const isMercadoPagoConfigured = /^https?:\/\//.test(mercadoPagoDonationUrl);
+
+const donationAmounts = [
+	{
+		amount: '$100',
+		title: 'Apoyo básico',
+		description: 'Ayuda con impresiones, carpetas y materiales sencillos de ensayo.',
+	},
+	{
+		amount: '$250',
+		title: 'Apoyo de ensayo',
+		description: 'Sostiene recursos para preparar cantos y organizar celebraciones.',
+	},
+	{
+		amount: '$500',
+		title: 'Apoyo comunitario',
+		description: 'Impulsa materiales, partituras y herramientas para el ministerio.',
+	},
+];
+
+const donationUses = [
+	'Preparación de partituras, acordes y materiales para el coro.',
+	'Impresiones, carpetas y recursos para ensayos y celebraciones.',
+	'Mantenimiento del cantoral digital y publicación de nuevos recursos.',
+];
+---
+
+<Layout>
+	<div class="donations-page">
+		<section
+			class="donations-hero"
+			style={`--donations-hero-bg: url(${bannerImageUrl});`}
+		>
+			<div class="donations-hero-inner">
+				<p class="donations-label">Donativos</p>
+				<h1>Apoya el servicio musical del Coro Beatus Dei</h1>
+				<p>
+					Tu donativo nos ayuda a preparar mejor los cantos, materiales y recursos
+					que acompañan la liturgia en comunidad.
+				</p>
+
+				<div class="donations-actions">
+					<a
+						class={isMercadoPagoConfigured ? 'donation-main-button' : 'donation-main-button is-disabled'}
+						href={isMercadoPagoConfigured ? mercadoPagoDonationUrl : '#configurar-mercado-pago'}
+						target={isMercadoPagoConfigured ? '_blank' : undefined}
+						rel={isMercadoPagoConfigured ? 'noreferrer' : undefined}
+					>
+						Donar con Mercado Pago
+					</a>
+					<span>Pago seguro en Mercado Pago</span>
+				</div>
+			</div>
+		</section>
+
+		<section class="donations-section">
+			<div class="donations-section-head">
+				<p class="donations-label">Elige una intención</p>
+				<h2>Montos sugeridos</h2>
+				<p>
+					Estos montos son una guía para quien quiera apoyar. El pago final se
+					confirma en Mercado Pago.
+				</p>
+			</div>
+
+			<div class="donation-grid">
+				{donationAmounts.map(option => (
+					<article class="donation-card">
+						<span>{option.amount}</span>
+						<h3>{option.title}</h3>
+						<p>{option.description}</p>
+						<a
+							href={isMercadoPagoConfigured ? mercadoPagoDonationUrl : '#configurar-mercado-pago'}
+							target={isMercadoPagoConfigured ? '_blank' : undefined}
+							rel={isMercadoPagoConfigured ? 'noreferrer' : undefined}
+						>
+							Donar
+						</a>
+					</article>
+				))}
+			</div>
+		</section>
+
+		<section class="donation-info">
+			<div>
+				<p class="donations-label">Tu apoyo se convierte en servicio</p>
+				<h2>Qué ayudas a sostener</h2>
+			</div>
+
+			<ul>
+				{donationUses.map(item => (
+					<li>{item}</li>
+				))}
+			</ul>
+		</section>
+
+		{
+			!isMercadoPagoConfigured && (
+				<section id="configurar-mercado-pago" class="donation-config">
+					<p class="donations-label">Configuración pendiente</p>
+					<h2>Conecta el link real de Mercado Pago</h2>
+					<p>
+						Para activar la pasarela, crea un Link de Pago o una preferencia de
+						Checkout Pro en Mercado Pago y agrega la URL en la variable
+						<code>PUBLIC_MERCADO_PAGO_DONATION_URL</code>.
+					</p>
+					<pre><code>PUBLIC_MERCADO_PAGO_DONATION_URL="https://www.mercadopago.com.mx/checkout/v1/redirect?pref_id=..."</code></pre>
+				</section>
+			)
+		}
+	</div>
+</Layout>

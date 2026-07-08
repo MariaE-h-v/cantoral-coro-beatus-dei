@@ -1,0 +1,459 @@
+.about-page {
+	min-height: 100%;
+	background: #f8fafc;
+	color: #0f172a;
+	padding-bottom: 42px;
+}
+
+.about-hero {
+	display: flex;
+	align-items: center;
+	min-height: 520px;
+	padding: 86px 20px 72px;
+	background-image:
+		linear-gradient(
+			90deg,
+			rgba(15, 23, 42, 0.82) 0%,
+			rgba(15, 23, 42, 0.62) 48%,
+			rgba(15, 23, 42, 0.24) 100%
+		),
+		var(--about-hero-bg);
+	background-position: center;
+	background-size: cover;
+	color: white;
+}
+
+.about-hero-inner,
+.about-intro,
+.about-section,
+.about-band,
+.contact-section,
+.about-cta {
+	width: min(100% - 40px, 1160px);
+	margin: 0 auto;
+}
+
+.about-hero-inner {
+	display: grid;
+	gap: 18px;
+}
+
+.about-label {
+	margin: 0;
+	color: #0f766e;
+	font-size: 0.78rem;
+	font-weight: 900;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.about-hero .about-label {
+	color: #99f6e4;
+}
+
+.about-hero h1 {
+	max-width: 820px;
+	margin: 0;
+	font-size: clamp(2.55rem, 7vw, 5.2rem);
+	line-height: 0.98;
+	letter-spacing: 0;
+}
+
+.about-hero p:not(.about-label) {
+	max-width: 660px;
+	margin: 0;
+	color: #e2e8f0;
+	font-size: 1.16rem;
+	line-height: 1.75;
+}
+
+.about-intro {
+	display: grid;
+	grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+	gap: 28px;
+	align-items: start;
+	padding: 64px 0 0;
+}
+
+.about-copy,
+.about-highlight,
+.parish-card,
+.contact-section,
+.value-card,
+.about-cta {
+	border: 1px solid rgba(148, 163, 184, 0.22);
+	background: white;
+	box-shadow: 0 18px 46px rgba(15, 23, 42, 0.07);
+}
+
+.about-copy,
+.about-highlight {
+	border-radius: 26px;
+	padding: 30px;
+}
+
+.about-copy h2,
+.about-section-head h2,
+.about-band h2,
+.about-cta h2 {
+	margin: 8px 0 0;
+	font-size: clamp(1.65rem, 4vw, 2.45rem);
+	line-height: 1.1;
+	letter-spacing: 0;
+}
+
+.about-copy p:not(.about-label),
+.about-highlight p,
+.value-card p,
+.about-cta p {
+	margin: 16px 0 0;
+	color: #64748b;
+	line-height: 1.72;
+}
+
+.about-highlight {
+	background: #102a43;
+	color: white;
+}
+
+.about-highlight span {
+	display: inline-flex;
+	margin-bottom: 16px;
+	padding: 0.42rem 0.82rem;
+	border-radius: 999px;
+	background: rgba(153, 246, 228, 0.14);
+	color: #99f6e4;
+	font-size: 0.78rem;
+	font-weight: 900;
+	text-transform: uppercase;
+}
+
+.about-highlight strong {
+	display: block;
+	font-size: clamp(1.55rem, 4vw, 2rem);
+	line-height: 1.12;
+}
+
+.about-highlight p {
+	color: #dbeafe;
+}
+
+.about-section {
+	padding: 62px 0 0;
+}
+
+.about-section-head {
+	margin-bottom: 24px;
+}
+
+.about-section-head > p:not(.about-label) {
+	max-width: 700px;
+	margin: 14px 0 0;
+	color: #64748b;
+	line-height: 1.72;
+}
+
+.parishes-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 18px;
+}
+
+.parish-card {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	gap: 18px;
+	align-items: start;
+	min-height: 220px;
+	border-radius: 24px;
+	padding: 26px;
+}
+
+.parish-icon {
+	display: inline-flex;
+	width: 54px;
+	height: 54px;
+	align-items: center;
+	justify-content: center;
+	border-radius: 18px;
+	background: #ecfdf5;
+	color: #0f766e;
+	font-size: 1.4rem;
+	font-weight: 900;
+}
+
+.parish-card h3 {
+	margin: 0;
+	font-size: 1.28rem;
+	line-height: 1.25;
+	letter-spacing: 0;
+}
+
+.parish-card p {
+	margin: 12px 0 0;
+	color: #64748b;
+	line-height: 1.68;
+}
+
+.parish-location {
+	display: inline-flex;
+	width: fit-content;
+	margin-top: 10px;
+	padding: 0.38rem 0.76rem;
+	border-radius: 999px;
+	background: #fff7ed;
+	color: #9a5f18;
+	font-size: 0.78rem;
+	font-weight: 900;
+}
+
+.values-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 18px;
+}
+
+.value-card {
+	min-height: 210px;
+	border-radius: 22px;
+	padding: 24px;
+}
+
+.value-card h3 {
+	margin: 0;
+	font-size: 1.25rem;
+	letter-spacing: 0;
+}
+
+.about-band {
+	display: grid;
+	grid-template-columns: 0.85fr 1.15fr;
+	gap: 28px;
+	align-items: start;
+	margin-top: 62px;
+	padding: 34px;
+	border-radius: 28px;
+	background: #fff7ed;
+	border: 1px solid #f1e4d1;
+}
+
+.ministry-list {
+	display: grid;
+	gap: 12px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.ministry-list li {
+	position: relative;
+	padding: 16px 18px 16px 46px;
+	border-radius: 16px;
+	background: white;
+	color: #334155;
+	line-height: 1.55;
+	box-shadow: 0 12px 28px rgba(15, 23, 42, 0.05);
+}
+
+.ministry-list li::before {
+	content: "";
+	position: absolute;
+	left: 18px;
+	top: 22px;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: #0f766e;
+}
+
+.contact-section {
+	display: grid;
+	grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+	gap: 28px;
+	align-items: center;
+	margin-top: 62px;
+	padding: 34px;
+	border-radius: 28px;
+}
+
+.contact-copy h2 {
+	margin: 8px 0 0;
+	font-size: clamp(1.65rem, 4vw, 2.45rem);
+	line-height: 1.1;
+	letter-spacing: 0;
+}
+
+.contact-copy p:not(.about-label) {
+	margin: 16px 0 0;
+	color: #64748b;
+	line-height: 1.72;
+}
+
+.contact-copy a {
+	display: inline-flex;
+	margin-top: 20px;
+	color: #9a5f18;
+	font-weight: 900;
+	text-decoration: none;
+}
+
+.social-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 14px;
+}
+
+.social-card {
+	display: grid;
+	gap: 14px;
+	min-height: 160px;
+	padding: 20px;
+	border: 1px solid rgba(148, 163, 184, 0.22);
+	border-radius: 20px;
+	background: #f8fafc;
+	color: #0f172a;
+	text-decoration: none;
+	transition:
+		transform 0.2s ease,
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+.social-card:hover {
+	transform: translateY(-3px);
+	border-color: rgba(15, 118, 110, 0.32);
+	box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
+}
+
+.social-icon {
+	display: inline-flex;
+	width: 48px;
+	height: 48px;
+	align-items: center;
+	justify-content: center;
+	border-radius: 16px;
+	background: #ecfdf5;
+	color: #0f766e;
+	font-size: 1.35rem;
+	font-weight: 900;
+}
+
+.social-card strong,
+.social-card small {
+	display: block;
+}
+
+.social-card strong {
+	font-size: 1.05rem;
+}
+
+.social-card small {
+	margin-top: 6px;
+	color: #64748b;
+	line-height: 1.35;
+}
+
+.about-cta {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 28px;
+	margin-top: 62px;
+	padding: 34px;
+	border-radius: 28px;
+}
+
+.about-cta > div:first-child {
+	max-width: 720px;
+}
+
+.about-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+.about-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 46px;
+	padding: 0.8rem 1.08rem;
+	border-radius: 999px;
+	font-weight: 900;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.about-button.primary {
+	background: #b27722;
+	color: white;
+}
+
+.about-button.secondary {
+	background: #ecfdf5;
+	color: #0f766e;
+}
+
+@media (max-width: 940px) {
+	.about-intro,
+	.about-band,
+	.contact-section {
+		grid-template-columns: 1fr;
+	}
+
+	.values-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.parishes-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.about-cta {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+}
+
+@media (max-width: 780px) {
+	.social-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 720px) {
+	.about-hero {
+		min-height: auto;
+		padding: 64px 20px 54px;
+		background-image:
+			linear-gradient(
+				180deg,
+				rgba(15, 23, 42, 0.82) 0%,
+				rgba(15, 23, 42, 0.72) 100%
+			),
+			var(--about-hero-bg);
+	}
+
+	.about-hero-inner,
+	.about-intro,
+	.about-section,
+	.about-band,
+	.contact-section,
+	.about-cta {
+		width: min(100% - 32px, 1160px);
+	}
+
+	.about-copy,
+	.about-highlight,
+	.parish-card,
+	.about-band,
+	.contact-section,
+	.about-cta {
+		padding: 24px;
+	}
+
+	.parish-card {
+		grid-template-columns: 1fr;
+	}
+}

@@ -1,0 +1,76 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/resources.css';
+import { guideLinks } from '../../data/resources';
+---
+
+<Layout>
+	<div class="resource-page">
+		<section class="resource-hero compact">
+			<div class="resource-hero-content">
+				<a class="resource-back-link" href="/recursos">← Recursos</a>
+				<p class="resource-label">Guías para músicos</p>
+				<h1>Formación para servir mejor desde el canto</h1>
+				<p>
+					Criterios breves para preparar el repertorio con sentido litúrgico,
+					cuidando el texto, la asamblea y el momento celebrativo.
+				</p>
+			</div>
+		</section>
+
+		<section class="resource-section guide-layout">
+			<div class="guide-main">
+				<p class="resource-label">Criterios prácticos</p>
+				<h2>Antes de escoger un canto</h2>
+
+				<div class="guide-points">
+					<article>
+						<strong>Texto</strong>
+						<p>
+							Verifica que la letra dialogue con la liturgia del día y no sólo
+							con el gusto musical del coro.
+						</p>
+					</article>
+					<article>
+						<strong>Momento</strong>
+						<p>
+							Entrada, ofertorio, comunión y salida no piden la misma energía ni
+							la misma duración.
+						</p>
+					</article>
+					<article>
+						<strong>Asamblea</strong>
+						<p>
+							Prioriza melodías que la comunidad pueda cantar, responder o al
+							menos reconocer con facilidad.
+						</p>
+					</article>
+					<article>
+						<strong>Ensayo</strong>
+						<p>
+							Prepara tonos, entradas, cortes y dinámicas antes de llegar al
+							templo.
+						</p>
+					</article>
+				</div>
+			</div>
+
+			<aside class="guide-links" aria-label="Enlaces recomendados">
+				<p class="resource-label">Links recomendados</p>
+				<h2>Para profundizar</h2>
+
+				{guideLinks.map(link => (
+					<a
+						class="guide-link"
+						href={link.href}
+						target={link.href.startsWith('http') ? '_blank' : undefined}
+						rel={link.href.startsWith('http') ? 'noreferrer' : undefined}
+					>
+						<strong>{link.title}</strong>
+						<span>{link.description}</span>
+					</a>
+				))}
+			</aside>
+		</section>
+	</div>
+</Layout>

@@ -1,0 +1,39 @@
+---
+title: "Hacia Belén va una burra"
+categoria: "Adoración Niño Dios"
+tipo: "Villancico"
+tiempo: "Navidad"
+author: "Anónimo"
+liturgico: false
+tags:
+  - Adoración Niño Dios
+  - Villancico
+description: "Hacia Belén va una burra rin rin..."
+---
+Hacia Belén va una burra, rin, rin,
+Yo me remendaba yo me remendé
+Yo me eché un remiendo yo me lo quité,
+Cargada de chocolate;
+Lleva en su chocolatera rin, rin
+Yo me remendaba yo me remendé
+Yo me eché un remiendo yo me lo quité,
+Su molinillo y su anafre.
+Ay María, María, ven a acá corriendo
+Que el chocolatillo se lo están comiendo
+Ay María, María, ay ven a acá volando
+Que el chocolatillo se lo están jalando
+Hacia Belén va una burra, rin, rin,
+Yo me remendaba yo me remendé
+Yo me eché un remiendo yo me lo quité,
+Cargada de chocolate;
+Lleva en su chocolatera rin, rin
+Yo me remendaba yo me remendé
+Yo me eché un remiendo yo me lo quité,
+Su molinillo y su anafre.
+Ay María, María, ay ven a acá corriendo
+Que el chocolatillo se lo están comiendo
+Ay María, María, ay ven a acá volando
+Que el chocolatillo se lo están jalando
+Ay María, María, ay ven a acá corriendo
+Que el chocolatillo se lo están jalando
+Que el chocolatillo se lo están jalando

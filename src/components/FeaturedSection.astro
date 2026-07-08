@@ -1,0 +1,68 @@
+---
+import { getLiturgicalBackground } from '../utils/liturgicalSeason';
+
+const { featuredSongs } = Astro.props;
+---
+<section class="featured-section">
+	<div class="section-head">
+		<div>
+			<p class="section-label">Cantos Destacados</p>
+			<h2>Encuentra tus himnos preferidos</h2>
+		</div>
+
+		<a class="section-link" href="/cantos">Ver todos →</a>
+	</div>
+
+	<div class="featured-grid">
+		{featuredSongs.map(song => {
+			const schemeSong = JSON.stringify({
+				slug: song.slug,
+				title: song.title,
+				categoria: song.categoria ?? 'Canto',
+				tipo: song.tipo ?? 'Canto',
+				tiempo: song.tiempo ?? 'Sin tiempo',
+				author: song.author ?? 'Autor desconocido',
+				description: song.description ?? '',
+				href: song.href ?? `/cantos/${song.slug}`,
+				lyrics: song.lyrics ?? '',
+			});
+			const seasonBackground = song.seasonBackground ?? getLiturgicalBackground(song.tiempo, song.tags);
+
+			return (
+				<article
+					class:list={['featured-card', { 'has-season-background': Boolean(seasonBackground) }]}
+					style={seasonBackground ? `--song-card-bg: url("${seasonBackground}");` : undefined}
+				>
+					<a
+						class="featured-image"
+						href={`/cantos/${song.slug}`}
+						aria-label={`Ver ${song.title}`}
+					>
+						<span class="play-button">▶</span>
+					</a>
+
+					<div class="featured-content">
+						<p class="featured-badge">{song.categoria ?? 'Canto'}</p>
+
+						<h3>
+							<a href={`/cantos/${song.slug}`}>{song.title}</a>
+						</h3>
+
+						<p>{song.author ?? 'Autor desconocido'}</p>
+
+						<button
+							class="scheme-add-button featured-scheme-add"
+							type="button"
+							data-song-scheme-add
+							data-song-scheme-song={schemeSong}
+							aria-pressed="false"
+						>
+							<span class="scheme-add-icon" aria-hidden="true">+</span>
+							<span data-add-label>Agregar</span>
+						</button>
+					</div>
+				</article>
+			);
+		})}
+	</div>
+</section>

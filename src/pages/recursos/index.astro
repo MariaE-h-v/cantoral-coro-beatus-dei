@@ -1,0 +1,66 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/resources.css';
+import { resourceCategories } from '../../data/resources';
+---
+
+<Layout>
+	<div class="resource-page">
+		<section class="resource-hero">
+			<div class="resource-hero-content">
+				<p class="resource-label">Biblioteca del ministerio</p>
+				<h1>Recursos para preparar la música de cada celebración</h1>
+				<p>
+					Encuentra partituras, acordes, videos, guías y planeaciones para que
+					el coro pueda ensayar con claridad y servir mejor en la liturgia.
+				</p>
+			</div>
+		</section>
+
+		<section class="resource-section">
+			<div class="resource-section-head">
+				<div>
+					<p class="resource-label">Categorías</p>
+					<h2>Elige el tipo de material</h2>
+				</div>
+			</div>
+
+			<div class="resource-directory">
+				{resourceCategories.map(resource => (
+					<a class="resource-directory-card" href={resource.href}>
+						<span class="resource-directory-icon">{resource.icon}</span>
+						<span class="resource-card-meta">{resource.meta}</span>
+						<strong>{resource.title}</strong>
+						<p>{resource.description}</p>
+						<span class="resource-link-text">Abrir recurso →</span>
+					</a>
+				))}
+			</div>
+		</section>
+
+		<section class="resource-band">
+			<div>
+				<p class="resource-label">Flujo sugerido</p>
+				<h2>De la planeación al ensayo</h2>
+			</div>
+
+			<div class="resource-steps">
+				<article>
+					<span>1</span>
+					<strong>Define la celebración</strong>
+					<p>Revisa el tiempo litúrgico, las lecturas y el momento de la misa.</p>
+				</article>
+				<article>
+					<span>2</span>
+					<strong>Elige los cantos</strong>
+					<p>Usa el cantoral y separa el material que requiere piano o guitarra.</p>
+				</article>
+				<article>
+					<span>3</span>
+					<strong>Ensaya con referencias</strong>
+					<p>Comparte videos, audios y PDFs antes del ensayo presencial.</p>
+				</article>
+			</div>
+		</section>
+	</div>
+</Layout>

@@ -1,0 +1,700 @@
+---
+import path from 'node:path';
+import Layout from '../../layouts/Layout.astro';
+import { getLiturgicalBackground } from '../../utils/liturgicalSeason';
+
+const rawSongs = import.meta.glob('../../content/cantos/*.md', { eager: true });
+
+const songs = Object.entries(rawSongs)
+	.map(([file, module]) => {
+		const markdown = module as any;
+		const data = markdown.frontmatter ?? {};
+		const slug = path.basename(file, '.md');
+		const lyrics = typeof markdown.rawContent === 'function' ? markdown.rawContent() : '';
+
+		return {
+			title: data.title ?? slug,
+			categoria: data.categoria ?? 'Otro',
+			tipo: data.tipo ?? 'Canto',
+			tiempo: data.tiempo ?? 'Sin tiempo',
+			author: data.author ?? 'Autor desconocido',
+			liturgico: Boolean(data.liturgico),
+			tags: Array.isArray(data.tags) ? data.tags : [],
+			description: data.description ?? 'Canto disponible para consulta dentro del cantoral.',
+			lyrics,
+			slug,
+			href: `/cantos/${slug}`,
+			seasonBackground: getLiturgicalBackground(data.tiempo, data.tags),
+		};
+	})
+	.sort((a, b) => a.title.localeCompare(b.title));
+
+const uniqueOptions = (values: string[]) => [
+	'Todos',
+	...Array.from(new Set(values.filter(Boolean))).sort((a, b) => a.localeCompare(b)),
+];
+
+const liturgicalSeasonOptions = [
+	'Adviento',
+	'Navidad',
+	'Cuaresma',
+	'Triduo Pascual',
+	'Pascua',
+	'Tiempo ordinario',
+	'Santos',
+];
+
+const categoryOptions = uniqueOptions(songs.map(song => song.categoria));
+const tiempoOptions = uniqueOptions([
+	...liturgicalSeasonOptions,
+	...songs.map(song => song.tiempo),
+]);
+const authorOptions = uniqueOptions(songs.map(song => song.author));
+
+const categoryIcons: Record<string, string> = {
+	entrada: '/icons/entrada.svg',
+	ofertorio: '/icons/ofertorio.svg',
+	comunion: '/icons/comunion.svg',
+	comunión: '/icons/comunion.svg',
+	salida: '/icons/salida.svg',
+	comun: '/icons/comun.svg',
+};
+
+const getCategoryIcon = (category: string) => {
+	const normalized = category
+		.normalize('NFD')
+		.replace(/[\u0300-\u036f]/g, '')
+		.toLowerCase();
+
+	return categoryIcons[normalized] ?? '';
+};
+---
+
+<Layout>
+	<main class="songs-page">
+		<section class="songs-hero">
+			<div>
+				<p class="songs-label">Cantoral</p>
+				<h1>Todos los cantos</h1>
+				<p>Consulta el repertorio completo y filtra por momento, tiempo litúrgico o autor.</p>
+			</div>
+
+			<p class="songs-total">
+				<span id="songsVisibleCount">{songs.length}</span> de {songs.length} cantos
+			</p>
+		</section>
+
+		<section class="songs-browser" aria-label="Listado de cantos">
+			<div class="songs-controls">
+				<div class="songs-control search-control">
+					<label for="songsSearch">Buscar</label>
+					<input
+						id="songsSearch"
+						type="search"
+						placeholder="Título, tema, autor..."
+						autocomplete="off"
+					/>
+				</div>
+
+				<div class="songs-control">
+					<label for="songsCategory">Momento</label>
+					<select id="songsCategory">
+						{categoryOptions.map(option => <option value={option}>{option}</option>)}
+					</select>
+				</div>
+
+				<div class="songs-control">
+					<label for="songsSeason">Tiempo</label>
+					<select id="songsSeason">
+						{tiempoOptions.map(option => <option value={option}>{option}</option>)}
+					</select>
+				</div>
+
+				<div class="songs-control">
+					<label for="songsAuthor">Autor</label>
+					<select id="songsAuthor">
+						{authorOptions.map(option => <option value={option}>{option}</option>)}
+					</select>
+				</div>
+
+				<div class="songs-control">
+					<label for="songsLiturgical">Uso</label>
+					<select id="songsLiturgical">
+						<option value="Todos">Todos</option>
+						<option value="liturgico">Litúrgicos</option>
+						<option value="revisar">Revisar</option>
+					</select>
+				</div>
+
+				<button id="songsClearFilters" class="songs-clear" type="button">
+					Limpiar
+				</button>
+			</div>
+
+			<ol class="songs-list" id="songsList">
+				{songs.map(song => {
+					const searchText = [
+						song.title,
+						song.description,
+						song.tipo,
+						song.categoria,
+						song.tiempo,
+						song.author,
+						...song.tags,
+					].join(' ');
+					const icon = getCategoryIcon(song.categoria);
+					const schemeSong = JSON.stringify({
+						slug: song.slug,
+						title: song.title,
+						categoria: song.categoria,
+						tipo: song.tipo,
+						tiempo: song.tiempo,
+						author: song.author,
+						description: song.description,
+						href: song.href,
+						lyrics: song.lyrics,
+					});
+
+					return (
+						<li
+							class="song-list-row"
+							data-title={song.title}
+							data-categoria={song.categoria}
+							data-tiempo={song.tiempo}
+							data-author={song.author}
+							data-liturgico={song.liturgico ? 'liturgico' : 'revisar'}
+							data-search={searchText}
+						>
+							<div
+								class:list={['song-row-card', { 'has-season-background': Boolean(song.seasonBackground) }]}
+								style={song.seasonBackground ? `--song-card-bg: url("${song.seasonBackground}");` : undefined}
+							>
+								<a class="song-row-link" href={song.href}>
+									<span class="song-row-icon" aria-hidden="true">
+										{icon ? (
+											<img src={icon} alt="" loading="lazy" />
+										) : (
+											<span>♪</span>
+										)}
+									</span>
+
+									<span class="song-row-main">
+										<span class="song-row-kicker">{song.categoria}</span>
+										<strong>{song.title}</strong>
+										<span class="song-row-description">{song.description}</span>
+									</span>
+
+									<span class="song-row-meta">
+										<span>{song.tiempo}</span>
+										<span>{song.author}</span>
+										<span class={song.liturgico ? 'status-pill liturgico' : 'status-pill neutral'}>
+											{song.liturgico ? 'Litúrgico' : 'Revisar'}
+										</span>
+									</span>
+								</a>
+
+								<button
+									class="scheme-add-button song-row-add"
+									type="button"
+									data-song-scheme-add
+									data-song-scheme-song={schemeSong}
+									aria-pressed="false"
+								>
+									<span class="scheme-add-icon" aria-hidden="true">+</span>
+									<span data-add-label>Agregar al esquema</span>
+								</button>
+							</div>
+						</li>
+					);
+				})}
+			</ol>
+
+			<p id="songsEmptyState" class="songs-empty" hidden>
+				No hay cantos que coincidan con estos filtros.
+			</p>
+		</section>
+	</main>
+</Layout>
+
+<script type="module">
+	const searchInput = document.getElementById('songsSearch');
+	const categoryFilter = document.getElementById('songsCategory');
+	const seasonFilter = document.getElementById('songsSeason');
+	const authorFilter = document.getElementById('songsAuthor');
+	const liturgicalFilter = document.getElementById('songsLiturgical');
+	const clearFilters = document.getElementById('songsClearFilters');
+	const visibleCount = document.getElementById('songsVisibleCount');
+	const emptyState = document.getElementById('songsEmptyState');
+	const rows = Array.from(document.querySelectorAll('.song-list-row'));
+
+	function normalize(value) {
+		return String(value ?? '')
+			.normalize('NFD')
+			.replace(/[\u0300-\u036f]/g, '')
+			.replace(/[-_]+/g, ' ')
+			.toLowerCase()
+			.trim();
+	}
+
+	function selectOption(select, value) {
+		if (!select) return;
+
+		const option = Array.from(select.options).find(
+			option => normalize(option.value) === normalize(value)
+		);
+
+		select.value = option?.value ?? 'Todos';
+	}
+
+	function updateUrl() {
+		const url = new URL(window.location.href);
+		const values = {
+			q: searchInput?.value?.trim() ?? '',
+			categoria: categoryFilter?.value ?? 'Todos',
+			tiempo: seasonFilter?.value ?? 'Todos',
+			author: authorFilter?.value ?? 'Todos',
+			uso: liturgicalFilter?.value ?? 'Todos',
+		};
+
+		Object.entries(values).forEach(([key, value]) => {
+			if (!value || normalize(value) === normalize('Todos')) {
+				url.searchParams.delete(key);
+			} else {
+				url.searchParams.set(key, value);
+			}
+		});
+
+		window.history.replaceState({}, '', url);
+	}
+
+	function filterSongs() {
+		const query = normalize(searchInput?.value ?? '');
+		const category = categoryFilter?.value ?? 'Todos';
+		const season = seasonFilter?.value ?? 'Todos';
+		const author = authorFilter?.value ?? 'Todos';
+		const liturgical = liturgicalFilter?.value ?? 'Todos';
+		let count = 0;
+
+		rows.forEach(row => {
+			const matchesQuery = !query || normalize(row.dataset.search).includes(query);
+			const matchesCategory =
+				category === 'Todos' || normalize(row.dataset.categoria) === normalize(category);
+			const matchesSeason =
+				season === 'Todos' || normalize(row.dataset.tiempo) === normalize(season);
+			const matchesAuthor =
+				author === 'Todos' || normalize(row.dataset.author) === normalize(author);
+			const matchesLiturgical =
+				liturgical === 'Todos' || normalize(row.dataset.liturgico) === normalize(liturgical);
+			const show =
+				matchesQuery &&
+				matchesCategory &&
+				matchesSeason &&
+				matchesAuthor &&
+				matchesLiturgical;
+
+			row.hidden = !show;
+			if (show) count += 1;
+		});
+
+		if (visibleCount) {
+			visibleCount.textContent = String(count);
+		}
+
+		if (emptyState) {
+			emptyState.hidden = count > 0;
+		}
+
+		updateUrl();
+	}
+
+	function applyUrlFilters() {
+		const params = new URLSearchParams(window.location.search);
+
+		if (searchInput) {
+			searchInput.value = params.get('q') ?? '';
+		}
+
+		selectOption(categoryFilter, params.get('categoria') ?? 'Todos');
+		selectOption(seasonFilter, params.get('tiempo') ?? 'Todos');
+		selectOption(authorFilter, params.get('author') ?? 'Todos');
+		selectOption(liturgicalFilter, params.get('uso') ?? 'Todos');
+		filterSongs();
+	}
+
+	searchInput?.addEventListener('input', filterSongs);
+	categoryFilter?.addEventListener('change', filterSongs);
+	seasonFilter?.addEventListener('change', filterSongs);
+	authorFilter?.addEventListener('change', filterSongs);
+	liturgicalFilter?.addEventListener('change', filterSongs);
+	clearFilters?.addEventListener('click', () => {
+		if (searchInput) searchInput.value = '';
+		selectOption(categoryFilter, 'Todos');
+		selectOption(seasonFilter, 'Todos');
+		selectOption(authorFilter, 'Todos');
+		selectOption(liturgicalFilter, 'Todos');
+		filterSongs();
+	});
+	window.addEventListener('popstate', applyUrlFilters);
+
+	applyUrlFilters();
+</script>
+
+<style>
+	.songs-page {
+		width: min(1160px, calc(100% - 56px));
+		margin: 0 auto;
+		padding: 42px 0 28px;
+		font-family: Inter, system-ui, sans-serif;
+	}
+
+	.songs-hero {
+		display: flex;
+		align-items: end;
+		justify-content: space-between;
+		gap: 28px;
+		margin-bottom: 28px;
+		padding: 34px;
+		border-radius: 28px;
+		background:
+			linear-gradient(135deg, rgba(255, 248, 239, 0.98) 0%, rgba(248, 250, 252, 0.96) 100%),
+			white;
+		border: 1px solid #eee7dc;
+		box-shadow: 0 24px 70px rgba(15, 23, 42, 0.07);
+	}
+
+	.songs-label {
+		margin: 0 0 8px;
+		color: #b27722;
+		font-size: 0.78rem;
+		font-weight: 900;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+	}
+
+	.songs-hero h1 {
+		margin: 0;
+		color: #171717;
+		font-family: Georgia, 'Times New Roman', serif;
+		font-size: clamp(2.4rem, 5vw, 4.4rem);
+		font-weight: 500;
+		line-height: 1;
+	}
+
+	.songs-hero p:not(.songs-label):not(.songs-total) {
+		max-width: 620px;
+		margin: 14px 0 0;
+		color: #64748b;
+		font-size: 1.02rem;
+		line-height: 1.75;
+	}
+
+	.songs-total {
+		flex: 0 0 auto;
+		margin: 0;
+		padding: 0.75rem 1rem;
+		border-radius: 999px;
+		background: white;
+		border: 1px solid #f1e4d1;
+		color: #7c5c32;
+		font-weight: 800;
+		box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+	}
+
+	.songs-browser {
+		display: grid;
+		gap: 20px;
+	}
+
+	.songs-controls {
+		position: sticky;
+		top: 88px;
+		z-index: 5;
+		display: grid;
+		grid-template-columns: minmax(220px, 1.4fr) repeat(4, minmax(140px, 1fr)) auto;
+		gap: 12px;
+		align-items: end;
+		padding: 16px;
+		border-radius: 22px;
+		background: rgba(255, 255, 255, 0.94);
+		border: 1px solid #eee7dc;
+		box-shadow: 0 18px 54px rgba(15, 23, 42, 0.08);
+		backdrop-filter: blur(14px);
+	}
+
+	.songs-control {
+		display: grid;
+		gap: 8px;
+		min-width: 0;
+	}
+
+	.songs-control label {
+		color: #334155;
+		font-size: 0.78rem;
+		font-weight: 900;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.songs-control input,
+	.songs-control select {
+		width: 100%;
+		min-width: 0;
+		min-height: 46px;
+		padding: 0 13px;
+		border: 1px solid #e5e7eb;
+		border-radius: 14px;
+		background: white;
+		color: #0f172a;
+		font: inherit;
+		box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+	}
+
+	.songs-clear {
+		min-height: 46px;
+		padding: 0 16px;
+		border: none;
+		border-radius: 999px;
+		background: #24456f;
+		color: white;
+		font-weight: 900;
+		cursor: pointer;
+		box-shadow: 0 12px 26px rgba(36, 69, 111, 0.18);
+	}
+
+	.songs-list {
+		display: grid;
+		gap: 12px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.song-list-row[hidden] {
+		display: none;
+	}
+
+	.song-row-card {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: 14px;
+		align-items: center;
+		overflow: hidden;
+		padding: 16px;
+		border-radius: 18px;
+		background: rgba(255, 255, 255, 0.92);
+		border: 1px solid rgba(226, 232, 240, 0.94);
+		box-shadow: 0 12px 34px rgba(15, 23, 42, 0.06);
+		transition:
+			border-color 0.18s ease,
+			box-shadow 0.18s ease,
+			transform 0.18s ease;
+	}
+
+	.song-row-card.has-season-background {
+		border-color: rgba(178, 119, 34, 0.24);
+		background:
+			linear-gradient(90deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 250, 244, 0.9) 58%, rgba(255, 255, 255, 0.72) 100%),
+			var(--song-card-bg) center / cover no-repeat,
+			white;
+	}
+
+	.song-row-card:hover {
+		border-color: rgba(200, 144, 47, 0.38);
+		box-shadow: 0 18px 44px rgba(120, 74, 20, 0.1);
+		transform: translateY(-1px);
+	}
+
+	.song-row-link {
+		display: grid;
+		grid-template-columns: 46px minmax(0, 1fr) minmax(260px, auto);
+		gap: 18px;
+		align-items: center;
+		min-width: 0;
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.song-row-add {
+		align-self: stretch;
+		min-width: 178px;
+		padding: 0 18px;
+		white-space: nowrap;
+	}
+
+	.song-row-icon {
+		display: inline-flex;
+		width: 46px;
+		height: 46px;
+		align-items: center;
+		justify-content: center;
+		border-radius: 15px;
+		background: #fff7ed;
+		border: 1px solid #f1e4d1;
+		color: #9a5f18;
+		font-weight: 900;
+	}
+
+	.song-row-icon img {
+		width: 28px;
+		height: 28px;
+		object-fit: contain;
+	}
+
+	.song-row-main {
+		min-width: 0;
+	}
+
+	.song-row-kicker {
+		display: block;
+		margin-bottom: 3px;
+		color: #b27722;
+		font-size: 0.72rem;
+		font-weight: 900;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+
+	.song-row-main strong {
+		display: block;
+		color: #111827;
+		font-size: 1.12rem;
+		line-height: 1.3;
+	}
+
+	.song-row-description {
+		display: block;
+		margin-top: 5px;
+		color: #64748b;
+		font-size: 0.92rem;
+		line-height: 1.55;
+	}
+
+	.song-row-meta {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		gap: 7px;
+		color: #475569;
+		font-size: 0.82rem;
+		font-weight: 750;
+	}
+
+	.song-row-meta > span {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.34em 0.72em;
+		border-radius: 999px;
+		background: #f8fafc;
+		border: 1px solid #e5e7eb;
+	}
+
+	.status-pill.liturgico {
+		color: #15803d;
+		background: rgba(34, 197, 94, 0.12);
+		border-color: rgba(34, 197, 94, 0.18);
+	}
+
+	.status-pill.neutral {
+		color: #475569;
+		background: rgba(148, 163, 184, 0.18);
+	}
+
+	.songs-empty {
+		margin: 0;
+		padding: 26px;
+		border-radius: 18px;
+		background: #fffaf4;
+		border: 1px dashed #d8c8af;
+		color: #64748b;
+		line-height: 1.65;
+	}
+
+	.songs-empty[hidden] {
+		display: none;
+	}
+
+	@media (max-width: 1120px) {
+		.songs-controls {
+			position: static;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.search-control {
+			grid-column: 1 / -1;
+		}
+
+		.songs-clear {
+			width: 100%;
+		}
+
+		.song-row-card {
+			grid-template-columns: 1fr;
+			align-items: stretch;
+		}
+
+		.song-row-link {
+			grid-template-columns: 46px minmax(0, 1fr);
+		}
+
+		.song-row-add {
+			justify-self: start;
+			min-height: 44px;
+		}
+
+		.song-row-meta {
+			grid-column: 2;
+			justify-content: flex-start;
+		}
+	}
+
+	@media (max-width: 720px) {
+		.songs-page {
+			width: min(100% - 32px, 1160px);
+			padding-top: 28px;
+		}
+
+		.songs-hero {
+			align-items: flex-start;
+			flex-direction: column;
+			padding: 24px;
+		}
+
+		.songs-controls {
+			grid-template-columns: 1fr;
+			border-radius: 18px;
+		}
+
+		.search-control {
+			grid-column: auto;
+		}
+
+		.song-row-card {
+			padding: 14px;
+		}
+
+		.song-row-link {
+			grid-template-columns: 38px minmax(0, 1fr);
+			gap: 13px;
+		}
+
+		.song-row-add {
+			width: 100%;
+			min-width: 0;
+		}
+
+		.song-row-icon {
+			width: 38px;
+			height: 38px;
+			border-radius: 13px;
+		}
+
+		.song-row-icon img {
+			width: 23px;
+			height: 23px;
+		}
+
+		.song-row-meta {
+			grid-column: 1 / -1;
+		}
+	}
+</style>

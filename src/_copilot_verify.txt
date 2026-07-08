@@ -1,0 +1,1 @@
+'---\n\n<Layout>\n\t<main class="app-shell">\n\t\t<section\n\t\t\tid="entrar"\n\t\t\tclass="hero-banner"\n\t\t\tstyle={`--hero-bg: url(${bannerImageUrl});`}\n\t\t>\n\t\t\t<div class="hero-inner">\n\t\t\t\t<div class="hero-copy">\n\t\t\t\t\t<p class="hero-label">Cantos Litúrgico'

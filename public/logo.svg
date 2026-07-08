@@ -1,0 +1,41 @@
+<svg width="720" height="190" viewBox="0 0 720 190" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Cantoral Coro Beatus Dei</title>
+  <desc id="desc">Logo horizontal con cruz, nota musical y texto Cantoral Coro Beatus Dei</desc>
+
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#DFA536"/>
+      <stop offset="45%" stop-color="#C9922B"/>
+      <stop offset="100%" stop-color="#F1C86A"/>
+    </linearGradient>
+
+    <linearGradient id="brown" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2D1D12"/>
+      <stop offset="100%" stop-color="#5A3A21"/>
+    </linearGradient>
+  </defs>
+
+  <g transform="translate(18 18)">
+    <rect x="62" y="0" width="13" height="120" rx="2" fill="url(#gold)"/>
+    <rect x="15" y="42" width="108" height="12" rx="2" fill="url(#gold)"/>
+    <circle cx="57" cy="126" r="26" fill="url(#gold)"/>
+    <path d="M80 33V122" stroke="url(#gold)" stroke-width="11" stroke-linecap="round"/>
+    <path d="M80 34C104 47 115 65 115 87C104 78 95 74 80 72V34Z" fill="url(#gold)"/>
+    <circle cx="132" cy="112" r="18" fill="url(#gold)"/>
+    <path d="M150 58V112" stroke="url(#gold)" stroke-width="8" stroke-linecap="round"/>
+    <path d="M150 58C169 69 176 82 174 98C165 90 158 87 150 86V58Z" fill="url(#gold)"/>
+    <path d="M28 138C58 166 111 165 142 134" stroke="url(#gold)" stroke-width="7" stroke-linecap="round"/>
+    <path d="M180 103L187 120L204 127L187 134L180 151L173 134L156 127L173 120L180 103Z" fill="url(#gold)"/>
+  </g>
+
+  <text x="245" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="72" font-weight="400" letter-spacing="2" fill="url(#brown)">
+    Cantoral
+  </text>
+
+  <line x1="250" y1="122" x2="315" y2="122" stroke="url(#gold)" stroke-width="3"/>
+  <line x1="625" y1="122" x2="690" y2="122" stroke="url(#gold)" stroke-width="3"/>
+
+  <text x="335" y="135" font-family="Georgia, 'Times New Roman', serif" font-size="35" font-weight="400" letter-spacing="4" fill="url(#gold)">
+    Coro Beatus Dei
+  </text>
+</svg>

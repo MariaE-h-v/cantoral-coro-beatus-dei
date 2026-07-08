@@ -1,0 +1,33 @@
+---
+import SongSearch from './SongSearch.astro';
+
+const { bannerImageUrl, liturgicalMoments } = Astro.props;
+---
+
+<section id="entrar" class="hero-banner" style={`--hero-bg: url(${bannerImageUrl});`}>
+	<div class="hero-inner">
+		<div class="hero-copy">
+			<p class="hero-label">Cantos Litúrgicos Católicos</p>
+
+			<h1>Cantos Litúrgicos para cada momento de la Misa</h1>
+
+			<p>Encuentra los cantos que elevan el corazón y nos unen como Iglesia.</p>
+
+			<SongSearch />
+		</div>
+	</div>
+
+	<div class="category-scroller">
+		{liturgicalMoments.map(item => (
+			<a href={item.href} class="category-pill" data-category={item.category ?? item.title}>
+				{item.icon ? (
+					<img src={item.icon} alt={item.title} />
+				) : (
+					<span class="category-pill-icon">{item.iconText}</span>
+				)}
+
+				<span>{item.title}</span>
+			</a>
+		))}
+	</div>
+</section>

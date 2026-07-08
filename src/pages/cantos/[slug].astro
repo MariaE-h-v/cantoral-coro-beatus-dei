@@ -1,0 +1,623 @@
+---
+import path from 'node:path';
+import Layout from '../../layouts/Layout.astro';
+import { getLiturgicalBackground } from '../../utils/liturgicalSeason';
+
+const songModules = import.meta.glob('../../content/cantos/*.md', { eager: true });
+
+export async function getStaticPaths() {
+	const pages = import.meta.glob('../../content/cantos/*.md', { eager: true });
+	return Object.keys(pages).map(file => ({
+		params: { slug: path.basename(file, '.md') },
+	}));
+}
+
+const slug = Astro.params.slug;
+const pages = songModules;
+
+const entry = Object.entries(pages).find(([file]) => path.basename(file, '.md') === slug);
+if (!entry) {
+	throw new Error(`Canto no encontrado: ${slug}`);
+}
+
+const [, module] = entry;
+const current = module as any;
+const frontmatter = current.frontmatter ?? {};
+const lyrics = typeof current.rawContent === 'function' ? current.rawContent() : '';
+const cleanLyrics = lyrics.replace(/^\s*\n/, '').replace(/\s+$/, '');
+const songTitle = frontmatter.title ?? slug;
+const songCategory = frontmatter.categoria ?? 'Sin categoría';
+const songType = frontmatter.tipo ?? 'Sin tipo';
+const songSeason = frontmatter.tiempo ?? 'Sin tiempo';
+const songAuthor = frontmatter.author ?? 'Autor desconocido';
+const songDescription = frontmatter.description ?? 'No hay descripción disponible.';
+const songTags = Array.isArray(frontmatter.tags) ? frontmatter.tags : [];
+const youtubeUrl = frontmatter.youtubeUrl ?? frontmatter.youtube_url ?? frontmatter.youtube ?? '';
+const getYouTubeEmbedUrl = (value: unknown) => {
+	const rawUrl = String(value ?? '').trim();
+	const videoIdPattern = /^[a-zA-Z0-9_-]{11}$/;
+
+	if (!rawUrl) return '';
+	if (videoIdPattern.test(rawUrl)) return `https://www.youtube-nocookie.com/embed/${rawUrl}`;
+
+	try {
+		const parseableUrl = /^https?:\/\//i.test(rawUrl) ? rawUrl : `https://${rawUrl}`;
+		const url = new URL(parseableUrl);
+		const host = url.hostname.replace(/^www\./, '').toLowerCase();
+		const embedMatch = url.pathname.match(/\/embed\/([a-zA-Z0-9_-]{11})/);
+		const shortsMatch = url.pathname.match(/\/shorts\/([a-zA-Z0-9_-]{11})/);
+		const liveMatch = url.pathname.match(/\/live\/([a-zA-Z0-9_-]{11})/);
+
+		if (host === 'youtu.be') {
+			const videoId = url.pathname.split('/').filter(Boolean)[0] ?? '';
+			return videoIdPattern.test(videoId) ? `https://www.youtube-nocookie.com/embed/${videoId}` : '';
+		}
+
+		if (['youtube.com', 'm.youtube.com', 'music.youtube.com', 'youtube-nocookie.com'].includes(host)) {
+			const videoId = url.searchParams.get('v') ?? embedMatch?.[1] ?? shortsMatch?.[1] ?? liveMatch?.[1] ?? '';
+			return videoIdPattern.test(videoId) ? `https://www.youtube-nocookie.com/embed/${videoId}` : '';
+		}
+	} catch {
+		return '';
+	}
+
+	return '';
+};
+const liturgicalSeasonBackground = getLiturgicalBackground(songSeason, songTags);
+const youtubeEmbedUrl = getYouTubeEmbedUrl(youtubeUrl);
+const detailBadges = [
+	{ label: 'Momento', value: songCategory },
+	{ label: 'Tipo', value: songType },
+	{ label: 'Tiempo', value: songSeason },
+	{ label: 'Autor', value: songAuthor },
+	{
+		label: 'Uso',
+		value: frontmatter.liturgico ? 'Litúrgico' : 'No litúrgico',
+		status: frontmatter.liturgico ? 'liturgico' : 'neutral',
+	},
+];
+const schemeSong = JSON.stringify({
+	slug,
+	title: songTitle,
+	categoria: frontmatter.categoria ?? 'Canto',
+	tipo: frontmatter.tipo ?? 'Canto',
+	tiempo: frontmatter.tiempo ?? 'Sin tiempo',
+	author: songAuthor,
+	description: frontmatter.description ?? '',
+	href: `/cantos/${slug}`,
+	lyrics: cleanLyrics,
+});
+const related = Object.entries(pages)
+	.filter(([file]) => path.basename(file, '.md') !== slug)
+	.map(([file, module]) => {
+		const data = (module as any).frontmatter ?? {};
+
+		return {
+			...data,
+			seasonBackground: getLiturgicalBackground(data.tiempo, data.tags),
+			slug: path.basename(file, '.md'),
+		};
+	})
+	.slice(0, 4);
+---
+
+<Layout>
+	<main class="detail-shell">
+		<section
+			class:list={['detail-header', { 'has-season-background': Boolean(liturgicalSeasonBackground) }]}
+			style={liturgicalSeasonBackground ? `--detail-cover-image: url("${liturgicalSeasonBackground}");` : undefined}
+		>
+			<a class="back-link" href="/cantos">← Volver al listado</a>
+
+			<div class="detail-header-grid">
+				<div class="detail-heading">
+					<p class="eyebrow">Detalle del canto</p>
+					<h1>{songTitle}</h1>
+					<p class="description">{songDescription}</p>
+
+					<ul class="detail-meta-badges" aria-label="Datos del canto">
+						{detailBadges.map(badge => (
+							<li class:list={['detail-badge', badge.status]}>
+								<span>{badge.label}</span>
+								<strong>{badge.value}</strong>
+							</li>
+						))}
+					</ul>
+
+					<div class="detail-actions">
+						<button
+							class="scheme-add-button"
+							type="button"
+							data-song-scheme-add
+							data-song-scheme-song={schemeSong}
+							aria-pressed="false"
+						>
+							<span class="scheme-add-icon" aria-hidden="true">+</span>
+							<span data-add-label>Agregar al esquema</span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		{youtubeEmbedUrl ? (
+			<details class="song-video">
+				<summary class="song-video-toggle">
+					<span>Ver video</span>
+					<span class="song-video-chevron" aria-hidden="true"></span>
+				</summary>
+
+				<div class="song-video-content">
+					<div class="song-video-frame">
+						<iframe
+							src={youtubeEmbedUrl}
+							title={`Video de ${songTitle}`}
+							loading="lazy"
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+							allowfullscreen
+							referrerpolicy="strict-origin-when-cross-origin"
+						></iframe>
+					</div>
+				</div>
+			</details>
+		) : null}
+
+		<section class="song-sheet" aria-labelledby="songSheetTitle">
+			<div class="song-sheet-head">
+				<div>
+					<p class="eyebrow">Letra y tonos</p>
+					<h2 id="songSheetTitle">Hoja del canto</h2>
+				</div>
+
+				<button class="copy-lyrics" type="button" data-copy-lyrics>
+					Copiar letra
+				</button>
+			</div>
+
+			<pre class="lyrics-sheet" data-lyrics-text><code>{cleanLyrics || 'Letra pendiente por registrar.'}</code></pre>
+		</section>
+
+		{related.length ? (
+			<section class="related-block">
+				<h2>Otros cantos</h2>
+				<div class="related-grid">
+					{related.map(song => (
+						<a
+							class:list={['related-card', { 'has-season-background': Boolean(song.seasonBackground) }]}
+							style={song.seasonBackground ? `--song-card-bg: url("${song.seasonBackground}");` : undefined}
+							href={`/cantos/${song.slug}`}
+						>
+							<h3>{song.title}</h3>
+							<p>{song.tiempo ?? 'Sin tiempo'}</p>
+						</a>
+					))}
+				</div>
+			</section>
+		) : null}
+	</main>
+</Layout>
+
+<script>
+	const copyButton = document.querySelector('[data-copy-lyrics]');
+	const lyricsText = document.querySelector('[data-lyrics-text]');
+
+	copyButton?.addEventListener('click', async () => {
+		const text = lyricsText?.textContent?.trim() ?? '';
+		if (!text) return;
+
+		try {
+			await navigator.clipboard.writeText(text);
+			const originalText = copyButton.textContent;
+			copyButton.textContent = 'Copiado';
+			window.setTimeout(() => {
+				copyButton.textContent = originalText;
+			}, 1500);
+		} catch {
+			copyButton.textContent = 'No se pudo copiar';
+			window.setTimeout(() => {
+				copyButton.textContent = 'Copiar letra';
+			}, 1500);
+		}
+	});
+</script>
+
+<style>
+	.detail-shell {
+		width: min(1040px, calc(100% - 40px));
+		margin: 0 auto;
+		padding: 36px 0 60px;
+		font-family: Inter, system-ui, sans-serif;
+	}
+
+	.detail-header {
+		display: grid;
+		gap: 22px;
+		margin-bottom: 26px;
+		padding: 30px;
+		border-radius: 28px;
+		background:
+			linear-gradient(135deg, rgba(255, 248, 239, 0.98) 0%, rgba(255, 255, 255, 0.96) 100%),
+			white;
+		border: 1px solid #eee7dc;
+		box-shadow: 0 24px 70px rgba(15, 23, 42, 0.07);
+	}
+
+	.detail-header.has-season-background {
+		background:
+			linear-gradient(90deg, rgba(255, 248, 239, 0.98) 0%, rgba(255, 248, 239, 0.9) 54%, rgba(255, 248, 239, 0.64) 100%),
+			var(--detail-cover-image) center / cover no-repeat,
+			linear-gradient(135deg, rgba(255, 248, 239, 0.98) 0%, rgba(255, 255, 255, 0.96) 100%),
+			white;
+	}
+
+	.detail-header-grid {
+		display: grid;
+		grid-template-columns: minmax(0, 760px);
+		align-items: start;
+	}
+
+	.back-link {
+		font-size: 0.95rem;
+		color: #8f5417;
+		font-weight: 800;
+		text-decoration: none;
+		width: fit-content;
+	}
+
+	.back-link:hover {
+		text-decoration: underline;
+	}
+
+	.eyebrow {
+		font-size: 0.78rem;
+		font-weight: 900;
+		text-transform: uppercase;
+		letter-spacing: 0.14em;
+		margin: 0 0 0.75em;
+		color: #b27722;
+	}
+
+	h1 {
+		max-width: 760px;
+		font-family: Georgia, 'Times New Roman', serif;
+		font-size: clamp(2.6rem, 5vw, 4.8rem);
+		font-weight: 500;
+		line-height: 0.98;
+		margin: 0 0 18px;
+		color: #171717;
+	}
+
+	.description {
+		max-width: 680px;
+		font-size: 1.03rem;
+		line-height: 1.75;
+		color: #475569;
+		margin: 0;
+	}
+
+	.detail-meta-badges {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 9px;
+		max-width: 760px;
+		margin: 18px 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.detail-badge {
+		display: inline-flex;
+		min-height: 36px;
+		max-width: 100%;
+		align-items: center;
+		gap: 7px;
+		padding: 8px 11px;
+		border-radius: 999px;
+		background: rgba(255, 250, 244, 0.88);
+		border: 1px solid rgba(178, 119, 34, 0.12);
+		box-shadow: 0 10px 24px rgba(120, 74, 20, 0.06);
+	}
+
+	.detail-badge span {
+		flex: 0 0 auto;
+		color: #8a5a1c;
+		font-size: 0.68rem;
+		font-weight: 900;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.detail-badge strong {
+		min-width: 0;
+		color: #1f2937;
+		font-size: 0.9rem;
+		line-height: 1.2;
+	}
+
+	.detail-badge.liturgico {
+		background: rgba(34, 197, 94, 0.12);
+		border-color: rgba(34, 197, 94, 0.18);
+	}
+
+	.detail-badge.liturgico span,
+	.detail-badge.liturgico strong {
+		color: #15803d;
+	}
+
+	.detail-badge.neutral {
+		background: rgba(148, 163, 184, 0.18);
+	}
+
+	.detail-badge.neutral span,
+	.detail-badge.neutral strong {
+		color: #475569;
+	}
+
+	.song-sheet {
+		overflow: hidden;
+		border-radius: 28px;
+		border: 1px solid #eee7dc;
+		background: white;
+		box-shadow: 0 24px 70px rgba(15, 23, 42, 0.08);
+	}
+
+	.song-video {
+		overflow: hidden;
+		margin-bottom: 14px;
+		border-radius: 18px;
+		border: 1px solid #eee7dc;
+		background: white;
+		box-shadow: 0 14px 32px rgba(15, 23, 42, 0.05);
+	}
+
+	.song-video-toggle {
+		display: flex;
+		min-height: 48px;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		padding: 0 18px;
+		background:
+			linear-gradient(135deg, rgba(255, 250, 244, 0.98), rgba(248, 250, 252, 0.96)),
+			white;
+		color: #8f5417;
+		font-weight: 900;
+		cursor: pointer;
+		user-select: none;
+		list-style: none;
+	}
+
+	.song-video-toggle::-webkit-details-marker {
+		display: none;
+	}
+
+	.song-video-toggle:hover {
+		background: #fff7ed;
+	}
+
+	.song-video-chevron {
+		width: 10px;
+		height: 10px;
+		border-right: 2px solid currentColor;
+		border-bottom: 2px solid currentColor;
+		transform: rotate(45deg);
+		transition: transform 0.18s ease;
+	}
+
+	.song-video[open] .song-video-chevron {
+		transform: translateY(3px) rotate(225deg);
+	}
+
+	.song-video-content {
+		display: flex;
+		justify-content: flex-end;
+		padding: 14px;
+		border-top: 1px solid #eee7dc;
+	}
+
+	.song-video-frame {
+		width: 100%;
+		max-width: 420px;
+		aspect-ratio: 16 / 9;
+		justify-self: end;
+		overflow: hidden;
+		border-radius: 16px;
+		background: #111827;
+	}
+
+	.song-video-frame iframe {
+		display: block;
+		width: 100%;
+		height: 100%;
+		border: 0;
+	}
+
+	.song-sheet-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 18px;
+		padding: 22px 24px;
+		background:
+			linear-gradient(135deg, rgba(255, 250, 244, 0.98), rgba(248, 250, 252, 0.96)),
+			white;
+		border-bottom: 1px solid #eee7dc;
+	}
+
+	.song-sheet-head h2 {
+		margin: 0;
+		color: #171717;
+		font-family: Georgia, 'Times New Roman', serif;
+		font-size: clamp(1.6rem, 3vw, 2.2rem);
+		font-weight: 500;
+	}
+
+	.detail-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+		margin-top: 20px;
+	}
+
+	.copy-lyrics {
+		display: inline-flex;
+		min-height: 42px;
+		align-items: center;
+		justify-content: center;
+		padding: 0 16px;
+		border: 1px solid rgba(178, 119, 34, 0.18);
+		border-radius: 999px;
+		background: #fff7ed;
+		color: #8f5417;
+		font: inherit;
+		font-weight: 900;
+		cursor: pointer;
+		white-space: nowrap;
+		transition:
+			background 0.18s ease,
+			transform 0.18s ease;
+	}
+
+	.copy-lyrics:hover {
+		background: #ffedd5;
+		transform: translateY(-1px);
+	}
+
+	.lyrics-sheet {
+		margin: 0;
+		padding: clamp(22px, 4vw, 38px);
+		background:
+			linear-gradient(90deg, rgba(178, 119, 34, 0.08) 1px, transparent 1px) 0 0 / 36px 36px,
+			linear-gradient(180deg, rgba(178, 119, 34, 0.05) 1px, transparent 1px) 0 0 / 36px 36px,
+			#fffdf9;
+		color: #1f2937;
+		font-family:
+			'SFMono-Regular',
+			Consolas,
+			'Liberation Mono',
+			ui-monospace,
+			monospace;
+		font-size: clamp(0.92rem, 1.6vw, 1.06rem);
+		line-height: 1.68;
+		tab-size: 4;
+		white-space: pre-wrap;
+		overflow-x: auto;
+		overflow-wrap: normal;
+	}
+
+	.lyrics-sheet code {
+		font: inherit;
+		white-space: inherit;
+	}
+
+	.related-block {
+		margin-top: 42px;
+	}
+
+	.related-block h2 {
+		color: #171717;
+		font-family: Georgia, 'Times New Roman', serif;
+		font-size: 1.4rem;
+		margin-bottom: 18px;
+	}
+
+	.related-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+		gap: 16px;
+	}
+
+	.related-card {
+		display: block;
+		overflow: hidden;
+		padding: 18px;
+		border-radius: 18px;
+		border: 1px solid #eee7dc;
+		background: white;
+		color: inherit;
+		text-decoration: none;
+		box-shadow: 0 14px 34px rgba(15, 23, 42, 0.05);
+		transition:
+			transform 0.2s ease,
+			border-color 0.2s ease,
+			box-shadow 0.2s ease;
+	}
+
+	.related-card.has-season-background {
+		border-color: rgba(178, 119, 34, 0.22);
+		background:
+			linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(255, 250, 244, 0.86)),
+			var(--song-card-bg) center / cover no-repeat,
+			white;
+	}
+
+	.related-card:hover {
+		transform: translateY(-2px);
+		border-color: rgba(200, 144, 47, 0.36);
+		box-shadow: 0 18px 42px rgba(120, 74, 20, 0.08);
+	}
+
+	.related-card h3 {
+		margin: 0 0 8px;
+	}
+
+	.related-card p {
+		margin: 0;
+		color: #475569;
+	}
+
+	@media (max-width: 720px) {
+		.detail-shell {
+			width: min(100% - 32px, 1040px);
+			padding: 24px 0 44px;
+		}
+
+		.detail-header {
+			padding: 22px;
+		}
+
+		.detail-header.has-season-background {
+			background:
+				linear-gradient(180deg, rgba(255, 248, 239, 0.98) 0%, rgba(255, 248, 239, 0.92) 58%, rgba(255, 248, 239, 0.74) 100%),
+				var(--detail-cover-image) center / cover no-repeat,
+				linear-gradient(135deg, rgba(255, 248, 239, 0.98) 0%, rgba(255, 255, 255, 0.96) 100%),
+				white;
+		}
+
+		.detail-header-grid,
+		.song-sheet-head {
+			grid-template-columns: 1fr;
+		}
+
+		.detail-header-grid {
+			gap: 20px;
+		}
+
+		.song-sheet-head {
+			align-items: flex-start;
+			flex-direction: column;
+		}
+
+		.song-video-toggle {
+			min-height: 46px;
+			padding: 0 15px;
+		}
+
+		.song-video-content {
+			padding: 12px;
+		}
+
+		.song-video-frame {
+			max-width: none;
+		}
+
+		.copy-lyrics {
+			width: 100%;
+		}
+
+		.lyrics-sheet {
+			white-space: pre;
+			font-size: 0.88rem;
+		}
+	}
+</style>

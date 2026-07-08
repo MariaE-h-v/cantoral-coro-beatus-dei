@@ -1,0 +1,46 @@
+---
+const { liturgicalSeasons, resources } = Astro.props;
+---
+<section id="tiempos" class="split-section">
+	<div class="panel panel-light">
+		<div class="panel-head">
+			<div>
+				<p class="section-label">Calendario litúrgico</p>
+				<h2>Tiempos Litúrgicos y Celebraciones</h2>
+			</div>
+
+			<a class="section-link" href="/tiempos-liturgicos">Ver todos →</a>
+		</div>
+
+		<div class="season-grid">
+			{liturgicalSeasons.map(season => (
+				<a href={season.href} class="season-card">
+					<span class="season-icon">{season.icon}</span>
+					<strong>{season.title}</strong>
+					<small>{season.subtitle}</small>
+				</a>
+			))}
+		</div>
+	</div>
+
+	<div id="recursos" class="panel panel-outline">
+		<div class="panel-head">
+			<div>
+				<p class="section-label">Formación y apoyo</p>
+				<h2>Recursos para tu Ministerio</h2>
+			</div>
+
+			<a class="section-link" href="/recursos">Ver todos →</a>
+		</div>
+
+		<div class="resource-grid">
+			{resources.map(resource => (
+				<a href={resource.href} class="resource-card">
+					<span class="resource-icon">{resource.icon}</span>
+					<strong>{resource.title}</strong>
+					<p>{resource.description}</p>
+				</a>
+			))}
+		</div>
+	</div>
+</section>

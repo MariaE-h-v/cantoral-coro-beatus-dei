@@ -1,11 +1,521 @@
 ---
-import Welcome from '../components/Welcome.astro';
+import path from 'node:path';
 import Layout from '../layouts/Layout.astro';
+import '../styles/home.css';
+import HeroBanner from '../components/HeroBanner.astro';
+import FeaturedSection from '../components/FeaturedSection.astro';
+import SplitSection from '../components/SplitSection.astro';
+import QuoteBanner from '../components/QuoteBanner.astro';
+import FiltersSection from '../components/FiltersSection.astro';
+import bannerImage from '../assets/bannerHome.png';
+import { getLiturgicalBackground } from '../utils/liturgicalSeason';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const bannerImageUrl = typeof bannerImage === 'string' ? bannerImage : bannerImage.src;
+
+const rawSongs = import.meta.glob('../content/cantos/*.md', { eager: true });
+
+const songs = Object.entries(rawSongs).map(([file, module]) => {
+	const markdown = module as any;
+	const data = markdown.frontmatter ?? {};
+	const slug = path.basename(file, '.md');
+	const lyrics = typeof markdown.rawContent === 'function' ? markdown.rawContent() : '';
+
+	return {
+		...data,
+		lyrics,
+		slug,
+		href: `/cantos/${slug}`,
+		seasonBackground: getLiturgicalBackground(data.tiempo, data.tags),
+	};
+});
+
+const featuredSongs = songs.slice(0, 5);
+
+const tiempoOptions = [
+	'Todos',
+	...Array.from(new Set(songs.map(song => song.tiempo ?? 'Sin tiempo'))).sort(),
+];
+
+const authorOptions = [
+	'Todos',
+	...Array.from(new Set(songs.map(song => song.author ?? 'Desconocido'))).sort(),
+];
+
+const categoryFilterHref = (category: string) =>
+	`/?categoria=${encodeURIComponent(category)}#cantoral`;
+
+const liturgicalMoments = [
+	{
+		title: 'Entrada',
+		category: 'Entrada',
+		subtitle: 'Inicio de la celebración',
+		icon: '/icons/entrada.svg',
+		href: categoryFilterHref('Entrada'),
+	},
+	{
+		title: 'Señor ten piedad',
+		category: 'Señor ten piedad',
+		subtitle: 'Acto penitencial',
+		iconText: '✝',
+		href: categoryFilterHref('Señor ten piedad'),
+	},
+	{
+		title: 'Gloria',
+		category: 'Gloria',
+		subtitle: 'Himno de alabanza',
+		iconText: '♪',
+		href: categoryFilterHref('Gloria'),
+	},
+	{
+		title: 'Aleluya',
+		category: 'Aleluya',
+		subtitle: 'Antes del Evangelio',
+		iconText: '♫',
+		href: categoryFilterHref('Aleluya'),
+	},
+	{
+		title: 'Ofertorio',
+		category: 'Ofertorio',
+		subtitle: 'Presentación de dones',
+		icon: '/icons/ofertorio.svg',
+		href: categoryFilterHref('Ofertorio'),
+	},
+	{
+		title: 'Santo',
+		category: 'Santo',
+		subtitle: 'Aclamación eucarística',
+		iconText: '✝',
+		href: categoryFilterHref('Santo'),
+	},
+	{
+		title: 'Comunión',
+		category: 'Comunión',
+		subtitle: 'Banquete eucarístico',
+		icon: '/icons/comunion.svg',
+		href: categoryFilterHref('Comunión'),
+	},
+	{
+		title: 'Salida',
+		category: 'Salida',
+		subtitle: 'Envío misionero',
+		icon: '/icons/salida.svg',
+		href: categoryFilterHref('Salida'),
+	},
+];
+
+const categoryOrder = [
+	...liturgicalMoments.map(item => item.category),
+	'Comun',
+	'Otro',
+];
+
+const categoryOptions = [
+	'Todos',
+	...Array.from(new Set([
+		...categoryOrder,
+		...songs.map(song => song.categoria ?? 'Otro'),
+	])),
+];
+
+const liturgicalSeasons = [
+	{
+		title: 'Adviento',
+		subtitle: 'Preparación',
+		icon: '🕯️',
+		href: '/cantos?tiempo=Adviento',
+	},
+	{
+		title: 'Navidad',
+		subtitle: 'Natividad del Señor',
+		icon: '⭐',
+		href: '/cantos?tiempo=Navidad',
+	},
+	{
+		title: 'Cuaresma',
+		subtitle: 'Conversión',
+		icon: '✝️',
+		href: '/cantos?tiempo=Cuaresma',
+	},
+	{
+		title: 'Pascua',
+		subtitle: 'Resurrección',
+		icon: '🌿',
+		href: '/cantos?tiempo=Pascua',
+	},
+	{
+		title: 'Tiempo ordinario',
+		subtitle: 'Camino cotidiano',
+		icon: '☀️',
+		href: '/cantos?tiempo=Tiempo%20ordinario',
+	},
+	{
+		title: 'Santos',
+		subtitle: 'Fiestas y memorias',
+		icon: '👑',
+		href: '/cantos?tiempo=Santos',
+	},
+];
+
+const resources = [
+	{
+		title: 'Partituras y Acordes',
+		description: 'Descarga PDFs, acordes y materiales para preparar tus cantos.',
+		icon: '♬',
+		href: '/recursos/acordes',
+	},
+	{
+		title: 'Guías para Músicos',
+		description: 'Consejos para servir mejor desde el ministerio de música.',
+		icon: '👥',
+		href: '/recursos/guias',
+	},
+	{
+		title: 'Audio y Videos',
+		description: 'Escucha, aprende y practica los cantos antes de la misa.',
+		icon: '▶',
+		href: '/recursos/audio-video',
+	},
+	{
+		title: 'Planeaciones Litúrgicas',
+		description: 'Organiza los cantos según el tiempo litúrgico y la celebración.',
+		icon: '📅',
+		href: '/recursos/planeaciones',
+	},
+];
 ---
 
 <Layout>
-	<Welcome />
+	<main class="app-shell">
+		<HeroBanner
+			bannerImageUrl={bannerImageUrl}
+			liturgicalMoments={liturgicalMoments}
+		/>
+
+		<FeaturedSection featuredSongs={featuredSongs} />
+
+		<SplitSection
+			liturgicalSeasons={liturgicalSeasons}
+			resources={resources}
+		/>
+
+		<QuoteBanner bannerImageUrl={bannerImageUrl} />
+
+		<FiltersSection
+			songs={songs}
+			tiempoOptions={tiempoOptions}
+			categoryOptions={categoryOptions}
+			authorOptions={authorOptions}
+		/>
+	</main>
 </Layout>
+
+<script type="module">
+	const searchInput = document.getElementById('searchInput');
+	const tiempoFilter = document.getElementById('tiempoFilter');
+	const categoriaFilter = document.getElementById('categoriaFilter');
+	const authorFilter = document.getElementById('authorFilter');
+	const visibleCount = document.getElementById('visibleCount');
+	const activeCategoryPanel = document.getElementById('activeCategoryPanel');
+	const activeCategoryName = document.getElementById('activeCategoryName');
+	const clearCategoryFilter = document.getElementById('clearCategoryFilter');
+	const emptyResults = document.getElementById('emptyResults');
+	const clearEmptyFilters = document.getElementById('clearEmptyFilters');
+	const filtersSection = document.getElementById('cantoral');
+	const songGrid = document.getElementById('songGrid');
+	const songGridCta = document.getElementById('songGridCta');
+	const songGridLimitText = document.getElementById('songGridLimitText');
+	const viewAllSongsLink = document.getElementById('viewAllSongsLink');
+
+	const categoryPills = Array.from(document.querySelectorAll('.category-pill[data-category]'));
+	const songs = JSON.parse(filtersSection?.getAttribute('data-songs') ?? '[]');
+	const homeSongRows = 4;
+	let currentFilteredSongs = [];
+	let resizeTimer;
+
+	function normalize(value) {
+		return String(value ?? '')
+			.normalize('NFD')
+			.replace(/[\u0300-\u036f]/g, '')
+			.replace(/[-_]+/g, ' ')
+			.toLowerCase()
+			.trim();
+	}
+
+	function escapeHtml(value) {
+		return String(value ?? '')
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#039;');
+	}
+
+	function getSchemePayload(song) {
+		return escapeHtml(JSON.stringify({
+			slug: song.slug,
+			title: song.title,
+			categoria: song.categoria,
+			tipo: song.tipo,
+			tiempo: song.tiempo,
+			author: song.author,
+			description: song.description,
+			href: song.href,
+			lyrics: song.lyrics,
+		}));
+	}
+
+	function renderSongCard(song) {
+		const statusClass = song.liturgico ? 'liturgico' : 'neutral';
+		const statusText = song.liturgico ? 'Litúrgico' : 'Revisar';
+		const description = song.description || 'Canto disponible para consulta dentro del cantoral.';
+		const cardClass = song.seasonBackground ? 'song-card has-season-background' : 'song-card';
+		const cardStyle = song.seasonBackground
+			? ` style="--song-card-bg: url('${escapeHtml(song.seasonBackground)}');"`
+			: '';
+
+		return `
+			<article class="${cardClass}"${cardStyle}>
+				<div class="song-card-head">
+					<div>
+						<p class="song-category">${escapeHtml(song.categoria)}</p>
+						<h3>${escapeHtml(song.title)}</h3>
+					</div>
+
+					<span class="badge">${escapeHtml(song.tipo)}</span>
+				</div>
+
+				<div class="meta-row">
+					<span>${escapeHtml(song.tiempo || 'Tiempo libre')}</span>
+					<span>${escapeHtml(song.author)}</span>
+					<span class="pill ${statusClass}">${statusText}</span>
+				</div>
+
+				<p>${escapeHtml(description)}</p>
+
+				<div class="card-footer">
+					<a class="detail-link" href="${escapeHtml(song.href)}">
+						Ver detalle →
+					</a>
+					<button
+						class="scheme-add-button card-scheme-add"
+						type="button"
+						data-song-scheme-add
+						data-song-scheme-song="${getSchemePayload(song)}"
+						aria-pressed="false"
+					>
+						<span class="scheme-add-icon" aria-hidden="true">+</span>
+						<span data-add-label>Agregar al esquema</span>
+					</button>
+				</div>
+			</article>
+		`;
+	}
+
+	function getGridColumnCount() {
+		if (!songGrid) return;
+
+		const columns = window
+			.getComputedStyle(songGrid)
+			.gridTemplateColumns
+			.split(' ')
+			.filter(column => column && column !== 'none').length;
+
+		return Math.max(columns, 1);
+	}
+
+	function getHomeSongLimit() {
+		return homeSongRows * (getGridColumnCount() || 1);
+	}
+
+	function getAllSongsHref() {
+		const url = new URL('/cantos', window.location.origin);
+		const query = searchInput?.value?.trim() ?? '';
+		const tiempoValue = tiempoFilter?.value ?? 'Todos';
+		const categoriaValue = categoriaFilter?.value ?? 'Todos';
+		const authorValue = authorFilter?.value ?? 'Todos';
+
+		if (query) url.searchParams.set('q', query);
+		if (tiempoValue !== 'Todos') url.searchParams.set('tiempo', tiempoValue);
+		if (categoriaValue !== 'Todos') url.searchParams.set('categoria', categoriaValue);
+		if (authorValue !== 'Todos') url.searchParams.set('author', authorValue);
+
+		return `${url.pathname}${url.search}`;
+	}
+
+	function updateSongGridCta(total, shown) {
+		if (songGridCta) {
+			songGridCta.hidden = total === 0;
+		}
+
+		if (songGridLimitText) {
+			songGridLimitText.textContent = total > shown
+				? `Mostrando ${shown} de ${total}`
+				: `${total} ${total === 1 ? 'canto' : 'cantos'} encontrados`;
+		}
+
+		if (viewAllSongsLink) {
+			viewAllSongsLink.href = getAllSongsHref();
+		}
+	}
+
+	function renderSongs(filteredSongs) {
+		if (!songGrid) return;
+
+		const visibleSongs = filteredSongs.slice(0, getHomeSongLimit());
+
+		songGrid.innerHTML = visibleSongs.map(renderSongCard).join('');
+		updateSongGridCta(filteredSongs.length, visibleSongs.length);
+		document.dispatchEvent(new CustomEvent('song-scheme-cards-rendered'));
+	}
+
+	function selectOption(select, value) {
+		if (!select) return;
+
+		const option = Array.from(select.options).find(
+			option => normalize(option.value) === normalize(value)
+		);
+
+		select.value = option?.value ?? 'Todos';
+	}
+
+	function isActiveCategory(value) {
+		return Boolean(value) && normalize(value) !== normalize('Todos');
+	}
+
+	function updateCategoryState(categoryValue) {
+		const active = isActiveCategory(categoryValue);
+
+		if (activeCategoryPanel) {
+			activeCategoryPanel.hidden = !active;
+		}
+
+		if (activeCategoryName) {
+			activeCategoryName.textContent = active ? categoryValue : '';
+		}
+
+		categoryPills.forEach(pill => {
+			pill.classList.toggle(
+				'is-active',
+				active && normalize(pill.dataset.category) === normalize(categoryValue)
+			);
+		});
+	}
+
+	function updateCategoryUrl(categoryValue) {
+		const url = new URL(window.location.href);
+
+		if (isActiveCategory(categoryValue)) {
+			url.searchParams.set('categoria', categoryValue);
+			url.hash = 'cantoral';
+		} else {
+			url.searchParams.delete('categoria');
+
+			if (url.hash === '#cantoral') {
+				url.hash = '';
+			}
+		}
+
+		window.history.pushState({}, '', url);
+	}
+
+	function filterSongs() {
+		const query = normalize(searchInput?.value?.trim() ?? '');
+		const tiempoValue = tiempoFilter?.value ?? 'Todos';
+		const categoriaValue = categoriaFilter?.value ?? 'Todos';
+		const authorValue = authorFilter?.value ?? 'Todos';
+
+		const filteredSongs = songs.filter(song => {
+			const searchText = normalize(song.searchText);
+			const cardTiempo = normalize(song.tiempo);
+			const cardCategoria = normalize(song.categoria);
+			const cardAuthor = normalize(song.author);
+
+			const matchesQuery = !query || searchText.includes(query);
+			const matchesTiempo =
+				tiempoValue === 'Todos' || cardTiempo === normalize(tiempoValue);
+			const matchesCategoria =
+				categoriaValue === 'Todos' || cardCategoria === normalize(categoriaValue);
+			const matchesAuthor =
+				authorValue === 'Todos' || cardAuthor === normalize(authorValue);
+
+			return matchesQuery && matchesTiempo && matchesCategoria && matchesAuthor;
+		});
+		const visible = filteredSongs.length;
+		currentFilteredSongs = filteredSongs;
+
+		if (visibleCount) {
+			visibleCount.textContent = String(visible);
+		}
+
+		if (emptyResults) {
+			emptyResults.hidden = visible > 0;
+		}
+
+		if (songGrid) {
+			songGrid.hidden = visible === 0;
+		}
+
+		renderSongs(filteredSongs);
+		updateCategoryState(categoriaValue);
+	}
+
+	function clearAllFilters() {
+		if (searchInput) searchInput.value = '';
+		selectOption(tiempoFilter, 'Todos');
+		selectOption(categoriaFilter, 'Todos');
+		selectOption(authorFilter, 'Todos');
+		filterSongs();
+		updateCategoryUrl('Todos');
+	}
+
+	function applyCategory(categoryValue, options = {}) {
+		selectOption(categoriaFilter, categoryValue);
+		filterSongs();
+
+		if (options.updateUrl) {
+			updateCategoryUrl(categoriaFilter?.value ?? 'Todos');
+		}
+
+		if (options.scroll) {
+			filtersSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		}
+	}
+
+	function applyUrlFilters() {
+		const params = new URLSearchParams(window.location.search);
+
+		selectOption(categoriaFilter, params.get('categoria') ?? 'Todos');
+		selectOption(tiempoFilter, params.get('tiempo') ?? 'Todos');
+		selectOption(authorFilter, params.get('author') ?? 'Todos');
+
+		filterSongs();
+	}
+
+	searchInput?.addEventListener('input', filterSongs);
+	tiempoFilter?.addEventListener('change', filterSongs);
+	categoriaFilter?.addEventListener('change', () => {
+		filterSongs();
+		updateCategoryUrl(categoriaFilter.value);
+	});
+	authorFilter?.addEventListener('change', filterSongs);
+	clearCategoryFilter?.addEventListener('click', () => {
+		applyCategory('Todos', { updateUrl: true });
+	});
+	clearEmptyFilters?.addEventListener('click', clearAllFilters);
+	categoryPills.forEach(pill => {
+		pill.addEventListener('click', event => {
+			event.preventDefault();
+			applyCategory(pill.dataset.category ?? 'Todos', {
+				scroll: true,
+				updateUrl: true,
+			});
+		});
+	});
+	window.addEventListener('popstate', applyUrlFilters);
+	window.addEventListener('resize', () => {
+		window.clearTimeout(resizeTimer);
+		resizeTimer = window.setTimeout(() => renderSongs(currentFilteredSongs), 120);
+	});
+
+	applyUrlFilters();
+</script>

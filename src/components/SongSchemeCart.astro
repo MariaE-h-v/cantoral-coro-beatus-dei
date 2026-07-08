@@ -1,0 +1,1361 @@
+<div class="scheme-cart" data-scheme-cart>
+	<button
+		class="scheme-cart-fab"
+		type="button"
+		data-scheme-toggle
+		aria-controls="songSchemePanel"
+		aria-expanded="false"
+	>
+		<span class="scheme-cart-fab-icon" aria-hidden="true">+</span>
+		<span>Separador</span>
+		<span class="scheme-cart-count" data-scheme-count>0</span>
+	</button>
+
+	<div class="scheme-cart-backdrop" data-scheme-close hidden></div>
+
+	<aside
+		id="songSchemePanel"
+		class="scheme-cart-panel"
+		aria-labelledby="songSchemeTitle"
+		aria-hidden="true"
+	>
+		<div class="scheme-cart-head">
+			<div>
+				<p>Esquema litúrgico</p>
+				<h2 id="songSchemeTitle">Separador de cantos</h2>
+			</div>
+
+			<button class="scheme-icon-button" type="button" data-scheme-close aria-label="Cerrar">
+				×
+			</button>
+		</div>
+
+		<div class="scheme-cart-fields">
+			<label>
+				<span>Nombre del esquema</span>
+				<input
+					type="text"
+					data-scheme-title-input
+					placeholder="Misa dominical, boda, retiro..."
+				/>
+			</label>
+
+			<label>
+				<span>Notas</span>
+				<textarea
+					data-scheme-note-input
+					rows="3"
+					placeholder="Fecha, parroquia, indicaciones para el coro..."
+				></textarea>
+			</label>
+		</div>
+
+		<div class="scheme-cart-list" data-scheme-list></div>
+
+		<div class="scheme-cart-empty" data-scheme-empty>
+			<strong>Aún no hay cantos seleccionados.</strong>
+			<span>Agrega cantos desde el listado para armar tu esquema.</span>
+		</div>
+
+		<div class="scheme-cart-actions">
+			<button class="scheme-primary-action" type="button" data-scheme-preview-open>
+				Ver esquema
+			</button>
+			<button class="scheme-primary-action" type="button" data-scheme-export>
+				Exportar PDF
+			</button>
+			<button class="scheme-secondary-action" type="button" data-scheme-clear>
+				Vaciar
+			</button>
+		</div>
+	</aside>
+
+	<div class="scheme-preview-backdrop" data-preview-close hidden></div>
+
+	<section
+		id="songSchemePreview"
+		class="scheme-preview"
+		aria-labelledby="schemePreviewTitle"
+		aria-hidden="true"
+		hidden
+		data-scheme-preview
+	>
+		<header class="scheme-preview-toolbar">
+			<div>
+				<p>Vista del esquema</p>
+				<h2 id="schemePreviewTitle" data-scheme-preview-title>Esquema de cantos</h2>
+			</div>
+
+			<div class="scheme-preview-actions">
+				<button class="scheme-primary-action" type="button" data-scheme-preview-export>
+					Exportar PDF
+				</button>
+				<button class="scheme-secondary-action" type="button" data-preview-close>
+					Cerrar
+				</button>
+			</div>
+		</header>
+
+		<div class="scheme-preview-body" data-scheme-preview-body></div>
+	</section>
+</div>
+
+<script type="module">
+	const STORAGE_KEY = 'beatus-song-scheme-v1';
+	const cartRoot = document.querySelector('[data-scheme-cart]');
+	const toggleButton = cartRoot?.querySelector('[data-scheme-toggle]');
+	const closeButtons = cartRoot?.querySelectorAll('[data-scheme-close]');
+	const panel = cartRoot?.querySelector('.scheme-cart-panel');
+	const backdrop = cartRoot?.querySelector('.scheme-cart-backdrop');
+	const countBadge = cartRoot?.querySelector('[data-scheme-count]');
+	const list = cartRoot?.querySelector('[data-scheme-list]');
+	const emptyState = cartRoot?.querySelector('[data-scheme-empty]');
+	const previewOpenButton = cartRoot?.querySelector('[data-scheme-preview-open]');
+	const exportButton = cartRoot?.querySelector('[data-scheme-export]');
+	const previewExportButton = cartRoot?.querySelector('[data-scheme-preview-export]');
+	const clearButton = cartRoot?.querySelector('[data-scheme-clear]');
+	const titleInput = cartRoot?.querySelector('[data-scheme-title-input]');
+	const noteInput = cartRoot?.querySelector('[data-scheme-note-input]');
+	const preview = cartRoot?.querySelector('[data-scheme-preview]');
+	const previewBackdrop = cartRoot?.querySelector('.scheme-preview-backdrop');
+	const previewCloseButtons = cartRoot?.querySelectorAll('[data-preview-close]');
+	const previewBody = cartRoot?.querySelector('[data-scheme-preview-body]');
+	const previewTitle = cartRoot?.querySelector('[data-scheme-preview-title]');
+
+	const emptyScheme = {
+		title: '',
+		note: '',
+		songs: [],
+	};
+
+	let scheme = loadScheme();
+
+	function loadScheme() {
+		try {
+			const stored = window.localStorage.getItem(STORAGE_KEY);
+			if (!stored) return { ...emptyScheme, songs: [] };
+
+			const parsed = JSON.parse(stored);
+			return {
+				title: parsed.title ?? '',
+				note: parsed.note ?? '',
+				songs: Array.isArray(parsed.songs) ? parsed.songs : [],
+			};
+		} catch {
+			return { ...emptyScheme, songs: [] };
+		}
+	}
+
+	function saveScheme() {
+		window.localStorage.setItem(STORAGE_KEY, JSON.stringify(scheme));
+	}
+
+	function escapeHtml(value) {
+		return String(value ?? '')
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#039;');
+	}
+
+	function normalizeSong(song) {
+		return {
+			slug: song.slug,
+			title: song.title ?? 'Canto sin título',
+			categoria: song.categoria ?? 'Canto',
+			tipo: song.tipo ?? 'Canto',
+			tiempo: song.tiempo ?? 'Sin tiempo',
+			author: song.author ?? 'Autor desconocido',
+			description: song.description ?? '',
+			href: song.href ?? `/cantos/${song.slug}`,
+			lyrics: song.lyrics ?? '',
+		};
+	}
+
+	function openCart() {
+		cartRoot?.classList.add('is-open');
+		panel?.setAttribute('aria-hidden', 'false');
+		toggleButton?.setAttribute('aria-expanded', 'true');
+		if (backdrop) backdrop.hidden = false;
+	}
+
+	function closeCart() {
+		cartRoot?.classList.remove('is-open');
+		panel?.setAttribute('aria-hidden', 'true');
+		toggleButton?.setAttribute('aria-expanded', 'false');
+		if (backdrop) backdrop.hidden = true;
+	}
+
+	function updateButtons() {
+		const selectedSlugs = new Set(scheme.songs.map(song => song.slug));
+
+		document.querySelectorAll('[data-song-scheme-add]').forEach(button => {
+			const payload = button.getAttribute('data-song-scheme-song');
+			if (!payload) return;
+
+			let song;
+			try {
+				song = JSON.parse(payload);
+			} catch {
+				return;
+			}
+
+			const isSelected = selectedSlugs.has(song.slug);
+			button.classList.toggle('is-selected', isSelected);
+			button.setAttribute('aria-pressed', String(isSelected));
+
+			const label = button.querySelector('[data-add-label]');
+			if (label) {
+				label.textContent = isSelected ? 'En esquema' : 'Agregar al esquema';
+			}
+		});
+	}
+
+	function renderList() {
+		if (!list || !emptyState) return;
+
+		countBadge.textContent = String(scheme.songs.length);
+		emptyState.hidden = scheme.songs.length > 0;
+		previewOpenButton.disabled = scheme.songs.length === 0;
+		exportButton.disabled = scheme.songs.length === 0;
+		previewExportButton.disabled = scheme.songs.length === 0;
+		clearButton.disabled = scheme.songs.length === 0;
+
+		if (titleInput && titleInput.value !== scheme.title) {
+			titleInput.value = scheme.title;
+		}
+
+		if (noteInput && noteInput.value !== scheme.note) {
+			noteInput.value = scheme.note;
+		}
+
+		list.innerHTML = scheme.songs
+			.map((song, index) => {
+				const moveUpDisabled = index === 0 ? 'disabled' : '';
+				const moveDownDisabled = index === scheme.songs.length - 1 ? 'disabled' : '';
+
+				return `
+					<article class="scheme-song-card">
+						<div class="scheme-song-index">${index + 1}</div>
+						<div class="scheme-song-body">
+							<span>${escapeHtml(song.categoria)}</span>
+							<strong>${escapeHtml(song.title)}</strong>
+							<small>${escapeHtml(song.tiempo)} · ${escapeHtml(song.author)}</small>
+						</div>
+						<div class="scheme-song-actions">
+							<button type="button" data-scheme-move-up="${index}" ${moveUpDisabled} aria-label="Subir ${escapeHtml(song.title)}">↑</button>
+							<button type="button" data-scheme-move-down="${index}" ${moveDownDisabled} aria-label="Bajar ${escapeHtml(song.title)}">↓</button>
+							<button type="button" data-scheme-remove="${index}" aria-label="Quitar ${escapeHtml(song.title)}">×</button>
+						</div>
+					</article>
+				`;
+			})
+			.join('');
+
+		updateButtons();
+
+		if (preview && !preview.hidden) {
+			renderPreview();
+		}
+	}
+
+	function addSong(songPayload) {
+		const song = normalizeSong(songPayload);
+		const exists = scheme.songs.some(item => item.slug === song.slug);
+
+		if (!exists) {
+			scheme.songs = [...scheme.songs, song];
+			saveScheme();
+			renderList();
+		}
+
+		openCart();
+	}
+
+	function removeSong(index) {
+		scheme.songs = scheme.songs.filter((_, songIndex) => songIndex !== index);
+		saveScheme();
+		renderList();
+	}
+
+	function moveSong(index, direction) {
+		const nextIndex = index + direction;
+		if (nextIndex < 0 || nextIndex >= scheme.songs.length) return;
+
+		const songs = [...scheme.songs];
+		const [song] = songs.splice(index, 1);
+		songs.splice(nextIndex, 0, song);
+		scheme.songs = songs;
+		saveScheme();
+		renderList();
+	}
+
+	function formatLyrics(lyrics) {
+		const cleanLyrics = String(lyrics ?? '').replace(/^\s*\n/, '').replace(/\s+$/, '');
+		if (!cleanLyrics) return 'No hay letra registrada para este canto.';
+
+		return escapeHtml(cleanLyrics);
+	}
+
+	function buildPrintDocument() {
+		const title = scheme.title.trim() || 'Esquema de cantos';
+		const note = scheme.note.trim();
+		const date = new Intl.DateTimeFormat('es-MX', { dateStyle: 'long' }).format(new Date());
+
+		return `
+			<div class="scheme-print-page">
+				<header class="scheme-print-header">
+					<p>Cantoral Coro Beatus Dei</p>
+					<h1>${escapeHtml(title)}</h1>
+					<span>${escapeHtml(date)}</span>
+					${note ? `<div class="scheme-print-note">${escapeHtml(note)}</div>` : ''}
+				</header>
+
+				<section class="scheme-print-index">
+					<h2>Orden del esquema</h2>
+					<ol>
+						${scheme.songs
+							.map(song => `<li>${escapeHtml(song.title)} <span>${escapeHtml(song.categoria)}</span></li>`)
+							.join('')}
+					</ol>
+				</section>
+
+				${scheme.songs
+					.map((song, index) => `
+						<section class="scheme-print-song">
+							<p class="scheme-print-kicker">${index + 1}. ${escapeHtml(song.categoria)}</p>
+							<h2>${escapeHtml(song.title)}</h2>
+							<div class="scheme-print-meta">
+								<span>${escapeHtml(song.tiempo)}</span>
+								<span>${escapeHtml(song.tipo)}</span>
+								<span>${escapeHtml(song.author)}</span>
+							</div>
+							${song.description ? `<p class="scheme-print-description">${escapeHtml(song.description)}</p>` : ''}
+							<pre class="scheme-print-lyrics"><code>${formatLyrics(song.lyrics)}</code></pre>
+						</section>
+					`)
+					.join('')}
+			</div>
+		`;
+	}
+
+	function buildPreviewDocument() {
+		const title = scheme.title.trim() || 'Esquema de cantos';
+		const note = scheme.note.trim();
+		const date = new Intl.DateTimeFormat('es-MX', { dateStyle: 'long' }).format(new Date());
+
+		return `
+			<article class="scheme-preview-document">
+				<header class="scheme-preview-hero">
+					<p>Cantoral Coro Beatus Dei</p>
+					<h1>${escapeHtml(title)}</h1>
+					<span>${escapeHtml(date)}</span>
+					${note ? `<div class="scheme-preview-note">${escapeHtml(note)}</div>` : ''}
+				</header>
+
+				<section class="scheme-preview-index">
+					<h2>Orden del esquema</h2>
+					<ol>
+						${scheme.songs
+							.map((song, index) => `
+								<li>
+									<a href="#scheme-preview-song-${index + 1}">
+										<strong>${index + 1}. ${escapeHtml(song.title)}</strong>
+										<span>${escapeHtml(song.categoria)}</span>
+									</a>
+								</li>
+							`)
+							.join('')}
+					</ol>
+				</section>
+
+				${scheme.songs
+					.map((song, index) => `
+						<section id="scheme-preview-song-${index + 1}" class="scheme-preview-song">
+							<div class="scheme-preview-song-head">
+								<div>
+									<p>${index + 1}. ${escapeHtml(song.categoria)}</p>
+									<h2>${escapeHtml(song.title)}</h2>
+								</div>
+								<a href="${escapeHtml(song.href)}">Detalle</a>
+							</div>
+							<div class="scheme-preview-meta">
+								<span>${escapeHtml(song.tiempo)}</span>
+								<span>${escapeHtml(song.tipo)}</span>
+								<span>${escapeHtml(song.author)}</span>
+							</div>
+							${song.description ? `<p class="scheme-preview-description">${escapeHtml(song.description)}</p>` : ''}
+							<pre class="scheme-preview-lyrics"><code>${formatLyrics(song.lyrics)}</code></pre>
+						</section>
+					`)
+					.join('')}
+			</article>
+		`;
+	}
+
+	function renderPreview() {
+		const title = scheme.title.trim() || 'Esquema de cantos';
+
+		if (previewTitle) {
+			previewTitle.textContent = title;
+		}
+
+		if (previewBody) {
+			previewBody.innerHTML = buildPreviewDocument();
+		}
+	}
+
+	function openPreview() {
+		if (!scheme.songs.length) {
+			openCart();
+			return;
+		}
+
+		renderPreview();
+		closeCart();
+		if (preview) {
+			preview.hidden = false;
+			preview.setAttribute('aria-hidden', 'false');
+		}
+		if (previewBackdrop) previewBackdrop.hidden = false;
+		document.body.setAttribute('data-scheme-previewing', 'true');
+	}
+
+	function closePreview() {
+		if (preview) {
+			preview.hidden = true;
+			preview.setAttribute('aria-hidden', 'true');
+		}
+		if (previewBackdrop) previewBackdrop.hidden = true;
+		document.body.removeAttribute('data-scheme-previewing');
+	}
+
+	function exportScheme() {
+		if (!scheme.songs.length) {
+			openCart();
+			return;
+		}
+
+		const printDocument = document.createElement('div');
+		printDocument.className = 'scheme-print-document';
+		printDocument.innerHTML = buildPrintDocument();
+		document.body.appendChild(printDocument);
+		document.body.setAttribute('data-printing-scheme', 'true');
+
+		const cleanup = () => {
+			document.body.removeAttribute('data-printing-scheme');
+			printDocument.remove();
+			window.removeEventListener('afterprint', cleanup);
+		};
+
+		window.addEventListener('afterprint', cleanup);
+		window.requestAnimationFrame(() => {
+			window.print();
+			window.setTimeout(cleanup, 30000);
+		});
+	}
+
+	document.addEventListener('click', event => {
+		const target = event.target instanceof Element ? event.target : null;
+		const addButton = target?.closest('[data-song-scheme-add]');
+		if (!addButton) return;
+
+		event.preventDefault();
+		event.stopPropagation();
+
+		try {
+			addSong(JSON.parse(addButton.getAttribute('data-song-scheme-song')));
+		} catch {
+			openCart();
+		}
+	});
+	document.addEventListener('song-scheme-cards-rendered', updateButtons);
+
+	list?.addEventListener('click', event => {
+		const target = event.target instanceof Element ? event.target : null;
+		const removeButton = target?.closest('[data-scheme-remove]');
+		const moveUpButton = target?.closest('[data-scheme-move-up]');
+		const moveDownButton = target?.closest('[data-scheme-move-down]');
+
+		if (removeButton) {
+			removeSong(Number(removeButton.dataset.schemeRemove));
+		}
+
+		if (moveUpButton) {
+			moveSong(Number(moveUpButton.dataset.schemeMoveUp), -1);
+		}
+
+		if (moveDownButton) {
+			moveSong(Number(moveDownButton.dataset.schemeMoveDown), 1);
+		}
+	});
+
+	toggleButton?.addEventListener('click', () => {
+		if (cartRoot?.classList.contains('is-open')) {
+			closeCart();
+		} else {
+			openCart();
+		}
+	});
+
+	closeButtons?.forEach(button => button.addEventListener('click', closeCart));
+	previewCloseButtons?.forEach(button => button.addEventListener('click', closePreview));
+	previewOpenButton?.addEventListener('click', openPreview);
+	exportButton?.addEventListener('click', exportScheme);
+	previewExportButton?.addEventListener('click', exportScheme);
+
+	clearButton?.addEventListener('click', () => {
+		if (!scheme.songs.length) return;
+		scheme.songs = [];
+		saveScheme();
+		renderList();
+		closePreview();
+	});
+
+	titleInput?.addEventListener('input', () => {
+		scheme.title = titleInput.value;
+		saveScheme();
+		if (preview && !preview.hidden) renderPreview();
+	});
+
+	noteInput?.addEventListener('input', () => {
+		scheme.note = noteInput.value;
+		saveScheme();
+		if (preview && !preview.hidden) renderPreview();
+	});
+
+	window.addEventListener('keydown', event => {
+		if (event.key === 'Escape') {
+			if (preview && !preview.hidden) {
+				closePreview();
+			} else {
+				closeCart();
+			}
+		}
+	});
+
+	renderList();
+</script>
+
+<style>
+	.scheme-cart {
+		position: relative;
+		z-index: 90;
+		font-family: Inter, system-ui, sans-serif;
+	}
+
+	.scheme-cart-fab {
+		position: fixed;
+		right: 22px;
+		bottom: 22px;
+		z-index: 95;
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		min-height: 54px;
+		padding: 0 14px 0 12px;
+		border: 1px solid rgba(122, 74, 18, 0.18);
+		border-radius: 999px;
+		background: linear-gradient(135deg, #d49b37 0%, #b27722 54%, #8f5417 100%);
+		color: white;
+		font: inherit;
+		font-weight: 900;
+		cursor: pointer;
+		box-shadow: 0 18px 46px rgba(143, 84, 23, 0.28);
+		transition:
+			transform 0.18s ease,
+			box-shadow 0.18s ease;
+	}
+
+	.scheme-cart-fab:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 22px 54px rgba(143, 84, 23, 0.34);
+	}
+
+	.scheme-cart-fab-icon,
+	.scheme-cart-count {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 999px;
+	}
+
+	.scheme-cart-fab-icon {
+		width: 30px;
+		height: 30px;
+		background: rgba(255, 255, 255, 0.18);
+		font-size: 1.2rem;
+		line-height: 1;
+	}
+
+	.scheme-cart-count {
+		min-width: 26px;
+		height: 26px;
+		padding: 0 7px;
+		background: white;
+		color: #8f5417;
+		font-size: 0.82rem;
+	}
+
+	.scheme-cart-backdrop {
+		position: fixed;
+		inset: 0;
+		z-index: 91;
+		background: rgba(15, 23, 42, 0.28);
+		backdrop-filter: blur(4px);
+	}
+
+	.scheme-cart-backdrop[hidden] {
+		display: none;
+	}
+
+	.scheme-preview-backdrop {
+		position: fixed;
+		inset: 0;
+		z-index: 101;
+		background: rgba(15, 23, 42, 0.34);
+		backdrop-filter: blur(5px);
+	}
+
+	.scheme-preview-backdrop[hidden] {
+		display: none;
+	}
+
+	.scheme-cart-panel {
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 96;
+		display: flex;
+		width: min(440px, 100%);
+		padding: 22px;
+		flex-direction: column;
+		gap: 18px;
+		background:
+			linear-gradient(180deg, rgba(255, 250, 244, 0.98) 0%, rgba(255, 255, 255, 0.98) 100%),
+			white;
+		border-left: 1px solid rgba(178, 119, 34, 0.16);
+		box-shadow: -24px 0 80px rgba(15, 23, 42, 0.18);
+		transform: translateX(100%);
+		transition: transform 0.24s ease;
+		overflow: auto;
+	}
+
+	.scheme-cart.is-open .scheme-cart-panel {
+		transform: translateX(0);
+	}
+
+	.scheme-cart-head {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 16px;
+	}
+
+	.scheme-cart-head p {
+		margin: 0 0 6px;
+		color: #b27722;
+		font-size: 0.75rem;
+		font-weight: 900;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+	}
+
+	.scheme-cart-head h2 {
+		margin: 0;
+		color: #171717;
+		font-family: Georgia, 'Times New Roman', serif;
+		font-size: 2rem;
+		font-weight: 500;
+		line-height: 1.05;
+	}
+
+	.scheme-icon-button {
+		display: inline-flex;
+		width: 38px;
+		height: 38px;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid #eadac0;
+		border-radius: 999px;
+		background: white;
+		color: #8f5417;
+		font-size: 1.4rem;
+		line-height: 1;
+		cursor: pointer;
+	}
+
+	.scheme-cart-fields {
+		display: grid;
+		gap: 12px;
+		padding: 14px;
+		border-radius: 18px;
+		background: rgba(255, 255, 255, 0.8);
+		border: 1px solid #eee7dc;
+	}
+
+	.scheme-cart-fields label {
+		display: grid;
+		gap: 7px;
+	}
+
+	.scheme-cart-fields span {
+		color: #334155;
+		font-size: 0.78rem;
+		font-weight: 900;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.scheme-cart-fields input,
+	.scheme-cart-fields textarea {
+		width: 100%;
+		border: 1px solid #e5e7eb;
+		border-radius: 14px;
+		background: white;
+		color: #0f172a;
+		font: inherit;
+	}
+
+	.scheme-cart-fields input {
+		min-height: 44px;
+		padding: 0 12px;
+	}
+
+	.scheme-cart-fields textarea {
+		min-height: 86px;
+		padding: 11px 12px;
+		resize: vertical;
+	}
+
+	.scheme-cart-list {
+		display: grid;
+		gap: 10px;
+	}
+
+	.scheme-cart :global(.scheme-song-card) {
+		display: grid;
+		grid-template-columns: 34px minmax(0, 1fr) auto;
+		gap: 10px;
+		align-items: center;
+		padding: 12px;
+		border-radius: 16px;
+		background: white;
+		border: 1px solid #eee7dc;
+		box-shadow: 0 12px 26px rgba(15, 23, 42, 0.05);
+	}
+
+	.scheme-cart :global(.scheme-song-index) {
+		display: inline-flex;
+		width: 34px;
+		height: 34px;
+		align-items: center;
+		justify-content: center;
+		border-radius: 999px;
+		background: #fff7ed;
+		color: #9a5f18;
+		font-weight: 900;
+	}
+
+	.scheme-cart :global(.scheme-song-body) {
+		display: grid;
+		gap: 2px;
+		min-width: 0;
+	}
+
+	.scheme-cart :global(.scheme-song-body span) {
+		color: #b27722;
+		font-size: 0.68rem;
+		font-weight: 900;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+
+	.scheme-cart :global(.scheme-song-body strong) {
+		color: #111827;
+		font-size: 0.98rem;
+		line-height: 1.25;
+		overflow-wrap: anywhere;
+	}
+
+	.scheme-cart :global(.scheme-song-body small) {
+		color: #64748b;
+		font-size: 0.78rem;
+		line-height: 1.35;
+	}
+
+	.scheme-cart :global(.scheme-song-actions) {
+		display: flex;
+		gap: 4px;
+	}
+
+	.scheme-cart :global(.scheme-song-actions button) {
+		display: inline-flex;
+		width: 30px;
+		height: 30px;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid #eadac0;
+		border-radius: 999px;
+		background: #fffaf4;
+		color: #8f5417;
+		font-weight: 900;
+		cursor: pointer;
+	}
+
+	.scheme-cart :global(.scheme-song-actions button:disabled) {
+		cursor: not-allowed;
+		opacity: 0.42;
+	}
+
+	.scheme-cart-empty {
+		display: grid;
+		gap: 6px;
+		padding: 20px;
+		border-radius: 18px;
+		background: #fffaf4;
+		border: 1px dashed #d8c8af;
+		color: #64748b;
+		line-height: 1.55;
+	}
+
+	.scheme-cart-empty[hidden] {
+		display: none;
+	}
+
+	.scheme-cart-empty strong {
+		color: #1f2937;
+	}
+
+	.scheme-cart-actions {
+		position: sticky;
+		bottom: 0;
+		display: grid;
+		grid-template-columns: 1fr 1fr auto;
+		gap: 10px;
+		margin-top: auto;
+		padding-top: 12px;
+		background: linear-gradient(180deg, rgba(255, 255, 255, 0), #fffaf4 32%);
+	}
+
+	.scheme-primary-action,
+	.scheme-secondary-action,
+	:global(.scheme-add-button) {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		min-height: 44px;
+		border: 0;
+		border-radius: 999px;
+		font: inherit;
+		font-weight: 900;
+		text-decoration: none;
+		cursor: pointer;
+		transition:
+			transform 0.18s ease,
+			box-shadow 0.18s ease,
+			background 0.18s ease;
+	}
+
+	.scheme-primary-action,
+	:global(.scheme-add-button) {
+		padding: 0 16px;
+		background: linear-gradient(135deg, #d49b37 0%, #b27722 54%, #8f5417 100%);
+		color: white;
+		box-shadow: 0 14px 30px rgba(143, 84, 23, 0.2);
+	}
+
+	.scheme-primary-action:hover,
+	:global(.scheme-add-button:hover) {
+		transform: translateY(-1px);
+		box-shadow: 0 18px 34px rgba(143, 84, 23, 0.26);
+	}
+
+	.scheme-secondary-action {
+		padding: 0 15px;
+		background: #f8fafc;
+		color: #475569;
+		border: 1px solid #e5e7eb;
+	}
+
+	.scheme-primary-action:disabled,
+	.scheme-secondary-action:disabled {
+		cursor: not-allowed;
+		opacity: 0.48;
+		transform: none;
+		box-shadow: none;
+	}
+
+	:global(.scheme-add-button.is-selected) {
+		background: #24456f;
+		box-shadow: 0 14px 28px rgba(36, 69, 111, 0.18);
+	}
+
+	:global(.scheme-add-icon) {
+		display: inline-flex;
+		width: 22px;
+		height: 22px;
+		align-items: center;
+		justify-content: center;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.18);
+		font-size: 1rem;
+		line-height: 1;
+	}
+
+	:global(.scheme-print-document) {
+		display: none;
+	}
+
+	:global(body[data-scheme-previewing]) {
+		overflow: hidden;
+	}
+
+	.scheme-preview {
+		position: fixed;
+		inset: clamp(12px, 3vw, 30px);
+		z-index: 112;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+		border-radius: 26px;
+		background:
+			linear-gradient(180deg, rgba(255, 250, 244, 0.98) 0%, rgba(255, 255, 255, 0.98) 100%),
+			white;
+		border: 1px solid rgba(178, 119, 34, 0.18);
+		box-shadow: 0 34px 100px rgba(15, 23, 42, 0.28);
+	}
+
+	.scheme-preview[hidden] {
+		display: none;
+	}
+
+	.scheme-preview-toolbar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 18px;
+		padding: 18px 20px;
+		border-bottom: 1px solid #eee7dc;
+		background:
+			linear-gradient(135deg, rgba(255, 247, 237, 0.98), rgba(248, 250, 252, 0.96)),
+			white;
+	}
+
+	.scheme-preview-toolbar p {
+		margin: 0 0 5px;
+		color: #b27722;
+		font-size: 0.72rem;
+		font-weight: 900;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+	}
+
+	.scheme-preview-toolbar h2 {
+		margin: 0;
+		color: #171717;
+		font-family: Georgia, 'Times New Roman', serif;
+		font-size: clamp(1.45rem, 3vw, 2.2rem);
+		font-weight: 500;
+		line-height: 1.08;
+	}
+
+	.scheme-preview-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		justify-content: flex-end;
+	}
+
+	.scheme-preview-body {
+		flex: 1;
+		overflow: auto;
+		padding: clamp(18px, 3vw, 34px);
+		background:
+			linear-gradient(90deg, rgba(178, 119, 34, 0.05) 1px, transparent 1px) 0 0 / 38px 38px,
+			linear-gradient(180deg, rgba(178, 119, 34, 0.04) 1px, transparent 1px) 0 0 / 38px 38px,
+			#fffdf9;
+	}
+
+	.scheme-preview :global(.scheme-preview-document) {
+		display: grid;
+		gap: 22px;
+		width: min(100%, 980px);
+		margin: 0 auto;
+	}
+
+	.scheme-preview :global(.scheme-preview-hero),
+	.scheme-preview :global(.scheme-preview-index),
+	.scheme-preview :global(.scheme-preview-song) {
+		border: 1px solid #eee7dc;
+		border-radius: 22px;
+		background: rgba(255, 255, 255, 0.94);
+		box-shadow: 0 16px 44px rgba(15, 23, 42, 0.06);
+	}
+
+	.scheme-preview :global(.scheme-preview-hero) {
+		padding: clamp(22px, 4vw, 36px);
+	}
+
+	.scheme-preview :global(.scheme-preview-hero p),
+	.scheme-preview :global(.scheme-preview-song-head p) {
+		margin: 0 0 7px;
+		color: #b27722;
+		font-size: 0.74rem;
+		font-weight: 900;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+
+	.scheme-preview :global(.scheme-preview-hero h1) {
+		margin: 0 0 8px;
+		color: #171717;
+		font-family: Georgia, 'Times New Roman', serif;
+		font-size: clamp(2.2rem, 5vw, 4rem);
+		font-weight: 500;
+		line-height: 1;
+	}
+
+	.scheme-preview :global(.scheme-preview-hero span) {
+		color: #64748b;
+		font-weight: 750;
+	}
+
+	.scheme-preview :global(.scheme-preview-note) {
+		margin-top: 16px;
+		padding: 13px 15px;
+		border-radius: 16px;
+		background: #fff7ed;
+		border: 1px solid #f1e4d1;
+		color: #475569;
+		line-height: 1.55;
+	}
+
+	.scheme-preview :global(.scheme-preview-index) {
+		padding: 20px;
+	}
+
+	.scheme-preview :global(.scheme-preview-index h2) {
+		margin: 0 0 12px;
+		color: #171717;
+		font-family: Georgia, 'Times New Roman', serif;
+		font-size: 1.45rem;
+		font-weight: 500;
+	}
+
+	.scheme-preview :global(.scheme-preview-index ol) {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 10px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.scheme-preview :global(.scheme-preview-index a) {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		padding: 12px 14px;
+		border-radius: 16px;
+		background: #fffaf4;
+		border: 1px solid #f1e4d1;
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.scheme-preview :global(.scheme-preview-index strong) {
+		min-width: 0;
+		color: #111827;
+		font-size: 0.98rem;
+		overflow-wrap: anywhere;
+	}
+
+	.scheme-preview :global(.scheme-preview-index span) {
+		flex: 0 0 auto;
+		color: #8f5417;
+		font-size: 0.78rem;
+		font-weight: 900;
+		text-transform: uppercase;
+	}
+
+	.scheme-preview :global(.scheme-preview-song) {
+		padding: clamp(18px, 3vw, 28px);
+		scroll-margin-top: 22px;
+	}
+
+	.scheme-preview :global(.scheme-preview-song-head) {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 16px;
+		margin-bottom: 12px;
+	}
+
+	.scheme-preview :global(.scheme-preview-song-head h2) {
+		margin: 0;
+		color: #171717;
+		font-family: Georgia, 'Times New Roman', serif;
+		font-size: clamp(1.65rem, 3vw, 2.35rem);
+		font-weight: 500;
+		line-height: 1.08;
+	}
+
+	.scheme-preview :global(.scheme-preview-song-head a) {
+		flex: 0 0 auto;
+		padding: 0.52rem 0.85rem;
+		border-radius: 999px;
+		background: #fff7ed;
+		border: 1px solid #f1e4d1;
+		color: #8f5417;
+		font-weight: 900;
+		text-decoration: none;
+	}
+
+	.scheme-preview :global(.scheme-preview-meta) {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin-bottom: 14px;
+	}
+
+	.scheme-preview :global(.scheme-preview-meta span) {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.36em 0.76em;
+		border-radius: 999px;
+		background: #f8fafc;
+		border: 1px solid #e5e7eb;
+		color: #475569;
+		font-size: 0.84rem;
+		font-weight: 800;
+	}
+
+	.scheme-preview :global(.scheme-preview-description) {
+		margin: 0 0 14px;
+		color: #64748b;
+		line-height: 1.65;
+	}
+
+	.scheme-preview :global(.scheme-preview-lyrics) {
+		margin: 0;
+		padding: clamp(16px, 3vw, 24px);
+		border-radius: 18px;
+		background:
+			linear-gradient(90deg, rgba(178, 119, 34, 0.08) 1px, transparent 1px) 0 0 / 34px 34px,
+			linear-gradient(180deg, rgba(178, 119, 34, 0.05) 1px, transparent 1px) 0 0 / 34px 34px,
+			#fffdf9;
+		border: 1px solid #f1e4d1;
+		color: #1f2937;
+		font-family:
+			'SFMono-Regular',
+			Consolas,
+			'Liberation Mono',
+			ui-monospace,
+			monospace;
+		font-size: clamp(0.9rem, 1.6vw, 1.02rem);
+		line-height: 1.65;
+		tab-size: 4;
+		white-space: pre-wrap;
+		overflow-x: auto;
+	}
+
+	.scheme-preview :global(.scheme-preview-lyrics code) {
+		font: inherit;
+		white-space: inherit;
+	}
+
+	@media (max-width: 640px) {
+		.scheme-cart-fab {
+			right: 16px;
+			bottom: 16px;
+		}
+
+		.scheme-cart-panel {
+			padding: 18px;
+		}
+
+		.scheme-cart-actions {
+			grid-template-columns: 1fr;
+		}
+
+		.scheme-cart :global(.scheme-song-card) {
+			grid-template-columns: 30px minmax(0, 1fr);
+		}
+
+		.scheme-cart :global(.scheme-song-actions) {
+			grid-column: 1 / -1;
+			justify-content: flex-end;
+		}
+
+		.scheme-preview {
+			inset: 0;
+			border-radius: 0;
+		}
+
+		.scheme-preview-toolbar {
+			align-items: stretch;
+			flex-direction: column;
+		}
+
+		.scheme-preview-actions {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+		}
+
+		.scheme-preview :global(.scheme-preview-index ol) {
+			grid-template-columns: 1fr;
+		}
+
+		.scheme-preview :global(.scheme-preview-song-head) {
+			flex-direction: column;
+		}
+	}
+
+	@media print {
+		:global(body[data-printing-scheme] > *:not(.scheme-print-document)) {
+			display: none !important;
+		}
+
+		:global(body[data-printing-scheme]) {
+			background: white !important;
+		}
+
+		:global(body[data-printing-scheme] .scheme-print-document) {
+			display: block !important;
+			color: #111827;
+			font-family: Georgia, 'Times New Roman', serif;
+			font-size: 11pt;
+			line-height: 1.45;
+		}
+
+		:global(.scheme-print-page) {
+			width: 100%;
+		}
+
+		:global(.scheme-print-header) {
+			margin-bottom: 22px;
+			padding-bottom: 14px;
+			border-bottom: 2px solid #b27722;
+		}
+
+		:global(.scheme-print-header p) {
+			margin: 0 0 6px;
+			color: #8f5417;
+			font-size: 9pt;
+			font-weight: 700;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+		}
+
+		:global(.scheme-print-header h1) {
+			margin: 0 0 6px;
+			font-size: 24pt;
+			line-height: 1.1;
+		}
+
+		:global(.scheme-print-header span) {
+			color: #4b5563;
+			font-size: 10pt;
+		}
+
+		:global(.scheme-print-note) {
+			margin-top: 12px;
+			padding: 10px 12px;
+			border: 1px solid #eadac0;
+			background: #fffaf4;
+			color: #374151;
+		}
+
+		:global(.scheme-print-index) {
+			margin: 0 0 24px;
+			break-inside: avoid;
+		}
+
+		:global(.scheme-print-index h2),
+		:global(.scheme-print-song h2) {
+			margin: 0 0 8px;
+			font-size: 16pt;
+		}
+
+		:global(.scheme-print-index ol) {
+			margin: 0;
+			padding-left: 20px;
+		}
+
+		:global(.scheme-print-index li) {
+			margin-bottom: 4px;
+		}
+
+		:global(.scheme-print-index span) {
+			color: #8f5417;
+			font-size: 9pt;
+		}
+
+		:global(.scheme-print-song) {
+			margin-bottom: 24px;
+			padding-top: 16px;
+			border-top: 1px solid #e5e7eb;
+			break-inside: avoid;
+			page-break-inside: avoid;
+		}
+
+		:global(.scheme-print-kicker) {
+			margin: 0 0 4px;
+			color: #8f5417;
+			font-size: 9pt;
+			font-weight: 700;
+			letter-spacing: 0.1em;
+			text-transform: uppercase;
+		}
+
+		:global(.scheme-print-meta) {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 6px;
+			margin-bottom: 8px;
+			color: #374151;
+			font-size: 9pt;
+		}
+
+		:global(.scheme-print-meta span) {
+			padding: 2px 7px;
+			border: 1px solid #e5e7eb;
+			border-radius: 999px;
+		}
+
+		:global(.scheme-print-description) {
+			margin: 0 0 10px;
+			color: #4b5563;
+			font-style: italic;
+		}
+
+		:global(.scheme-print-lyrics) {
+			margin: 10px 0 0;
+			padding: 0;
+			background: transparent;
+			color: #111827;
+			font-family:
+				'SFMono-Regular',
+				Consolas,
+				'Liberation Mono',
+				ui-monospace,
+				monospace;
+			font-size: 10pt;
+			line-height: 1.48;
+			tab-size: 4;
+			white-space: pre-wrap !important;
+			overflow-wrap: normal;
+			word-break: normal;
+		}
+
+		:global(.scheme-print-lyrics code) {
+			font: inherit;
+			white-space: inherit;
+		}
+	}
+</style>

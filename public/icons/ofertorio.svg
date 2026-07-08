@@ -1,0 +1,13 @@
+<svg width="260" height="260" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ofertorioTitle">
+  <title id="ofertorioTitle">Ofertorio</title>
+  <rect width="260" height="260" rx="48" fill="#FEF3C7"/>
+  <circle cx="130" cy="132" r="56" fill="#F59E0B" opacity="0.16"/>
+  <path d="M74 188h112" stroke="#B45309" stroke-width="18" stroke-linecap="round"/>
+  <path d="M84 166c22 18 70 18 92 0" fill="none" stroke="#D97706" stroke-width="16" stroke-linecap="round"/>
+  <circle cx="104" cy="118" r="30" fill="#FDE68A" stroke="#D97706" stroke-width="10"/>
+  <path d="M104 98v40" stroke="#F59E0B" stroke-width="8" stroke-linecap="round"/>
+  <path d="M88 118h32" stroke="#F59E0B" stroke-width="8" stroke-linecap="round"/>
+  <path d="M144 92h48v18c0 20-11 34-24 34s-24-14-24-34z" fill="#FDBA74" stroke="#D97706" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M168 144v28" stroke="#B45309" stroke-width="12" stroke-linecap="round"/>
+  <path d="M150 172h36" stroke="#B45309" stroke-width="12" stroke-linecap="round"/>
+</svg>

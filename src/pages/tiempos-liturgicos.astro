@@ -1,0 +1,465 @@
+---
+import path from 'node:path';
+import Layout from '../layouts/Layout.astro';
+
+const rawSongs = import.meta.glob('../content/cantos/*.md', { eager: true });
+
+const songs = Object.entries(rawSongs)
+	.map(([file, module]) => {
+		const data = (module as any).frontmatter ?? {};
+		const slug = path.basename(file, '.md');
+
+		return {
+			title: data.title ?? slug,
+			categoria: data.categoria ?? 'Canto',
+			tipo: data.tipo ?? 'Canto',
+			tiempo: data.tiempo ?? 'Sin tiempo',
+			author: data.author ?? 'Autor desconocido',
+			liturgico: Boolean(data.liturgico),
+			description: data.description ?? 'Canto disponible para consulta dentro del cantoral.',
+			slug,
+			href: `/cantos/${slug}`,
+		};
+	})
+	.sort((a, b) => a.title.localeCompare(b.title));
+
+const normalize = (value: string) =>
+	value
+		.normalize('NFD')
+		.replace(/[\u0300-\u036f]/g, '')
+		.toLowerCase()
+		.trim();
+
+const liturgicalSeasons = [
+	{
+		title: 'Adviento',
+		id: 'adviento',
+		icon: 'A',
+		subtitle: 'Tiempo de espera y preparación',
+		description:
+			'El Adviento abre el año litúrgico y prepara a la comunidad para la venida del Señor. Sus cantos suelen expresar vigilancia, esperanza y deseo de conversión.',
+		aliases: ['Adviento'],
+	},
+	{
+		title: 'Navidad',
+		id: 'navidad',
+		icon: 'N',
+		subtitle: 'Celebración del nacimiento de Cristo',
+		description:
+			'La Navidad contempla el misterio de la Encarnación. En este tiempo, el canto anuncia la alegría del Dios que se hace cercano y habita entre nosotros.',
+		aliases: ['Navidad'],
+	},
+	{
+		title: 'Cuaresma',
+		id: 'cuaresma',
+		icon: 'C',
+		subtitle: 'Camino de conversión hacia la Pascua',
+		description:
+			'La Cuaresma invita al silencio interior, la penitencia y la vuelta al Evangelio. Sus cantos acompañan la oración, la misericordia y la preparación bautismal.',
+		aliases: ['Cuaresma'],
+	},
+	{
+		title: 'Triduo Pascual',
+		id: 'triduo-pascual',
+		icon: 'T',
+		subtitle: 'Pasión, muerte y resurrección del Señor',
+		description:
+			'El Triduo Pascual es el centro del año litúrgico. Cada celebración pide cantos sobrios, profundos y muy unidos a los signos propios de estos días santos.',
+		aliases: ['Triduo Pascual', 'Semana Santa', 'Jueves Santo', 'Viernes Santo', 'Vigilia Pascual'],
+	},
+	{
+		title: 'Pascua',
+		id: 'pascua',
+		icon: 'P',
+		subtitle: 'Alegría por Cristo resucitado',
+		description:
+			'La Pascua celebra la victoria de Cristo sobre la muerte. Los cantos de este tiempo proclaman vida nueva, aleluya, luz y misión.',
+		aliases: ['Pascua'],
+	},
+	{
+		title: 'Tiempo Ordinario',
+		id: 'tiempo-ordinario',
+		icon: 'O',
+		subtitle: 'La vida cotidiana iluminada por el Evangelio',
+		description:
+			'El Tiempo Ordinario recorre la vida pública de Jesús y la maduración de la fe. Permite cantos de alabanza, comunión, seguimiento y envío.',
+		aliases: ['Tiempo ordinario', 'Ordinario'],
+	},
+	{
+		title: 'Santos y solemnidades',
+		id: 'santos',
+		icon: 'S',
+		subtitle: 'Memorias, fiestas y celebraciones especiales',
+		description:
+			'Las fiestas de santos y solemnidades ayudan a cantar la obra de Dios en la Iglesia. Sus cantos suelen destacar la intercesión, la gratitud y la vocación cristiana.',
+		aliases: ['Santos', 'Solemnidades', 'Fiestas'],
+	},
+];
+
+const songsForSeason = (aliases: string[]) => {
+	const normalizedAliases = aliases.map(alias => normalize(alias));
+
+	return songs.filter(song =>
+		normalizedAliases.includes(normalize(song.tiempo))
+	);
+};
+---
+
+<Layout>
+	<main class="seasons-page">
+		<section class="seasons-hero">
+			<div>
+				<p class="seasons-label">Calendario litúrgico</p>
+				<h1>Tiempos litúrgicos</h1>
+				<p>
+					Una guía para ubicar cada tiempo del año de la Iglesia y preparar cantos
+					que acompañen mejor la celebración.
+				</p>
+			</div>
+		</section>
+
+		<nav class="season-index" aria-label="Tiempos litúrgicos">
+			{liturgicalSeasons.map(season => {
+				const count = songsForSeason(season.aliases).length;
+
+				return (
+					<a href={`#${season.id}`} class="season-index-link">
+						<span>{season.icon}</span>
+						<strong>{season.title}</strong>
+						<small>{count} {count === 1 ? 'canto' : 'cantos'}</small>
+					</a>
+				);
+			})}
+		</nav>
+
+		<div class="season-sections">
+			{liturgicalSeasons.map(season => {
+				const seasonSongs = songsForSeason(season.aliases);
+				const filterTarget = `/cantos?tiempo=${encodeURIComponent(season.aliases[0])}`;
+
+				return (
+					<section id={season.id} class="season-detail">
+						<div class="season-copy">
+							<span class="season-mark" aria-hidden="true">{season.icon}</span>
+							<p class="seasons-label">{season.subtitle}</p>
+							<h2>{season.title}</h2>
+							<p>{season.description}</p>
+							<a class="season-filter-link" href={filterTarget}>
+								Ver en el cantoral
+							</a>
+						</div>
+
+						<div class="season-song-list">
+							<div class="season-list-head">
+								<h3>Cantos para {season.title}</h3>
+								<span>{seasonSongs.length}</span>
+							</div>
+
+							{seasonSongs.length ? (
+								<ul>
+									{seasonSongs.map(song => (
+										<li>
+											<a href={song.href}>
+												<span>
+													<strong>{song.title}</strong>
+													<small>{song.description}</small>
+												</span>
+
+												<span class="song-meta">
+													<span>{song.categoria}</span>
+													<span>{song.author}</span>
+												</span>
+											</a>
+										</li>
+									))}
+								</ul>
+							) : (
+								<p class="season-empty">
+									Aún no hay cantos registrados para este tiempo.
+								</p>
+							)}
+						</div>
+					</section>
+				);
+			})}
+		</div>
+	</main>
+</Layout>
+
+<style>
+	.seasons-page {
+		width: min(1160px, calc(100% - 56px));
+		margin: 0 auto;
+		padding: 42px 0 28px;
+		font-family: Inter, system-ui, sans-serif;
+	}
+
+	.seasons-hero {
+		margin-bottom: 24px;
+		padding: 36px;
+		border-radius: 28px;
+		background:
+			linear-gradient(135deg, rgba(255, 248, 239, 0.98) 0%, rgba(248, 250, 252, 0.96) 100%),
+			white;
+		border: 1px solid #eee7dc;
+		box-shadow: 0 24px 70px rgba(15, 23, 42, 0.07);
+	}
+
+	.seasons-label {
+		margin: 0 0 8px;
+		color: #b27722;
+		font-size: 0.78rem;
+		font-weight: 900;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+	}
+
+	.seasons-hero h1,
+	.season-copy h2 {
+		margin: 0;
+		color: #171717;
+		font-family: Georgia, 'Times New Roman', serif;
+		font-weight: 500;
+		line-height: 1;
+	}
+
+	.seasons-hero h1 {
+		font-size: clamp(2.6rem, 5vw, 4.6rem);
+	}
+
+	.seasons-hero p:not(.seasons-label) {
+		max-width: 720px;
+		margin: 16px 0 0;
+		color: #64748b;
+		font-size: 1.04rem;
+		line-height: 1.75;
+	}
+
+	.season-index {
+		display: grid;
+		grid-template-columns: repeat(7, minmax(0, 1fr));
+		gap: 10px;
+		margin-bottom: 26px;
+	}
+
+	.season-index-link {
+		display: grid;
+		gap: 7px;
+		align-content: start;
+		min-height: 126px;
+		padding: 14px;
+		border-radius: 18px;
+		background: white;
+		border: 1px solid #eee7dc;
+		color: #111827;
+		text-decoration: none;
+		box-shadow: 0 14px 34px rgba(15, 23, 42, 0.05);
+	}
+
+	.season-index-link span,
+	.season-mark {
+		display: inline-flex;
+		width: 38px;
+		height: 38px;
+		align-items: center;
+		justify-content: center;
+		border-radius: 13px;
+		background: #fff7ed;
+		border: 1px solid #f1e4d1;
+		color: #9a5f18;
+		font-weight: 900;
+	}
+
+	.season-index-link strong {
+		font-size: 0.95rem;
+		line-height: 1.25;
+	}
+
+	.season-index-link small {
+		color: #64748b;
+		font-weight: 750;
+	}
+
+	.season-sections {
+		display: grid;
+		gap: 22px;
+	}
+
+	.season-detail {
+		display: grid;
+		grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.35fr);
+		gap: 24px;
+		align-items: start;
+		padding: 24px;
+		border-radius: 28px;
+		background: rgba(255, 255, 255, 0.9);
+		border: 1px solid #eee7dc;
+		box-shadow: 0 18px 54px rgba(15, 23, 42, 0.06);
+		scroll-margin-top: 98px;
+	}
+
+	.season-copy {
+		display: grid;
+		gap: 12px;
+	}
+
+	.season-copy h2 {
+		font-size: clamp(2rem, 3vw, 3rem);
+	}
+
+	.season-copy p:not(.seasons-label) {
+		margin: 0;
+		color: #64748b;
+		line-height: 1.75;
+	}
+
+	.season-filter-link {
+		display: inline-flex;
+		width: fit-content;
+		margin-top: 4px;
+		padding: 0.72rem 1rem;
+		border-radius: 999px;
+		background: #24456f;
+		color: white;
+		font-weight: 900;
+		text-decoration: none;
+		box-shadow: 0 12px 26px rgba(36, 69, 111, 0.18);
+	}
+
+	.season-song-list {
+		padding: 18px;
+		border-radius: 22px;
+		background: #fffaf4;
+		border: 1px solid #f1e4d1;
+	}
+
+	.season-list-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 14px;
+		margin-bottom: 12px;
+	}
+
+	.season-list-head h3 {
+		margin: 0;
+		color: #111827;
+		font-size: 1rem;
+	}
+
+	.season-list-head span {
+		display: inline-flex;
+		min-width: 34px;
+		height: 34px;
+		align-items: center;
+		justify-content: center;
+		border-radius: 999px;
+		background: white;
+		border: 1px solid #f1e4d1;
+		color: #8a520f;
+		font-weight: 900;
+	}
+
+	.season-song-list ul {
+		display: grid;
+		gap: 10px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.season-song-list li a {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: 14px;
+		align-items: center;
+		padding: 14px;
+		border-radius: 16px;
+		background: white;
+		border: 1px solid #f1e8dd;
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.season-song-list strong,
+	.season-song-list small {
+		display: block;
+	}
+
+	.season-song-list strong {
+		color: #111827;
+		font-size: 1rem;
+	}
+
+	.season-song-list small {
+		margin-top: 4px;
+		color: #64748b;
+		line-height: 1.5;
+	}
+
+	.song-meta {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		gap: 6px;
+		color: #475569;
+		font-size: 0.8rem;
+		font-weight: 750;
+	}
+
+	.song-meta span {
+		padding: 0.32em 0.68em;
+		border-radius: 999px;
+		background: #f8fafc;
+		border: 1px solid #e5e7eb;
+	}
+
+	.season-empty {
+		margin: 0;
+		padding: 18px;
+		border-radius: 16px;
+		background: white;
+		border: 1px dashed #d8c8af;
+		color: #64748b;
+		line-height: 1.6;
+	}
+
+	@media (max-width: 1100px) {
+		.season-index {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+
+		.season-detail {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 720px) {
+		.seasons-page {
+			width: min(100% - 32px, 1160px);
+			padding-top: 28px;
+		}
+
+		.seasons-hero,
+		.season-detail {
+			padding: 22px;
+			border-radius: 22px;
+		}
+
+		.season-index {
+			grid-template-columns: 1fr;
+		}
+
+		.season-index-link {
+			min-height: auto;
+		}
+
+		.season-song-list li a {
+			grid-template-columns: 1fr;
+		}
+
+		.song-meta {
+			justify-content: flex-start;
+		}
+	}
+</style>

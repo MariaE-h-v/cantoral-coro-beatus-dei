@@ -1,0 +1,24 @@
+---
+const { bannerImageUrl } = Astro.props;
+---
+<section class="quote-banner">
+	<div
+		class="quote-image"
+		style={`background-image: linear-gradient(rgba(90, 55, 18, 0.1), rgba(90, 55, 18, 0.18)), url(${bannerImageUrl});`} 
+	/>
+
+	<div class="quote-content">
+		<p class="section-label">Que la música sea tu oración</p>
+		<h2>Haz un donativo y ayuda a sostener los recursos del ministerio.</h2>
+	</div>
+
+	<div class="donation-quote-action">
+		<a href="/donativos">Donar ahora</a>
+		<span>Pago seguro con Mercado Pago</span>
+	</div>
+
+	<blockquote>
+		“Alaben al Señor con cánticos nuevos.”
+		<cite>Salmo 98, 1</cite>
+	</blockquote>
+</section>

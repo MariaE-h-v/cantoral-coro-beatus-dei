@@ -1,0 +1,104 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/resources.css';
+import { sheetTabs } from '../../data/resources';
+---
+
+<Layout>
+	<div class="resource-page">
+		<section class="resource-hero compact">
+			<div class="resource-hero-content">
+				<a class="resource-back-link" href="/recursos">← Recursos</a>
+				<p class="resource-label">Partituras y acordes</p>
+				<h1>PDFs para piano y guitarra</h1>
+				<p>
+					Material separado por instrumento para que cada músico encuentre rápido
+					la versión que necesita antes del ensayo.
+				</p>
+			</div>
+		</section>
+
+		<section class="resource-section">
+			<div class="resource-tabs" role="tablist" aria-label="Instrumentos">
+				{sheetTabs.map((tab, index) => (
+					<button
+						type="button"
+						class={index === 0 ? 'resource-tab is-active' : 'resource-tab'}
+						role="tab"
+						aria-selected={index === 0 ? 'true' : 'false'}
+						aria-controls={`${tab.id}-panel`}
+						id={`${tab.id}-tab`}
+						data-tab-target={tab.id}
+					>
+						{tab.label}
+					</button>
+				))}
+			</div>
+
+			{sheetTabs.map((tab, index) => (
+				<section
+					id={`${tab.id}-panel`}
+					class="resource-tab-panel"
+					role="tabpanel"
+					aria-labelledby={`${tab.id}-tab`}
+					data-tab-panel={tab.id}
+					hidden={index !== 0}
+				>
+					<div class="resource-section-head">
+						<div>
+							<p class="resource-label">{tab.label}</p>
+							<h2>{tab.description}</h2>
+						</div>
+					</div>
+
+					<div class="pdf-list">
+						{tab.items.map(item => (
+							<article class="pdf-row">
+								<div>
+									<span class="resource-card-meta">{item.season}</span>
+									<h3>{item.title}</h3>
+									<p>Nivel sugerido: {item.level}</p>
+								</div>
+									<a class="resource-button" href={item.href} target="_blank" rel="noreferrer">
+										Abrir PDF
+									</a>
+							</article>
+						))}
+					</div>
+				</section>
+			))}
+		</section>
+	</div>
+</Layout>
+
+<script>
+	const tabButtons = Array.from(document.querySelectorAll('[data-tab-target]'));
+	const tabPanels = Array.from(document.querySelectorAll('[data-tab-panel]'));
+
+	function activateTab(tabId) {
+		tabButtons.forEach(button => {
+			const isActive = button.dataset.tabTarget === tabId;
+			button.classList.toggle('is-active', isActive);
+			button.setAttribute('aria-selected', String(isActive));
+		});
+
+		tabPanels.forEach(panel => {
+			panel.hidden = panel.dataset.tabPanel !== tabId;
+		});
+	}
+
+	tabButtons.forEach(button => {
+		button.addEventListener('click', () => {
+			const tabId = button.dataset.tabTarget;
+			if (!tabId) return;
+
+			activateTab(tabId);
+			window.history.replaceState({}, '', `#${tabId}`);
+		});
+	});
+
+	const initialTab = window.location.hash.replace('#', '');
+	if (initialTab) {
+		activateTab(initialTab);
+	}
+</script>

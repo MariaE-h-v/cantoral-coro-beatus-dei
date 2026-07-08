@@ -1,0 +1,94 @@
+---
+import { getLiturgicalBackground } from '../utils/liturgicalSeason';
+
+const { songs, tiempoOptions, categoryOptions, authorOptions } = Astro.props;
+
+const filterSongs = songs.map(song => ({
+	slug: song.slug,
+	title: song.title,
+	categoria: song.categoria ?? 'Canto',
+	tipo: song.tipo ?? 'Canto',
+	tiempo: song.tiempo ?? 'Sin tiempo',
+	author: song.author ?? 'Autor desconocido',
+	description: song.description ?? '',
+	href: song.href ?? `/cantos/${song.slug}`,
+	lyrics: song.lyrics ?? '',
+	liturgico: Boolean(song.liturgico),
+	seasonBackground: song.seasonBackground ?? getLiturgicalBackground(song.tiempo, song.tags),
+	searchText: [
+		song.title,
+		song.description,
+		song.tipo,
+		song.categoria,
+		song.tiempo,
+		song.author,
+		...(song.tags ?? []),
+	].join(' '),
+}));
+---
+<section id="cantoral" class="filters-section" data-songs={JSON.stringify(filterSongs)}>
+	<div class="section-head">
+		<div>
+			<p class="section-label">Explora el cantoral</p>
+			<h2>Todos los cantos disponibles</h2>
+		</div>
+
+		<p class="results-summary">
+			<span id="visibleCount">{songs.length}</span> cantos encontrados
+		</p>
+	</div>
+
+	<div id="activeCategoryPanel" class="active-filter-panel" hidden>
+		<div>
+			<span>Categoría seleccionada</span>
+			<strong id="activeCategoryName"></strong>
+		</div>
+
+		<button id="clearCategoryFilter" type="button">Ver todos</button>
+	</div>
+
+	<div class="controls">
+		<div class="control-group">
+			<label for="tiempoFilter">Tiempo litúrgico</label>
+			<select id="tiempoFilter">
+				{tiempoOptions.map(option => (
+					<option value={option}>{option}</option>
+				))}
+			</select>
+		</div>
+
+		<div class="control-group">
+			<label for="categoriaFilter">Momento de la misa</label>
+			<select id="categoriaFilter">
+				{categoryOptions.map(option => (
+					<option value={option}>{option}</option>
+				))}
+			</select>
+		</div>
+
+		<div class="control-group">
+			<label for="authorFilter">Autor</label>
+			<select id="authorFilter">
+				{authorOptions.map(option => (
+					<option value={option}>{option}</option>
+				))}
+			</select>
+		</div>
+	</div>
+
+	<div id="songGrid" class="song-grid"></div>
+
+	<div id="songGridCta" class="song-grid-cta" hidden>
+		<span id="songGridLimitText"></span>
+		<a id="viewAllSongsLink" class="view-all-songs" href="/cantos">
+			Ver todos los cantos
+		</a>
+	</div>
+
+	<section id="emptyResults" class="empty-results" aria-live="polite" hidden>
+		<span aria-hidden="true">♪</span>
+		<h3>No se encontraron resultados</h3>
+		<p>Prueba con otro tiempo litúrgico, momento de la misa o autor.</p>
+		<button id="clearEmptyFilters" type="button">Limpiar filtros</button>
+	</section>
+</section>

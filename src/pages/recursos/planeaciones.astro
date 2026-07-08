@@ -1,0 +1,38 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/resources.css';
+import { planningPdfs } from '../../data/resources';
+---
+
+<Layout>
+	<div class="resource-page">
+		<section class="resource-hero compact">
+			<div class="resource-hero-content">
+				<a class="resource-back-link" href="/recursos">← Recursos</a>
+				<p class="resource-label">Planeaciones litúrgicas</p>
+				<h1>PDFs para organizar el repertorio</h1>
+				<p>
+					Formatos listos para planear los cantos de la misa según el tiempo
+					litúrgico, el tipo de celebración y el equipo disponible.
+				</p>
+			</div>
+		</section>
+
+		<section class="resource-section">
+			<div class="planning-list">
+				{planningPdfs.map(plan => (
+					<article class="planning-row">
+						<div class="planning-icon">📄</div>
+						<div>
+							<h2>{plan.title}</h2>
+							<p>{plan.description}</p>
+						</div>
+						<a class="resource-button" href={plan.href} target="_blank" rel="noreferrer">
+							Abrir PDF
+						</a>
+					</article>
+				))}
+			</div>
+		</section>
+	</div>
+</Layout>
