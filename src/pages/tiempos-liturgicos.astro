@@ -35,6 +35,8 @@ const liturgicalSeasons = [
 		title: 'Adviento',
 		id: 'adviento',
 		icon: 'A',
+		background: '/assets/tiempos-card-adviento.png',
+		planningHref: '/recursos/pdfs/planeaciones/adviento.pdf',
 		subtitle: 'Tiempo de espera y preparación',
 		description:
 			'El Adviento abre el año litúrgico y prepara a la comunidad para la venida del Señor. Sus cantos suelen expresar vigilancia, esperanza y deseo de conversión.',
@@ -44,6 +46,8 @@ const liturgicalSeasons = [
 		title: 'Navidad',
 		id: 'navidad',
 		icon: 'N',
+		background: '/assets/tiempos-card-navidad.png',
+		planningHref: '/recursos/planeaciones',
 		subtitle: 'Celebración del nacimiento de Cristo',
 		description:
 			'La Navidad contempla el misterio de la Encarnación. En este tiempo, el canto anuncia la alegría del Dios que se hace cercano y habita entre nosotros.',
@@ -53,6 +57,8 @@ const liturgicalSeasons = [
 		title: 'Cuaresma',
 		id: 'cuaresma',
 		icon: 'C',
+		background: '/assets/tiempos-card-cuaresma.png',
+		planningHref: '/recursos/pdfs/planeaciones/cuaresma.pdf',
 		subtitle: 'Camino de conversión hacia la Pascua',
 		description:
 			'La Cuaresma invita al silencio interior, la penitencia y la vuelta al Evangelio. Sus cantos acompañan la oración, la misericordia y la preparación bautismal.',
@@ -62,6 +68,8 @@ const liturgicalSeasons = [
 		title: 'Triduo Pascual',
 		id: 'triduo-pascual',
 		icon: 'T',
+		background: '/assets/tiempos-card-triduo-pascual.png',
+		planningHref: '/recursos/pdfs/planeaciones/semana-santa.pdf',
 		subtitle: 'Pasión, muerte y resurrección del Señor',
 		description:
 			'El Triduo Pascual es el centro del año litúrgico. Cada celebración pide cantos sobrios, profundos y muy unidos a los signos propios de estos días santos.',
@@ -71,6 +79,8 @@ const liturgicalSeasons = [
 		title: 'Pascua',
 		id: 'pascua',
 		icon: 'P',
+		background: '/assets/tiempos-card-pascua.png',
+		planningHref: '/recursos/planeaciones',
 		subtitle: 'Alegría por Cristo resucitado',
 		description:
 			'La Pascua celebra la victoria de Cristo sobre la muerte. Los cantos de este tiempo proclaman vida nueva, aleluya, luz y misión.',
@@ -80,6 +90,8 @@ const liturgicalSeasons = [
 		title: 'Tiempo Ordinario',
 		id: 'tiempo-ordinario',
 		icon: 'O',
+		background: '/assets/tiempos-card-tiempo-ordinario.png',
+		planningHref: '/recursos/pdfs/planeaciones/tiempo-ordinario.pdf',
 		subtitle: 'La vida cotidiana iluminada por el Evangelio',
 		description:
 			'El Tiempo Ordinario recorre la vida pública de Jesús y la maduración de la fe. Permite cantos de alabanza, comunión, seguimiento y envío.',
@@ -89,6 +101,8 @@ const liturgicalSeasons = [
 		title: 'Santos y solemnidades',
 		id: 'santos',
 		icon: 'S',
+		background: '/assets/tiempos-card-santos.png',
+		planningHref: '/recursos/pdfs/planeaciones/tiempo-ordinario.pdf',
 		subtitle: 'Memorias, fiestas y celebraciones especiales',
 		description:
 			'Las fiestas de santos y solemnidades ayudan a cantar la obra de Dios en la Iglesia. Sus cantos suelen destacar la intercesión, la gratitud y la vocación cristiana.',
@@ -123,7 +137,11 @@ const songsForSeason = (aliases: string[]) => {
 				const count = songsForSeason(season.aliases).length;
 
 				return (
-					<a href={`#${season.id}`} class="season-index-link">
+					<a
+						href={`#${season.id}`}
+						class="season-index-link"
+						style={`--season-card-bg: url('${season.background}');`}
+					>
 						<span>{season.icon}</span>
 						<strong>{season.title}</strong>
 						<small>{count} {count === 1 ? 'canto' : 'cantos'}</small>
@@ -136,17 +154,32 @@ const songsForSeason = (aliases: string[]) => {
 			{liturgicalSeasons.map(season => {
 				const seasonSongs = songsForSeason(season.aliases);
 				const filterTarget = `/cantos?tiempo=${encodeURIComponent(season.aliases[0])}`;
+				const planningIsPdf = season.planningHref.endsWith('.pdf');
 
 				return (
-					<section id={season.id} class="season-detail">
+					<section
+						id={season.id}
+						class="season-detail"
+						style={`--season-card-bg: url('${season.background}');`}
+					>
 						<div class="season-copy">
 							<span class="season-mark" aria-hidden="true">{season.icon}</span>
 							<p class="seasons-label">{season.subtitle}</p>
 							<h2>{season.title}</h2>
 							<p>{season.description}</p>
-							<a class="season-filter-link" href={filterTarget}>
-								Ver en el cantoral
-							</a>
+							<div class="season-actions">
+								<a class="season-filter-link" href={filterTarget}>
+									Ver en el cantoral
+								</a>
+								<a
+									class="season-planning-link"
+									href={season.planningHref}
+									target={planningIsPdf ? '_blank' : undefined}
+									rel={planningIsPdf ? 'noreferrer' : undefined}
+								>
+									Ver planeación
+								</a>
+							</div>
 						</div>
 
 						<div class="season-song-list">
@@ -156,7 +189,7 @@ const songsForSeason = (aliases: string[]) => {
 							</div>
 
 							{seasonSongs.length ? (
-								<ul>
+								<ul data-season-song-scroll>
 									{seasonSongs.map(song => (
 										<li>
 											<a href={song.href}>
@@ -186,6 +219,38 @@ const songsForSeason = (aliases: string[]) => {
 	</main>
 </Layout>
 
+<script>
+	const limitSeasonSongLists = () => {
+		document.querySelectorAll<HTMLElement>('[data-season-song-scroll]').forEach(list => {
+			const items = Array.from(list.children).filter(item => item instanceof HTMLElement);
+
+			if (items.length <= 3) {
+				list.classList.remove('is-scrollable');
+				list.removeAttribute('style');
+				return;
+			}
+
+			const styles = window.getComputedStyle(list);
+			const gap = Number.parseFloat(styles.rowGap || styles.gap || '0') || 0;
+			const visibleHeight = items
+				.slice(0, 3)
+				.reduce((total, item) => total + item.getBoundingClientRect().height, 0);
+
+			list.style.maxHeight = `${Math.ceil(visibleHeight + gap * 2)}px`;
+			list.classList.add('is-scrollable');
+		});
+	};
+
+	const refreshSeasonSongLists = () => {
+		window.requestAnimationFrame(limitSeasonSongLists);
+	};
+
+	refreshSeasonSongLists();
+	window.addEventListener('load', refreshSeasonSongLists);
+	window.addEventListener('resize', refreshSeasonSongLists);
+	document.fonts?.ready.then(refreshSeasonSongLists);
+</script>
+
 <style>
 	.seasons-page {
 		width: min(1160px, calc(100% - 56px));
@@ -195,14 +260,25 @@ const songsForSeason = (aliases: string[]) => {
 	}
 
 	.seasons-hero {
+		position: relative;
+		display: flex;
+		min-height: 340px;
+		align-items: center;
+		overflow: hidden;
 		margin-bottom: 24px;
 		padding: 36px;
 		border-radius: 28px;
 		background:
-			linear-gradient(135deg, rgba(255, 248, 239, 0.98) 0%, rgba(248, 250, 252, 0.96) 100%),
+			linear-gradient(90deg, rgba(255, 248, 239, 0.98) 0%, rgba(255, 248, 239, 0.94) 44%, rgba(255, 248, 239, 0.62) 72%, rgba(255, 248, 239, 0.24) 100%),
+			url('/assets/tiempos-liturgicos-hero.png') center / cover no-repeat,
 			white;
 		border: 1px solid #eee7dc;
 		box-shadow: 0 24px 70px rgba(15, 23, 42, 0.07);
+	}
+
+	.seasons-hero > div {
+		position: relative;
+		z-index: 1;
 	}
 
 	.seasons-label {
@@ -243,17 +319,33 @@ const songsForSeason = (aliases: string[]) => {
 	}
 
 	.season-index-link {
+		position: relative;
 		display: grid;
 		gap: 7px;
 		align-content: start;
+		overflow: hidden;
+		isolation: isolate;
 		min-height: 126px;
 		padding: 14px;
 		border-radius: 18px;
-		background: white;
+		background:
+			linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 248, 239, 0.82) 58%, rgba(255, 255, 255, 0.68) 100%),
+			var(--season-card-bg) center / cover no-repeat,
+			white;
 		border: 1px solid #eee7dc;
 		color: #111827;
 		text-decoration: none;
 		box-shadow: 0 14px 34px rgba(15, 23, 42, 0.05);
+		transition:
+			transform 180ms ease,
+			border-color 180ms ease,
+			box-shadow 180ms ease;
+	}
+
+	.season-index-link:hover {
+		transform: translateY(-2px);
+		border-color: rgba(178, 119, 34, 0.32);
+		box-shadow: 0 18px 40px rgba(15, 23, 42, 0.09);
 	}
 
 	.season-index-link span,
@@ -264,10 +356,11 @@ const songsForSeason = (aliases: string[]) => {
 		align-items: center;
 		justify-content: center;
 		border-radius: 13px;
-		background: #fff7ed;
+		background: rgba(255, 247, 237, 0.92);
 		border: 1px solid #f1e4d1;
 		color: #9a5f18;
 		font-weight: 900;
+		backdrop-filter: blur(4px);
 	}
 
 	.season-index-link strong {
@@ -290,9 +383,13 @@ const songsForSeason = (aliases: string[]) => {
 		grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.35fr);
 		gap: 24px;
 		align-items: start;
+		overflow: hidden;
 		padding: 24px;
 		border-radius: 28px;
-		background: rgba(255, 255, 255, 0.9);
+		background:
+			linear-gradient(90deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 250, 244, 0.91) 47%, rgba(255, 255, 255, 0.76) 100%),
+			var(--season-card-bg) center / cover no-repeat,
+			white;
 		border: 1px solid #eee7dc;
 		box-shadow: 0 18px 54px rgba(15, 23, 42, 0.06);
 		scroll-margin-top: 98px;
@@ -313,24 +410,45 @@ const songsForSeason = (aliases: string[]) => {
 		line-height: 1.75;
 	}
 
-	.season-filter-link {
+	.season-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin-top: 4px;
+	}
+
+	.season-filter-link,
+	.season-planning-link {
 		display: inline-flex;
 		width: fit-content;
-		margin-top: 4px;
+		align-items: center;
+		justify-content: center;
 		padding: 0.72rem 1rem;
 		border-radius: 999px;
-		background: #24456f;
-		color: white;
 		font-weight: 900;
 		text-decoration: none;
+		line-height: 1.1;
+	}
+
+	.season-filter-link {
+		background: #24456f;
+		color: white;
 		box-shadow: 0 12px 26px rgba(36, 69, 111, 0.18);
+	}
+
+	.season-planning-link {
+		background: rgba(255, 247, 237, 0.92);
+		border: 1px solid #e8d3af;
+		color: #8a520f;
+		box-shadow: 0 12px 24px rgba(138, 82, 15, 0.12);
 	}
 
 	.season-song-list {
 		padding: 18px;
 		border-radius: 22px;
-		background: #fffaf4;
+		background: rgba(255, 250, 244, 0.92);
 		border: 1px solid #f1e4d1;
+		backdrop-filter: blur(6px);
 	}
 
 	.season-list-head {
@@ -366,6 +484,29 @@ const songsForSeason = (aliases: string[]) => {
 		margin: 0;
 		padding: 0;
 		list-style: none;
+	}
+
+	.season-song-list ul.is-scrollable {
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		padding-right: 8px;
+		scrollbar-color: #d8c8af rgba(255, 255, 255, 0.64);
+		scrollbar-gutter: stable;
+		scrollbar-width: thin;
+	}
+
+	.season-song-list ul.is-scrollable::-webkit-scrollbar {
+		width: 8px;
+	}
+
+	.season-song-list ul.is-scrollable::-webkit-scrollbar-track {
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.64);
+	}
+
+	.season-song-list ul.is-scrollable::-webkit-scrollbar-thumb {
+		border-radius: 999px;
+		background: #d8c8af;
 	}
 
 	.season-song-list li a {
@@ -446,12 +587,27 @@ const songsForSeason = (aliases: string[]) => {
 			border-radius: 22px;
 		}
 
+		.seasons-hero {
+			min-height: 330px;
+			background:
+				linear-gradient(180deg, rgba(255, 248, 239, 0.98) 0%, rgba(255, 248, 239, 0.94) 64%, rgba(255, 248, 239, 0.72) 100%),
+				url('/assets/tiempos-liturgicos-hero.png') center right / cover no-repeat,
+				white;
+		}
+
 		.season-index {
 			grid-template-columns: 1fr;
 		}
 
 		.season-index-link {
 			min-height: auto;
+		}
+
+		.season-detail {
+			background:
+				linear-gradient(180deg, rgba(255, 255, 255, 0.97) 0%, rgba(255, 250, 244, 0.9) 68%, rgba(255, 255, 255, 0.8) 100%),
+				var(--season-card-bg) center / cover no-repeat,
+				white;
 		}
 
 		.season-song-list li a {
