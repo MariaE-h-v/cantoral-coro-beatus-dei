@@ -1,4 +1,5 @@
 ---
+import Analytics from '@vercel/analytics/astro';
 import { socialLinks } from '../data/socialLinks';
 import SongSchemeCart from '../components/SongSchemeCart.astro';
 ---
@@ -102,6 +103,7 @@ import SongSchemeCart from '../components/SongSchemeCart.astro';
 			</footer>
 
 			<SongSchemeCart />
+			<Analytics />
 		</div>
 
 		<script>
