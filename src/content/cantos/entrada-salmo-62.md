@@ -10,6 +10,7 @@ tags:
   - Ordinario
   - Salmo
 description: "Señor mi Dios yo te busco mi alma tiene sed de ti..."
+youtubeUrl: "https://youtu.be/kaE7i7tilkg?si=nMacqrSOwMpe6o3V"
 ---
 CAPO 2
 
