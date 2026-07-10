@@ -9,6 +9,7 @@ tags:
   - Gloria
   - Misa alrededor de tu mesa
 description: "..."
+youtubeUrl: "https://youtu.be/tWO97Ni3LkU?si=W1sEgdo-Nb0QYrfV"
 ---
 C.            Dm.     Em
 Gloria a Dios en el cielo,
