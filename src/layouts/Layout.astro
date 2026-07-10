@@ -2,6 +2,80 @@
 import Analytics from '@vercel/analytics/astro';
 import { socialLinks } from '../data/socialLinks';
 import SongSchemeCart from '../components/SongSchemeCart.astro';
+
+interface Props {
+	title?: string;
+	description?: string;
+	image?: string;
+	canonical?: string;
+	type?: 'website' | 'article';
+	noindex?: boolean;
+	jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const siteName = 'Cantoral Coro Beatus Dei';
+const defaultDescription =
+	'Cantoral católico con cantos litúrgicos, letras, acordes, recursos y planeaciones para preparar la música de cada celebración.';
+const defaultImage = '/logo.png';
+
+const {
+	title = siteName,
+	description = defaultDescription,
+	image = defaultImage,
+	canonical,
+	type = 'website',
+	noindex = false,
+	jsonLd = [],
+} = Astro.props;
+
+const normalizeOrigin = (value: string | undefined) => {
+	if (!value) return '';
+	const withProtocol = /^https?:\/\//i.test(value) ? value : `https://${value}`;
+	return withProtocol.replace(/\/+$/, '');
+};
+
+const siteOrigin =
+	normalizeOrigin(Astro.site?.toString()) ||
+	normalizeOrigin(import.meta.env.PUBLIC_SITE_URL) ||
+	normalizeOrigin(import.meta.env.VERCEL_PROJECT_PRODUCTION_URL) ||
+	normalizeOrigin(import.meta.env.VERCEL_URL);
+
+const toAbsoluteUrl = (value: string | undefined) => {
+	if (!value || !siteOrigin) return '';
+	return new URL(value, `${siteOrigin}/`).toString();
+};
+
+const cleanDescription =
+	description.length > 165 ? `${description.slice(0, 162).trim()}...` : description;
+const fullTitle = title === siteName ? siteName : `${title} | ${siteName}`;
+const canonicalUrl = toAbsoluteUrl(canonical ?? Astro.url.pathname);
+const imageUrl = toAbsoluteUrl(image);
+const robotsContent = noindex ? 'noindex, nofollow' : 'index, follow';
+const socialUrls = socialLinks.map(link => link.href);
+const pageJsonLd = (Array.isArray(jsonLd) ? jsonLd : [jsonLd]).filter(Boolean);
+const baseJsonLd = siteOrigin
+	? [
+			{
+				'@context': 'https://schema.org',
+				'@type': 'Organization',
+				name: siteName,
+				url: siteOrigin,
+				logo: toAbsoluteUrl('/logo.png'),
+				sameAs: socialUrls,
+			},
+			{
+				'@context': 'https://schema.org',
+				'@type': 'WebSite',
+				name: siteName,
+				url: siteOrigin,
+				inLanguage: 'es-MX',
+				description: defaultDescription,
+			},
+		]
+	: [];
+const allJsonLd = [...baseJsonLd, ...pageJsonLd].map(item =>
+	item['@context'] ? item : { '@context': 'https://schema.org', ...item }
+);
 ---
 
 <!doctype html>
@@ -11,8 +85,28 @@ import SongSchemeCart from '../components/SongSchemeCart.astro';
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
+		<link rel="apple-touch-icon" href="/logo.png" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Cantoral Coro Beatus Dei</title>
+		<title>{fullTitle}</title>
+		<meta name="description" content={cleanDescription} />
+		<meta name="robots" content={robotsContent} />
+		<meta name="theme-color" content="#b27722" />
+		{canonicalUrl ? <link rel="canonical" href={canonicalUrl} /> : null}
+		<meta property="og:locale" content="es_MX" />
+		<meta property="og:site_name" content={siteName} />
+		<meta property="og:type" content={type} />
+		<meta property="og:title" content={fullTitle} />
+		<meta property="og:description" content={cleanDescription} />
+		{canonicalUrl ? <meta property="og:url" content={canonicalUrl} /> : null}
+		{imageUrl ? <meta property="og:image" content={imageUrl} /> : null}
+		{imageUrl ? <meta property="og:image:alt" content={siteName} /> : null}
+		<meta name="twitter:card" content={imageUrl ? 'summary_large_image' : 'summary'} />
+		<meta name="twitter:title" content={fullTitle} />
+		<meta name="twitter:description" content={cleanDescription} />
+		{imageUrl ? <meta name="twitter:image" content={imageUrl} /> : null}
+		{allJsonLd.map(item => (
+			<script type="application/ld+json" set:html={JSON.stringify(item)}></script>
+		))}
 	</head>
 
 	<body>

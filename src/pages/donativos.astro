@@ -4,24 +4,33 @@ import '../styles/donations.css';
 import bannerImage from '../assets/bannerHome.png';
 
 const bannerImageUrl = typeof bannerImage === 'string' ? bannerImage : bannerImage.src;
-const mercadoPagoDonationUrl = import.meta.env.PUBLIC_MERCADO_PAGO_DONATION_URL ?? '';
+const defaultMercadoPagoDonationUrl = 'https://mpago.la/2KpDFey';
+const mercadoPagoDonationUrl = import.meta.env.PUBLIC_MERCADO_PAGO_DONATION_URL ?? defaultMercadoPagoDonationUrl;
 const isMercadoPagoConfigured = /^https?:\/\//.test(mercadoPagoDonationUrl);
 
 const donationAmounts = [
 	{
-		amount: '$100',
+		amount: '$50 MXN',
 		title: 'Apoyo básico',
-		description: 'Ayuda con impresiones, carpetas y materiales sencillos de ensayo.',
+		description: 'Aporta para materiales sencillos, copias y recursos básicos de ensayo.',
 	},
 	{
-		amount: '$250',
+		amount: '$100 MXN',
+		title: 'Apoyo de materiales',
+		description: 'Ayuda con impresiones, carpetas y materiales sencillos de ensayo.',
+		paymentUrl: 'https://mpago.la/1tgpViD',
+	},
+	{
+		amount: '$250 MXN',
 		title: 'Apoyo de ensayo',
 		description: 'Sostiene recursos para preparar cantos y organizar celebraciones.',
+		paymentUrl: 'https://mpago.la/1kKLK2q'
 	},
 	{
-		amount: '$500',
+		amount: '$500 MXN',
 		title: 'Apoyo comunitario',
 		description: 'Impulsa materiales, partituras y herramientas para el ministerio.',
+		paymentUrl: 'https://mpago.la/2bjsrCm'
 	},
 ];
 
@@ -30,9 +39,23 @@ const donationUses = [
 	'Impresiones, carpetas y recursos para ensayos y celebraciones.',
 	'Mantenimiento del cantoral digital y publicación de nuevos recursos.',
 ];
+
+const configuredDonationAmounts = donationAmounts.map(option => {
+	const paymentUrl = option.paymentUrl ?? mercadoPagoDonationUrl;
+
+	return {
+		...option,
+		paymentUrl,
+		isPaymentConfigured: /^https?:\/\//.test(paymentUrl),
+	};
+});
 ---
 
-<Layout>
+<Layout
+	title="Donativos para el ministerio de música"
+	description="Apoya al Coro Beatus Dei para preparar partituras, acordes, impresiones y recursos litúrgicos para ensayos y celebraciones."
+	image={bannerImageUrl}
+>
 	<div class="donations-page">
 		<section
 			class="donations-hero"
@@ -71,15 +94,15 @@ const donationUses = [
 			</div>
 
 			<div class="donation-grid">
-				{donationAmounts.map(option => (
+				{configuredDonationAmounts.map(option => (
 					<article class="donation-card">
 						<span>{option.amount}</span>
 						<h3>{option.title}</h3>
 						<p>{option.description}</p>
 						<a
-							href={isMercadoPagoConfigured ? mercadoPagoDonationUrl : '#configurar-mercado-pago'}
-							target={isMercadoPagoConfigured ? '_blank' : undefined}
-							rel={isMercadoPagoConfigured ? 'noreferrer' : undefined}
+							href={option.isPaymentConfigured ? option.paymentUrl : '#configurar-mercado-pago'}
+							target={option.isPaymentConfigured ? '_blank' : undefined}
+							rel={option.isPaymentConfigured ? 'noreferrer' : undefined}
 						>
 							Donar
 						</a>
@@ -111,7 +134,7 @@ const donationUses = [
 						Checkout Pro en Mercado Pago y agrega la URL en la variable
 						<code>PUBLIC_MERCADO_PAGO_DONATION_URL</code>.
 					</p>
-					<pre><code>PUBLIC_MERCADO_PAGO_DONATION_URL="https://www.mercadopago.com.mx/checkout/v1/redirect?pref_id=..."</code></pre>
+					<pre><code>PUBLIC_MERCADO_PAGO_DONATION_URL="https://mpago.la/2KpDFey"</code></pre>
 				</section>
 			)
 		}

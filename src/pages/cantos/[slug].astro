@@ -99,9 +99,27 @@ const related = Object.entries(pages)
 		};
 	})
 	.slice(0, 4);
+const songJsonLd = {
+	'@type': 'MusicComposition',
+	name: songTitle,
+	description: songDescription,
+	inLanguage: 'es-MX',
+	genre: [songCategory, songType, songSeason].filter(Boolean).join(', '),
+	composer: {
+		'@type': 'Person',
+		name: songAuthor,
+	},
+	isAccessibleForFree: true,
+};
 ---
 
-<Layout>
+<Layout
+	title={`${songTitle} - letra y acordes`}
+	description={songDescription}
+	image={liturgicalSeasonBackground ?? '/logo.png'}
+	type="article"
+	jsonLd={songJsonLd}
+>
 	<main class="detail-shell">
 		<section
 			class:list={['detail-header', { 'has-season-background': Boolean(liturgicalSeasonBackground) }]}
