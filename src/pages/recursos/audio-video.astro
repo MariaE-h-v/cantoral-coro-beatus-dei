@@ -2,6 +2,28 @@
 import Layout from '../../layouts/Layout.astro';
 import '../../styles/resources.css';
 import { videoResources } from '../../data/resources';
+
+const practiceSteps = [
+	{
+		title: 'Escucha primero',
+		description: 'Identifica tempo, respiraciones, entradas, cortes y carácter general antes de cantar.',
+	},
+	{
+		title: 'Ensaya por secciones',
+		description: 'Trabaja melodía, texto y armonía en fragmentos cortos antes de unir todo el canto.',
+	},
+	{
+		title: 'Graba y corrige',
+		description: 'Usa una grabación breve para revisar afinación, dicción y balance del coro.',
+	},
+];
+
+const listeningChecklist = [
+	'¿El texto se entiende claramente?',
+	'¿La entrada del coro está unificada?',
+	'¿La velocidad permite que la asamblea participe?',
+	'¿El acompañamiento sostiene sin cubrir las voces?',
+];
 ---
 
 <Layout>
@@ -10,15 +32,52 @@ import { videoResources } from '../../data/resources';
 			<div class="resource-hero-content">
 				<a class="resource-back-link" href="/recursos">← Recursos</a>
 				<p class="resource-label">Audios y videos</p>
-				<h1>Referencias de escucha y preparación</h1>
+				<h1>Referencias para ensayar con intención</h1>
 				<p>
-					Videos embebidos de YouTube para estudiar estilos, fraseo, balance
-					vocal y acompañamientos antes de llevarlos al ensayo.
+					Usa estos materiales para escuchar, comparar versiones y preparar la
+					interpretación antes del ensayo presencial.
 				</p>
 			</div>
 		</section>
 
+		<section class="resource-section audio-video-layout">
+			<div class="audio-practice-panel">
+				<div>
+					<p class="resource-label">Método rápido</p>
+					<h2>Cómo aprovechar cada referencia</h2>
+				</div>
+
+				<div class="audio-practice-grid">
+					{practiceSteps.map((step, index) => (
+						<article class="audio-practice-card">
+							<span>{index + 1}</span>
+							<strong>{step.title}</strong>
+							<p>{step.description}</p>
+						</article>
+					))}
+				</div>
+			</div>
+
+			<aside class="audio-guide-card">
+				<p class="resource-label">Para cantores</p>
+				<h2>Guía de escucha</h2>
+				<ul>
+					{listeningChecklist.map(item => <li>{item}</li>)}
+				</ul>
+				<a class="resource-button" href="/recursos/guia-cantores">
+					Abrir guía para cantores
+				</a>
+			</aside>
+		</section>
+
 		<section class="resource-section">
+			<div class="resource-section-head">
+				<div>
+					<p class="resource-label">Biblioteca audiovisual</p>
+					<h2>Videos para estudiar y comparar</h2>
+				</div>
+			</div>
+
 			<div class="video-grid">
 				{videoResources.map(video => (
 					<article class="video-card">
@@ -32,8 +91,10 @@ import { videoResources } from '../../data/resources';
 							></iframe>
 						</div>
 						<div class="video-copy">
+							<span class="resource-card-meta">{video.label}</span>
 							<h2>{video.title}</h2>
 							<p>{video.description}</p>
+							<p class="video-focus">{video.focus}</p>
 							<a href={video.sourceUrl} target="_blank" rel="noreferrer">
 								Ver en YouTube →
 							</a>

@@ -7,7 +7,7 @@ import SongSchemeCart from '../components/SongSchemeCart.astro';
 <html lang="es">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
@@ -31,6 +31,7 @@ import SongSchemeCart from '../components/SongSchemeCart.astro';
 					<a href="/">Inicio</a>
 					<a href="/cantos">Cantos</a>
 					<a href="/tiempos-liturgicos">Tiempos Litúrgicos</a>
+					<a href="/tipos-de-misas">Tipos de Misas</a>
 					<a href="/recursos">Recursos</a>
 					<a href="/sobre-nosotros">Sobre nosotros</a>
 					<a href="#contacto">Contacto</a>
@@ -62,6 +63,7 @@ import SongSchemeCart from '../components/SongSchemeCart.astro';
 							<a href="/">Inicio</a>
 							<a href="/cantos">Cantos</a>
 							<a href="/tiempos-liturgicos">Tiempos Litúrgicos</a>
+							<a href="/tipos-de-misas">Tipos de Misas</a>
 							<a href="/recursos">Recursos</a>
 							<a href="/donativos">Donativos</a>
 						</div>
@@ -309,7 +311,7 @@ import SongSchemeCart from '../components/SongSchemeCart.astro';
 		}
 
 		.footer-links a,
-		.footer-meta a {
+		.footer-meta > a {
 			display: inline-block;
 			width: fit-content;
 			margin-top: 10px;
@@ -323,7 +325,7 @@ import SongSchemeCart from '../components/SongSchemeCart.astro';
 		}
 
 		.footer-links a:hover,
-		.footer-meta a:hover {
+		.footer-meta > a:hover {
 			color: #b27722;
 			transform: translateX(3px);
 		}
@@ -346,10 +348,13 @@ import SongSchemeCart from '../components/SongSchemeCart.astro';
 
 		.footer-social a {
 			display: inline-flex;
+			flex: 0 0 40px;
 			width: 40px;
 			height: 40px;
+			aspect-ratio: 1;
 			align-items: center;
 			justify-content: center;
+			padding: 0;
 			margin: 0;
 			border-radius: 50%;
 			background: white;
@@ -370,6 +375,11 @@ import SongSchemeCart from '../components/SongSchemeCart.astro';
 		}
 
 		.footer-social span {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 1em;
+			height: 1em;
 			line-height: 1;
 		}
 
@@ -493,17 +503,25 @@ import SongSchemeCart from '../components/SongSchemeCart.astro';
 			}
 
 			.footer-links a,
-			.footer-meta a {
+			.footer-meta > a {
 				width: auto;
 			}
 
 			.footer-links a:hover,
-			.footer-meta a:hover {
+			.footer-meta > a:hover {
 				transform: none;
 			}
 
 			.footer-social {
 				justify-content: center;
+			}
+
+			.footer-social a {
+				flex-basis: 40px;
+				width: 40px;
+				min-width: 40px;
+				max-width: 40px;
+				height: 40px;
 			}
 
 			.footer-social a:hover {

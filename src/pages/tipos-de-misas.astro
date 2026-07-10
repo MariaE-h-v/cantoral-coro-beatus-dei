@@ -1,0 +1,718 @@
+---
+import path from 'node:path';
+import Layout from '../layouts/Layout.astro';
+
+const rawSongs = import.meta.glob('../content/cantos/*.md', { eager: true });
+
+const songs = Object.entries(rawSongs)
+	.map(([file, module]) => {
+		const data = (module as any).frontmatter ?? {};
+		const slug = path.basename(file, '.md');
+
+		return {
+			title: data.title ?? slug,
+			categoria: data.categoria ?? 'Canto',
+			tipo: data.tipo ?? 'Canto',
+			tiempo: data.tiempo ?? 'Sin tiempo',
+			author: data.author ?? 'Autor desconocido',
+			tags: Array.isArray(data.tags) ? data.tags : [],
+			description: data.description ?? 'Canto disponible para consulta dentro del cantoral.',
+			slug,
+			href: `/cantos/${slug}`,
+		};
+	})
+	.sort((a, b) => a.title.localeCompare(b.title));
+
+const normalize = (value: string) =>
+	value
+		.normalize('NFD')
+		.replace(/[\u0300-\u036f]/g, '')
+		.replace(/[-_]+/g, ' ')
+		.toLowerCase()
+		.trim();
+
+const slugify = (value: string) => normalize(value).replace(/\s+/g, '-');
+
+const massTypes = [
+	{
+		group: 'Sacramentos',
+		title: 'Bautizo',
+		id: 'bautizo',
+		icon: 'B',
+		subtitle: 'Entrada a la vida cristiana',
+		background: '/assets/tiempos-card-pascua.png',
+		description:
+			'Cantos para acompañar el signo del agua, la filiación bautismal y la alegría de recibir a un nuevo miembro de la Iglesia.',
+		moments: ['Entrada', 'Aspersión', 'Aleluya', 'Comunión', 'Salida'],
+		matchTerms: ['Bautizo', 'Bautismo', 'Bautismal', 'Fuente bautismal'],
+		fallbackTerms: ['Bautismo del Señor', 'Agua', 'Pascua', 'Espíritu Santo'],
+		filterQuery: 'Bautizo',
+	},
+	{
+		group: 'Sacramentos',
+		title: 'Matrimonio',
+		id: 'matrimonio',
+		icon: 'M',
+		subtitle: 'Alianza de amor y bendición',
+		background: '/assets/tiempos-card-santos.png',
+		description:
+			'Repertorio para una celebración nupcial, con cantos sobre el amor fiel, la entrega, la alianza y la vida compartida ante Dios.',
+		moments: ['Entrada', 'Ofertorio', 'Comunión', 'Meditación', 'Salida'],
+		matchTerms: ['Matrimonio', 'Boda'],
+		fallbackTerms: ['Amor', 'Familia', 'Alianza', 'Donde hay amor'],
+		filterQuery: 'Matrimonio',
+	},
+	{
+		group: 'Sacramentos',
+		title: 'Primera Comunión',
+		id: 'primera-comunion',
+		icon: 'C',
+		subtitle: 'Primer encuentro sacramental con Jesús Eucaristía',
+		background: '/assets/tiempos-card-tiempo-ordinario.png',
+		description:
+			'Cantos centrados en la Eucaristía, la alegría del encuentro con Jesús y la gratitud de los niños que reciben la comunión por primera vez.',
+		moments: ['Entrada', 'Ofertorio', 'Comunión', 'Post comunión', 'Salida'],
+		matchTerms: ['Primera comunión'],
+		fallbackTerms: ['Eucaristía', 'Eucarístico', 'Pan de vida', 'Comunión'],
+		filterQuery: 'Primera comunión',
+	},
+	{
+		group: 'Sacramentos',
+		title: 'Confirmación',
+		id: 'confirmacion',
+		icon: 'F',
+		subtitle: 'Don del Espíritu Santo y envío',
+		background: '/assets/tiempos-card-pascua.png',
+		description:
+			'Cantos para invocar al Espíritu Santo, expresar disponibilidad y acompañar el envío misionero propio de este sacramento.',
+		moments: ['Entrada', 'Aleluya', 'Comunión', 'Invocación', 'Salida'],
+		matchTerms: ['Confirmación', 'Confirmacion'],
+		fallbackTerms: ['Espíritu Santo', 'Pentecostés', 'Vocacional', 'Misión', 'Envío'],
+		filterQuery: 'Espíritu Santo',
+	},
+	{
+		group: 'Acción de gracias',
+		title: 'XV años',
+		id: 'xv-anos',
+		icon: 'XV',
+		subtitle: 'Gratitud por la vida y la familia',
+		background: '/assets/tiempos-card-adviento.png',
+		description:
+			'Cantos de gratitud, confianza, alegría y consagración para una misa de acción de gracias por los quince años.',
+		moments: ['Entrada', 'Ofertorio', 'Comunión', 'Meditación mariana', 'Salida'],
+		matchTerms: ['XV años', '15 años', 'Quince años', 'Quinceañera', 'Quinceanera'],
+		fallbackTerms: ['María', 'Alabanza', 'Alegría', 'Familia', 'Gracias'],
+		filterQuery: 'María',
+	},
+	{
+		group: 'Acción de gracias',
+		title: 'Graduación',
+		id: 'graduacion',
+		icon: 'G',
+		subtitle: 'Cierre de etapa y misión nueva',
+		background: '/assets/tiempos-card-tiempo-ordinario.png',
+		description:
+			'Repertorio para agradecer el camino recorrido, pedir sabiduría y cantar el envío hacia una nueva etapa de servicio y vocación.',
+		moments: ['Entrada', 'Ofertorio', 'Comunión', 'Acción de gracias', 'Salida'],
+		matchTerms: ['Graduación', 'Graduacion'],
+		fallbackTerms: ['Vocacional', 'Misión', 'Camino', 'Envío', 'Alabanza'],
+		filterQuery: 'Vocacional',
+	},
+	{
+		group: 'Acción de gracias',
+		title: 'Aniversario',
+		id: 'aniversario',
+		icon: 'A',
+		subtitle: 'Memoria agradecida y renovación',
+		background: '/assets/tiempos-card-santos.png',
+		description:
+			'Cantos para celebrar años de vida, matrimonio, comunidad o ministerio, con énfasis en la fidelidad de Dios y la gratitud.',
+		moments: ['Entrada', 'Ofertorio', 'Comunión', 'Acción de gracias', 'Salida'],
+		matchTerms: ['Aniversario'],
+		fallbackTerms: ['Matrimonio', 'Familia', 'Amor', 'Alabanza', 'Sagrado corazón'],
+		filterQuery: 'Alabanza',
+	},
+	{
+		group: 'Celebraciones',
+		title: 'Celebración de la Palabra',
+		id: 'celebracion-de-la-palabra',
+		icon: 'P',
+		subtitle: 'Escucha, respuesta y envío',
+		background: '/assets/tiempos-card-cuaresma.png',
+		description:
+			'Cantos para una celebración sin liturgia eucarística, centrados en la escucha de la Palabra, el salmo, la aclamación y el envío.',
+		moments: ['Entrada', 'Salmo', 'Aleluya', 'Meditación', 'Salida'],
+		matchTerms: ['Celebración de la Palabra', 'Celebracion de la Palabra', 'Liturgia de la Palabra'],
+		fallbackTerms: ['Salmo', 'Aleluya', 'Honor y gloria', 'Palabra', 'Entrada', 'Salida'],
+		filterQuery: 'Palabra',
+	},
+];
+
+const songValues = (song: typeof songs[number]) => [
+	song.title,
+	song.description,
+	song.tipo,
+	song.categoria,
+	song.tiempo,
+	song.author,
+	...song.tags,
+];
+
+const scoreSong = (song: typeof songs[number], terms: string[], fallback = false) => {
+	const normalizedTerms = terms.map(term => normalize(term)).filter(Boolean);
+	const normalizedValues = songValues(song).map(value => normalize(String(value)));
+	const primaryValues = [song.tiempo, song.tipo].map(value => normalize(String(value)));
+	const tagValues = song.tags.map(tag => normalize(String(tag)));
+	let score = 0;
+
+	for (const term of normalizedTerms) {
+		if (primaryValues.some(value => value === term)) score += fallback ? 9 : 18;
+		if (tagValues.some(value => value === term)) score += fallback ? 8 : 16;
+		if (normalizedValues.some(value => value === term)) score += fallback ? 4 : 10;
+		if (normalizedValues.some(value => value.includes(term))) score += fallback ? 2 : 6;
+	}
+
+	return score;
+};
+
+const songsForMassType = (type: typeof massTypes[number]) => {
+	const directMatches = songs
+		.map(song => ({ song, score: scoreSong(song, type.matchTerms) }))
+		.filter(result => result.score > 0);
+	const source = directMatches.length
+		? directMatches
+		: songs
+				.map(song => ({ song, score: scoreSong(song, type.fallbackTerms, true) }))
+				.filter(result => result.score > 0);
+
+	return source
+		.sort((a, b) => b.score - a.score || a.song.title.localeCompare(b.song.title))
+		.slice(0, 18)
+		.map(result => result.song);
+};
+
+const groups = Array.from(new Set(massTypes.map(type => type.group)));
+---
+
+<Layout>
+	<main class="mass-types-page">
+		<section class="mass-types-hero">
+			<div>
+				<p class="mass-types-label">Celebraciones</p>
+				<h1>Tipos de misas</h1>
+				<p>
+					Una guía para elegir cantos según sacramentos, misas de acción de
+					gracias y celebraciones de la Palabra.
+				</p>
+			</div>
+		</section>
+
+		<nav class="mass-type-index" aria-label="Tipos de misas">
+			{massTypes.map(type => {
+				const count = songsForMassType(type).length;
+
+				return (
+					<a
+						href={`#${type.id}`}
+						class="mass-type-index-link"
+						style={`--mass-type-bg: url('${type.background}');`}
+					>
+						<span>{type.icon}</span>
+						<strong>{type.title}</strong>
+						<small>{type.group} · {count} {count === 1 ? 'canto' : 'cantos'}</small>
+					</a>
+				);
+			})}
+		</nav>
+
+		<div class="mass-type-sections">
+			{groups.map(group => (
+				<section class="mass-type-group" aria-labelledby={`group-${slugify(group)}`}>
+					<div class="mass-type-group-head">
+						<p class="mass-types-label">Clasificación</p>
+						<h2 id={`group-${slugify(group)}`}>{group}</h2>
+					</div>
+
+					<div class="mass-type-group-grid">
+						{massTypes
+							.filter(type => type.group === group)
+							.map(type => {
+								const typeSongs = songsForMassType(type);
+								const filterTarget = `/cantos?q=${encodeURIComponent(type.filterQuery)}`;
+
+								return (
+									<article
+										id={type.id}
+										class="mass-type-detail"
+										style={`--mass-type-bg: url('${type.background}');`}
+									>
+										<div class="mass-type-copy">
+											<span class="mass-type-mark" aria-hidden="true">{type.icon}</span>
+											<p class="mass-types-label">{type.subtitle}</p>
+											<h3>{type.title}</h3>
+											<p>{type.description}</p>
+
+											<div class="mass-type-moments">
+												{type.moments.map(moment => <span>{moment}</span>)}
+											</div>
+
+											<div class="mass-type-actions">
+												<a class="mass-type-link" href={filterTarget}>
+													Ver en el cantoral
+												</a>
+												<a class="mass-type-planning-link" href="/recursos/planeaciones">
+													Ver planeación
+												</a>
+											</div>
+										</div>
+
+										<div class="mass-type-song-list">
+											<div class="mass-type-list-head">
+												<h4>Cantos sugeridos</h4>
+												<span>{typeSongs.length}</span>
+											</div>
+
+											{typeSongs.length ? (
+												<ul>
+													{typeSongs.map(song => (
+														<li>
+															<a href={song.href}>
+																<span>
+																	<strong>{song.title}</strong>
+																	<small>{song.description}</small>
+																</span>
+
+																<span class="song-meta">
+																	<span>{song.categoria}</span>
+																	<span>{song.tiempo}</span>
+																</span>
+															</a>
+														</li>
+													))}
+												</ul>
+											) : (
+												<p class="mass-type-empty">
+													Aún no hay cantos relacionados para esta celebración.
+												</p>
+											)}
+										</div>
+									</article>
+								);
+							})}
+					</div>
+				</section>
+			))}
+		</div>
+	</main>
+</Layout>
+
+<style>
+	.mass-types-page {
+		width: min(1160px, calc(100% - 56px));
+		margin: 0 auto;
+		padding: 42px 0 28px;
+		font-family: Inter, system-ui, sans-serif;
+	}
+
+	.mass-types-hero {
+		position: relative;
+		display: flex;
+		min-height: 340px;
+		align-items: center;
+		overflow: hidden;
+		margin-bottom: 24px;
+		padding: 36px;
+		border-radius: 28px;
+		background:
+			linear-gradient(90deg, rgba(255, 248, 239, 0.98) 0%, rgba(255, 248, 239, 0.9) 48%, rgba(255, 248, 239, 0.36) 100%),
+			url('/assets/tiempos-card-santos.png') center / cover no-repeat,
+			white;
+		border: 1px solid #eee7dc;
+		box-shadow: 0 24px 70px rgba(15, 23, 42, 0.07);
+	}
+
+	.mass-types-hero > div {
+		position: relative;
+		z-index: 1;
+	}
+
+	.mass-types-label {
+		margin: 0 0 8px;
+		color: #b27722;
+		font-size: 0.78rem;
+		font-weight: 900;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+	}
+
+	.mass-types-hero h1,
+	.mass-type-group-head h2,
+	.mass-type-copy h3 {
+		margin: 0;
+		color: #171717;
+		font-family: Georgia, 'Times New Roman', serif;
+		font-weight: 500;
+		line-height: 1;
+	}
+
+	.mass-types-hero h1 {
+		font-size: clamp(2.6rem, 5vw, 4.6rem);
+	}
+
+	.mass-types-hero p:not(.mass-types-label) {
+		max-width: 690px;
+		margin: 16px 0 0;
+		color: #475569;
+		font-size: 1.04rem;
+		line-height: 1.75;
+	}
+
+	.mass-type-index {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 12px;
+		margin-bottom: 30px;
+	}
+
+	.mass-type-index-link {
+		display: grid;
+		gap: 8px;
+		align-content: start;
+		min-height: 142px;
+		overflow: hidden;
+		padding: 14px;
+		border-radius: 18px;
+		background:
+			linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 248, 239, 0.82) 62%, rgba(255, 255, 255, 0.66) 100%),
+			var(--mass-type-bg) center / cover no-repeat,
+			white;
+		border: 1px solid #eee7dc;
+		color: #111827;
+		text-decoration: none;
+		box-shadow: 0 14px 34px rgba(15, 23, 42, 0.05);
+		transition:
+			transform 180ms ease,
+			border-color 180ms ease,
+			box-shadow 180ms ease;
+	}
+
+	.mass-type-index-link:hover {
+		transform: translateY(-2px);
+		border-color: rgba(178, 119, 34, 0.32);
+		box-shadow: 0 18px 40px rgba(15, 23, 42, 0.09);
+	}
+
+	.mass-type-index-link span,
+	.mass-type-mark {
+		display: inline-flex;
+		width: 40px;
+		height: 40px;
+		align-items: center;
+		justify-content: center;
+		border-radius: 13px;
+		background: rgba(255, 247, 237, 0.92);
+		border: 1px solid #f1e4d1;
+		color: #8a520f;
+		font-size: 0.86rem;
+		font-weight: 900;
+		backdrop-filter: blur(4px);
+	}
+
+	.mass-type-index-link strong {
+		font-size: 1rem;
+		line-height: 1.25;
+	}
+
+	.mass-type-index-link small {
+		color: #64748b;
+		font-weight: 750;
+		line-height: 1.45;
+	}
+
+	.mass-type-sections {
+		display: grid;
+		gap: 34px;
+	}
+
+	.mass-type-group {
+		display: grid;
+		gap: 16px;
+	}
+
+	.mass-type-group-head {
+		display: flex;
+		align-items: end;
+		justify-content: space-between;
+		gap: 18px;
+		padding: 0 4px;
+	}
+
+	.mass-type-group-head h2 {
+		font-size: clamp(1.9rem, 3vw, 2.8rem);
+	}
+
+	.mass-type-group-grid {
+		display: grid;
+		gap: 22px;
+	}
+
+	.mass-type-detail {
+		display: grid;
+		grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.35fr);
+		gap: 24px;
+		align-items: start;
+		overflow: hidden;
+		padding: 24px;
+		border-radius: 28px;
+		background:
+			linear-gradient(90deg, rgba(255, 255, 255, 0.97) 0%, rgba(255, 250, 244, 0.92) 48%, rgba(255, 255, 255, 0.78) 100%),
+			var(--mass-type-bg) center / cover no-repeat,
+			white;
+		border: 1px solid #eee7dc;
+		box-shadow: 0 18px 54px rgba(15, 23, 42, 0.06);
+		scroll-margin-top: 98px;
+	}
+
+	.mass-type-copy {
+		display: grid;
+		gap: 12px;
+	}
+
+	.mass-type-copy h3 {
+		font-size: clamp(1.9rem, 3vw, 2.8rem);
+	}
+
+	.mass-type-copy p:not(.mass-types-label) {
+		margin: 0;
+		color: #64748b;
+		line-height: 1.75;
+	}
+
+	.mass-type-moments {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin-top: 2px;
+	}
+
+	.mass-type-moments span {
+		display: inline-flex;
+		padding: 0.36rem 0.72rem;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.84);
+		border: 1px solid #f1e4d1;
+		color: #475569;
+		font-size: 0.82rem;
+		font-weight: 800;
+	}
+
+	.mass-type-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin-top: 4px;
+	}
+
+	.mass-type-link,
+	.mass-type-planning-link {
+		display: inline-flex;
+		width: fit-content;
+		align-items: center;
+		justify-content: center;
+		padding: 0.72rem 1rem;
+		border-radius: 999px;
+		font-weight: 900;
+		text-decoration: none;
+		line-height: 1.1;
+	}
+
+	.mass-type-link {
+		background: #24456f;
+		color: white;
+		box-shadow: 0 12px 26px rgba(36, 69, 111, 0.18);
+	}
+
+	.mass-type-planning-link {
+		background: rgba(255, 247, 237, 0.92);
+		border: 1px solid #e8d3af;
+		color: #8a520f;
+		box-shadow: 0 12px 24px rgba(138, 82, 15, 0.12);
+	}
+
+	.mass-type-song-list {
+		padding: 18px;
+		border-radius: 22px;
+		background: rgba(255, 250, 244, 0.92);
+		border: 1px solid #f1e4d1;
+		backdrop-filter: blur(6px);
+	}
+
+	.mass-type-list-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 14px;
+		margin-bottom: 12px;
+	}
+
+	.mass-type-list-head h4 {
+		margin: 0;
+		color: #111827;
+		font-size: 1rem;
+	}
+
+	.mass-type-list-head span {
+		display: inline-flex;
+		min-width: 34px;
+		height: 34px;
+		align-items: center;
+		justify-content: center;
+		border-radius: 999px;
+		background: white;
+		border: 1px solid #f1e4d1;
+		color: #8a520f;
+		font-weight: 900;
+	}
+
+	.mass-type-song-list ul {
+		display: grid;
+		gap: 10px;
+		max-height: 388px;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		margin: 0;
+		padding: 0 8px 0 0;
+		list-style: none;
+		scrollbar-color: #d8c8af rgba(255, 255, 255, 0.64);
+		scrollbar-gutter: stable;
+		scrollbar-width: thin;
+	}
+
+	.mass-type-song-list ul::-webkit-scrollbar {
+		width: 8px;
+	}
+
+	.mass-type-song-list ul::-webkit-scrollbar-track {
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.64);
+	}
+
+	.mass-type-song-list ul::-webkit-scrollbar-thumb {
+		border-radius: 999px;
+		background: #d8c8af;
+	}
+
+	.mass-type-song-list li a {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: 14px;
+		align-items: center;
+		padding: 14px;
+		border-radius: 16px;
+		background: white;
+		border: 1px solid #f1e8dd;
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.mass-type-song-list strong,
+	.mass-type-song-list small {
+		display: block;
+	}
+
+	.mass-type-song-list strong {
+		color: #111827;
+		font-size: 1rem;
+	}
+
+	.mass-type-song-list small {
+		margin-top: 4px;
+		color: #64748b;
+		line-height: 1.5;
+	}
+
+	.song-meta {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		gap: 6px;
+		color: #475569;
+		font-size: 0.8rem;
+		font-weight: 750;
+	}
+
+	.song-meta span {
+		padding: 0.32em 0.68em;
+		border-radius: 999px;
+		background: #f8fafc;
+		border: 1px solid #e5e7eb;
+	}
+
+	.mass-type-empty {
+		margin: 0;
+		padding: 18px;
+		border-radius: 16px;
+		background: white;
+		border: 1px dashed #d8c8af;
+		color: #64748b;
+		line-height: 1.6;
+	}
+
+	@media (max-width: 1100px) {
+		.mass-type-index {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.mass-type-detail {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 720px) {
+		.mass-types-page {
+			width: min(100% - 32px, 1160px);
+			padding-top: 28px;
+		}
+
+		.mass-types-hero,
+		.mass-type-detail {
+			padding: 22px;
+			border-radius: 22px;
+		}
+
+		.mass-types-hero {
+			min-height: 330px;
+			background:
+				linear-gradient(180deg, rgba(255, 248, 239, 0.98) 0%, rgba(255, 248, 239, 0.94) 64%, rgba(255, 248, 239, 0.78) 100%),
+				url('/assets/tiempos-card-santos.png') center / cover no-repeat,
+				white;
+		}
+
+		.mass-type-index {
+			grid-template-columns: 1fr;
+		}
+
+		.mass-type-index-link {
+			min-height: auto;
+		}
+
+		.mass-type-group-head {
+			display: block;
+		}
+
+		.mass-type-detail {
+			background:
+				linear-gradient(180deg, rgba(255, 255, 255, 0.97) 0%, rgba(255, 250, 244, 0.9) 68%, rgba(255, 255, 255, 0.82) 100%),
+				var(--mass-type-bg) center / cover no-repeat,
+				white;
+		}
+
+		.mass-type-song-list li a {
+			grid-template-columns: 1fr;
+		}
+
+		.song-meta {
+			justify-content: flex-start;
+		}
+	}
+</style>

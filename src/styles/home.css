@@ -118,8 +118,7 @@ body {
 .category-scroller {
 	position: relative;
 	z-index: 10;
-	display: grid;
-	grid-template-columns: repeat(8, minmax(0, 1fr));
+	display: flex;
 	gap: 0;
 	width: min(100%, 1160px);
 	margin: 64px auto 0;
@@ -129,14 +128,36 @@ body {
 	box-shadow: 0 24px 80px rgba(15, 23, 42, 0.12);
 	backdrop-filter: blur(10px);
 	box-sizing: border-box;
+	overflow-x: auto;
+	overscroll-behavior-inline: contain;
+	scroll-padding-inline: 16px;
+	scroll-snap-type: x proximity;
+	scrollbar-color: rgba(178, 119, 34, 0.42) transparent;
+	scrollbar-width: thin;
+	-webkit-overflow-scrolling: touch;
+}
+
+.category-scroller::-webkit-scrollbar {
+	height: 8px;
+}
+
+.category-scroller::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.category-scroller::-webkit-scrollbar-thumb {
+	border-radius: 999px;
+	background: rgba(178, 119, 34, 0.34);
 }
 
 .category-pill {
 	display: flex;
+	flex: 1 0 0;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	gap: 9px;
+	min-width: 0;
 	min-height: 96px;
 	padding: 12px;
 	text-align: center;
@@ -146,6 +167,7 @@ body {
 	font-weight: 800;
 	border-right: 1px solid #ece7df;
 	box-sizing: border-box;
+	scroll-snap-align: start;
 }
 
 .category-pill:last-child {
@@ -801,22 +823,6 @@ blockquote cite {
 		grid-template-columns: repeat(3, minmax(0, 1fr));
 	}
 
-	.category-scroller {
-		grid-template-columns: repeat(4, minmax(0, 1fr));
-	}
-
-	.category-pill {
-		border-right: none;
-		border-bottom: 1px solid #ece7df;
-	}
-
-	.category-pill:nth-child(5),
-	.category-pill:nth-child(6),
-	.category-pill:nth-child(7),
-	.category-pill:nth-child(8) {
-		border-bottom: none;
-	}
-
 	.split-section,
 	.quote-banner {
 		grid-template-columns: 1fr;
@@ -863,30 +869,52 @@ blockquote cite {
 	}
 
 	.category-scroller {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
 		margin-top: 36px;
 		padding: 10px;
+		scroll-padding-inline: 10px;
 	}
 
 	.category-pill {
-		border-right: none;
-		border-bottom: 1px solid #ece7df;
+		flex: 0 0 clamp(140px, 32vw, 178px);
+		min-height: 92px;
 	}
 
-	.category-pill:nth-child(odd) {
-		border-right: 1px solid #ece7df;
-	}
-
-	.category-pill:nth-child(7),
-	.category-pill:nth-child(8) {
-		border-bottom: none;
-	}
-
-	.featured-grid,
 	.song-grid,
 	.controls,
 	.resource-grid {
 		grid-template-columns: 1fr;
+	}
+
+	.featured-grid {
+		display: flex;
+		align-items: stretch;
+		gap: 16px;
+		overflow-x: auto;
+		overscroll-behavior-inline: contain;
+		padding: 4px 4px 18px;
+		scroll-padding-inline: 4px;
+		scroll-snap-type: x proximity;
+		scrollbar-color: rgba(178, 119, 34, 0.42) transparent;
+		scrollbar-width: thin;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.featured-grid::-webkit-scrollbar {
+		height: 8px;
+	}
+
+	.featured-grid::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	.featured-grid::-webkit-scrollbar-thumb {
+		border-radius: 999px;
+		background: rgba(178, 119, 34, 0.34);
+	}
+
+	.featured-card {
+		flex: 0 0 clamp(240px, 72vw, 320px);
+		scroll-snap-align: start;
 	}
 
 	.season-grid {
@@ -932,20 +960,11 @@ blockquote cite {
 		padding: 22px;
 	}
 
-	.category-scroller {
-		grid-template-columns: 1fr;
+	.category-pill {
+		flex-basis: clamp(136px, 44vw, 172px);
 	}
 
-	.category-pill,
-	.category-pill:nth-child(odd) {
-		border-right: none;
-	}
-
-	.category-pill:nth-child(7) {
-		border-bottom: 1px solid #ece7df;
-	}
-
-	.category-pill:nth-child(8) {
-		border-bottom: none;
+	.featured-card {
+		flex-basis: clamp(238px, 82vw, 300px);
 	}
 }

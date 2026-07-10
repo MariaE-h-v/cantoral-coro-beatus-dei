@@ -1,0 +1,118 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/resources.css';
+
+const singerGuideSections = [
+	{
+		title: 'Antes del ensayo',
+		description:
+			'Prepara tu voz y tu mente para llegar con claridad musical y disposición de servicio.',
+		items: [
+			'Revisa la letra del canto y marca palabras difíciles.',
+			'Escucha una referencia completa antes de practicar por partes.',
+			'Identifica entradas, silencios y respiraciones importantes.',
+			'Lleva agua y evita forzar la voz antes de cantar.',
+		],
+	},
+	{
+		title: 'Durante el ensayo',
+		description:
+			'El ensayo funciona mejor cuando cada cantor escucha tanto como canta.',
+		items: [
+			'Afina con la cuerda o voz guía antes de subir volumen.',
+			'Pronuncia consonantes finales sin exagerarlas.',
+			'Respira con el grupo para que las frases salgan juntas.',
+			'Anota cambios de tono, cortes y repeticiones.',
+		],
+	},
+	{
+		title: 'En la celebración',
+		description:
+			'El canto sostiene la oración de la asamblea; la voz debe servir al rito, no competir con él.',
+		items: [
+			'Mira al director o a quien marque entradas y cierres.',
+			'Cuida que el volumen no cubra al sacerdote ni a la asamblea.',
+			'Canta con sobriedad en momentos de silencio o meditación.',
+			'Evita improvisar cambios que el coro no ensayó.',
+		],
+	},
+];
+
+const vocalHabits = [
+	{
+		title: 'Respiración',
+		description: 'Inhala sin levantar hombros y sostiene el aire como apoyo, no como tensión.',
+	},
+	{
+		title: 'Dicción',
+		description: 'Abre vocales y articula consonantes para que el texto litúrgico se entienda.',
+	},
+	{
+		title: 'Afinación',
+		description: 'Escucha antes de corregir; muchas desafinaciones vienen de cantar más fuerte que atento.',
+	},
+	{
+		title: 'Unidad',
+		description: 'Frasea con el grupo: mismas respiraciones, finales y dinámica.',
+	},
+];
+---
+
+<Layout>
+	<div class="resource-page">
+		<section class="resource-hero compact singer-guide-hero">
+			<div class="resource-hero-content">
+				<a class="resource-back-link" href="/recursos/guias">← Guías</a>
+				<p class="resource-label">Guía para cantores</p>
+				<h1>Cantar con técnica, escucha y sentido litúrgico</h1>
+				<p>
+					Una guía práctica para cuidar la voz, preparar el ensayo y servir mejor
+					a la oración de la comunidad.
+				</p>
+			</div>
+		</section>
+
+		<section class="resource-section singer-guide-layout">
+			<div class="singer-guide-main">
+				{ singerGuideSections.map(section => (
+					<article class="singer-guide-section">
+						<div>
+							<p class="resource-label">Práctica</p>
+							<h2>{section.title}</h2>
+							<p>{section.description}</p>
+						</div>
+
+						<ul>
+							{section.items.map(item => <li>{item}</li>)}
+						</ul>
+					</article>
+				)) }
+			</div>
+
+			<aside class="singer-guide-aside">
+				<p class="resource-label">Voz</p>
+				<h2>Hábitos esenciales</h2>
+
+				<div class="vocal-habit-list">
+					{vocalHabits.map(habit => (
+						<article>
+							<strong>{habit.title}</strong>
+							<p>{habit.description}</p>
+						</article>
+					))}
+				</div>
+
+				<div class="singer-guide-cta">
+					<h3>Ensaya con referencia</h3>
+					<p>
+						Complementa esta guía con videos de escucha para trabajar fraseo,
+						balance y entradas del coro.
+					</p>
+					<a class="resource-button" href="/recursos/audio-video">
+						Ir a audios y videos
+					</a>
+				</div>
+			</aside>
+		</section>
+	</div>
+</Layout>

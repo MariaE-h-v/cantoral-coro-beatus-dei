@@ -135,6 +135,10 @@ const related = Object.entries(pages)
 							<span class="scheme-add-icon" aria-hidden="true">+</span>
 							<span data-add-label>Agregar al esquema</span>
 						</button>
+
+						<a class="sheet-resource-link" href="/recursos/acordes">
+							Ver partituras
+						</a>
 					</div>
 				</div>
 			</div>
@@ -476,6 +480,31 @@ const related = Object.entries(pages)
 		transition:
 			background 0.18s ease,
 			transform 0.18s ease;
+	}
+
+	.sheet-resource-link {
+		display: inline-flex;
+		min-height: 42px;
+		align-items: center;
+		justify-content: center;
+		padding: 0 16px;
+		border: 1px solid #e8d3af;
+		border-radius: 999px;
+		background: rgba(255, 247, 237, 0.92);
+		color: #8a520f;
+		font-weight: 900;
+		line-height: 1.1;
+		text-decoration: none;
+		box-shadow: 0 12px 24px rgba(138, 82, 15, 0.12);
+		white-space: nowrap;
+		transition:
+			background 0.18s ease,
+			transform 0.18s ease;
+	}
+
+	.sheet-resource-link:hover {
+		background: #ffedd5;
+		transform: translateY(-1px);
 	}
 
 	.copy-lyrics:hover {

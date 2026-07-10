@@ -14,6 +14,13 @@ export const resourceCategories = [
 		meta: 'Formación',
 	},
 	{
+		title: 'Guía para Cantores',
+		description: 'Pautas de respiración, dicción, escucha y servicio para cantar mejor.',
+		icon: '🎙️',
+		href: '/recursos/guia-cantores',
+		meta: 'Voz y servicio',
+	},
+	{
 		title: 'Audios y Videos',
 		description: 'Videos de referencia para escuchar, aprender y preparar ensayos.',
 		icon: '▶',
@@ -26,6 +33,13 @@ export const resourceCategories = [
 		icon: '📅',
 		href: '/recursos/planeaciones',
 		meta: 'PDFs',
+	},
+	{
+		title: 'Tipos de Misas',
+		description: 'Guía para elegir cantos en sacramentos, acción de gracias y celebraciones de la Palabra.',
+		icon: '✚',
+		href: '/tipos-de-misas',
+		meta: 'Guía',
 	},
 ];
 
@@ -88,24 +102,32 @@ export const videoResources = [
 	{
 		title: 'Misa Criolla - referencia coral',
 		description: 'Un ejemplo de escucha para analizar ensamble, respiración y fraseo coral.',
+		label: 'Ensamble',
+		focus: 'Escucha balance entre voces, entradas y cierres de frase.',
 		embedUrl: 'https://www.youtube.com/embed/Eh_UTth9QnA',
 		sourceUrl: 'https://www.youtube.com/watch?v=Eh_UTth9QnA',
 	},
 	{
 		title: 'Misa Criolla - grabación histórica',
 		description: 'Referencia para observar articulación, textura vocal y acompañamiento.',
+		label: 'Interpretación',
+		focus: 'Observa intención del texto, respiración común y dinámica.',
 		embedUrl: 'https://www.youtube.com/embed/qeukymixGfg',
 		sourceUrl: 'https://www.youtube.com/watch?v=qeukymixGfg',
 	},
 	{
 		title: 'Misa Tango - referencia de interpretación',
 		description: 'Material para escuchar balance entre solistas, coro e instrumento.',
+		label: 'Solistas',
+		focus: 'Distingue cuándo acompañar y cuándo dejar espacio a una voz principal.',
 		embedUrl: 'https://www.youtube.com/embed/vPZkoi4GP4k',
 		sourceUrl: 'https://www.youtube.com/watch?v=vPZkoi4GP4k',
 	},
 	{
 		title: 'Misa Castellana - lista de reproducción',
 		description: 'Lista de videos para comparar estilos y momentos de la misa.',
+		label: 'Repertorio',
+		focus: 'Compara versiones antes de elegir tono, tempo y arreglo.',
 		embedUrl:
 			'https://www.youtube.com/embed/videoseries?list=PLoDhM_XK9SD8WJc4NMgod_TewRKxoQOHR',
 		sourceUrl:
@@ -137,6 +159,11 @@ export const planningPdfs = [
 ];
 
 export const guideLinks = [
+	{
+		title: 'Guía para cantores',
+		description: 'Pautas prácticas de preparación vocal, ensayo y servicio en misa.',
+		href: '/recursos/guia-cantores',
+	},
 	{
 		title: 'Sacrosanctum Concilium',
 		description: 'Constitución sobre la sagrada liturgia y la participación activa.',
