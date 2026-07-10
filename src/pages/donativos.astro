@@ -12,32 +12,32 @@ const donationAmounts = [
 	{
 		amount: '$50 MXN',
 		title: 'Apoyo básico',
-		description: 'Aporta para materiales sencillos, copias y recursos básicos de ensayo.',
+		description: 'Agradecimiento especial',
 	},
 	{
 		amount: '$100 MXN',
 		title: 'Apoyo de materiales',
-		description: 'Ayuda con impresiones, carpetas y materiales sencillos de ensayo.',
+		description: 'Apoyanos para seguir subiendo material y recursos de formación',
 		paymentUrl: 'https://mpago.la/1tgpViD',
 	},
 	{
 		amount: '$250 MXN',
 		title: 'Apoyo de ensayo',
-		description: 'Sostiene recursos para preparar cantos y organizar celebraciones.',
+		description: 'Apoyanos para llegar a más coros',
 		paymentUrl: 'https://mpago.la/1kKLK2q'
 	},
 	{
 		amount: '$500 MXN',
 		title: 'Apoyo comunitario',
-		description: 'Impulsa materiales, partituras y herramientas para el ministerio.',
+		description: 'Impulsa el mantenimiento y crecimiento del sitio web.',
 		paymentUrl: 'https://mpago.la/2bjsrCm'
 	},
 ];
 
 const donationUses = [
-	'Preparación de partituras, acordes y materiales para el coro.',
-	'Impresiones, carpetas y recursos para ensayos y celebraciones.',
-	'Mantenimiento del cantoral digital y publicación de nuevos recursos.',
+	'Preparación de partituras, acordes y materiales disponibles gratuitamente para todo el público.',
+	'Mantenimiento de recursos del sitio web',
+	'Apoyo a las Parroquias donde sirve Coro Beatus Dei',
 ];
 
 const configuredDonationAmounts = donationAmounts.map(option => {
@@ -87,10 +87,6 @@ const configuredDonationAmounts = donationAmounts.map(option => {
 			<div class="donations-section-head">
 				<p class="donations-label">Elige una intención</p>
 				<h2>Montos sugeridos</h2>
-				<p>
-					Estos montos son una guía para quien quiera apoyar. El pago final se
-					confirma en Mercado Pago.
-				</p>
 			</div>
 
 			<div class="donation-grid">
