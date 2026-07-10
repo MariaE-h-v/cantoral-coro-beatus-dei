@@ -942,8 +942,14 @@ blockquote cite {
 		width: 100%;
 	}
 
+	.donation-quote-action {
+		width: 100%;
+	}
+
 	.donation-quote-action a {
-		width: fit-content;
+		width: 100%;
+		box-sizing: border-box;
+		text-align: center;
 	}
 }
 
