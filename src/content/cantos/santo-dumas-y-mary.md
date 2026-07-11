@@ -11,10 +11,16 @@ description: "..."
 youtubeUrl: "https://youtu.be/kp4lVtiMUnM?si=6Dt3tO5rrVAiZOI1"
 ---
 
-Do       Fa        Sol                    Do  Sol7                  Do
-Santo, Santo, Santo es el Señor, Dios del universo. 
+C       F 
+Santo, Santo, 
+G.            C
+Santo es el Señor, 
+G7.          C
+Dios del universo. 
 Do            Mim  Lam         Fa                 Sol
-Llenos están el cielo y la tierra de tu gloria. 
+Llenos están el cielo 
+
+y la tierra de tu gloria. 
      Do       Fa   Sol7  Do 
 Hosanna en el cielo. 
        Mi7             Fa           Re7                Solsus Sol

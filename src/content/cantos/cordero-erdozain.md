@@ -8,13 +8,22 @@ liturgico: true
 tags:
   - Cordero de Dios
 description: "..."
+youtubeUrl: "https://youtu.be/CgjV-6Qnd10?si=92Vfyo7nVmZhukA1"
 ---
-lam Sol Do 
-Cordero de Dios que quitas el pecado del mundo
-Sol Do
+Intro: Am C Dm Am
+
+Am                   G
+Cordero de Dios que quitas 
+               C
+el pecado del mundo
+G                 C
 ten piedad de nosotros. (2)
 
-lam mim Sol rem
-Cordero de Dios que quitas el pecado del mundo
-Sol lam rem lam Sol lam
-danos la paz, danos la paz, danos la paz.
+Am                   Em
+Cordero de Dios que quitas 
+     G.         Dm
+el pecado del mundo
+G.       Am.   Dm.     Am
+danos la paz, danos la paz, 
+G.        Am
+danos la paz.

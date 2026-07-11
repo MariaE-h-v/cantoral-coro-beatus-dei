@@ -9,51 +9,51 @@ tags:
   - Ofertorio
   - Ordinario
 description: "Este pan y vino señor se convertirán..."
+youtubeUrl: "https://youtu.be/9M7iJL9dGr4?si=pH-QCuW9oNaxkm27"
 ---
-CAPO 2
 
-C           F      C
+D           G      D
 Este pan y vino, Señor
-Am        G    C
+Bm        A    D
 Se transformarán
-C                 F       C
+D                 G       D
 En tu cuerpo y sangre, Señor
-Am      G      C
+Bm      A      D
 En nuestro manjar
 
-C                G        C
+D                A        D
 Gracias al sol y al labrador
-         C/G    F     C
+         D/A    G     D
 En el altar florecen hoy
-F/A      G   Em      Am
+G/B      A   F#m      Bm
 Las espigas, los racimos
-F       Dm          G
+G       Em          A
 Que presentamos a Dios
 
-C           F      C
+D           G      D
 Este pan y vino, Señor
-Am        G    C
+Bm        A    D
 Se transformarán
-C                 F       C
+D                 G       D
 En tu cuerpo y sangre, Señor
-Am      G      C
+Bm      A      D
 En nuestro manjar
 
-C              G       C
+D              A       D
 Lo que sembré con mi dolor
-         C/G  F       C
+         D/A G       D
 Lo que pedí en mi oración
-F/A         G    Em      Am
+G/B        A    F#m      Bm
 Hoy son frutos, son ofrendas
-F         Dm        G
+G         Em        A
 Que presentamos a Dios
 
 
-C           F      C
+D           G      D
 Este pan y vino, Señor
-Am        G    C
+Bm        A    D
 Se transformarán
-C                 F       C
+D                 G       D
 En tu cuerpo y sangre, Señor
-Am      G      C
+Bm      A      D
 En nuestro manjar

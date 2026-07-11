@@ -8,9 +8,13 @@ liturgico: true
 tags:
   - Aleluya
 description: "..."
+youtubeUrl: "https://youtu.be/ztGfRYbxOCs?si=jAfOeQdDgKiSTMsQ"
 ---
-ALELUYA
+Intro: D Bm G Em A
+
+D           Bm          G Em A
 ¡Aleluya!, ¡Aleluya!, ¡Aleluya!
-       RE          SIm        SOL LA  
-¡Aleluya!, ¡Aleluya!,     ¡Aleluya!,     ¡Aleluya!   ¡
-      RE            SIm          SOL  LA              RE
+D           Bm          G Em A
+¡Aleluya!, ¡Aleluya!, ¡Aleluya!
+    D
+Aleluya
