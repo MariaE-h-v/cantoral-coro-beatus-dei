@@ -12,7 +12,7 @@ tags:
 description: "Señor mi Dios yo te busco mi alma tiene sed de ti..."
 youtubeUrl: "https://youtu.be/kaE7i7tilkg?si=nMacqrSOwMpe6o3V"
 ---
-CAPO 2
+INTRO D D G Asus4 D 
 
 D                     G   F# E
 Señor mi Dios yo te busco
@@ -41,3 +41,4 @@ D                    Bm
 El es mi roca mi baluarte
 G       Em            A
 de él viene mi esperanza
+

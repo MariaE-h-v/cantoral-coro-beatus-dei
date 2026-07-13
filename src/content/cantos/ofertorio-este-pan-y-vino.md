@@ -12,48 +12,48 @@ description: "Este pan y vino señor se convertirán..."
 youtubeUrl: "https://youtu.be/9M7iJL9dGr4?si=pH-QCuW9oNaxkm27"
 ---
 
-D           G      D
+C           F      C
 Este pan y vino, Señor
-Bm        A    D
+Am        G    C
 Se transformarán
-D                 G       D
+C                 F       C
 En tu cuerpo y sangre, Señor
-Bm      A      D
+Am      G      C
 En nuestro manjar
 
-D                A        D
+C                G        C
 Gracias al sol y al labrador
-         D/A    G     D
+         C/G    F     C
 En el altar florecen hoy
-G/B      A   F#m      Bm
+F/A      G   Em      Am
 Las espigas, los racimos
-G       Em          A
+F       Dm          G
 Que presentamos a Dios
 
-D           G      D
+C           F      C
 Este pan y vino, Señor
-Bm        A    D
+Am        G    C
 Se transformarán
-D                 G       D
+C                 F       C
 En tu cuerpo y sangre, Señor
-Bm      A      D
+Am      G      C
 En nuestro manjar
 
-D              A       D
+C              G       C
 Lo que sembré con mi dolor
-         D/A G       D
+         C/G F       C
 Lo que pedí en mi oración
-G/B        A    F#m      Bm
+F/A        G    Em      Am
 Hoy son frutos, son ofrendas
-G         Em        A
+F         Dm        G
 Que presentamos a Dios
 
 
-D           G      D
+C           F      C
 Este pan y vino, Señor
-Bm        A    D
+Am        G    C
 Se transformarán
-D                 G       D
+C                 F       C
 En tu cuerpo y sangre, Señor
-Bm      A      D
+Am      G      C
 En nuestro manjar
