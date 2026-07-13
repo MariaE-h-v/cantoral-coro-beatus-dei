@@ -8,6 +8,7 @@ liturgico: true
 tags:
   - Señor ten piedad
 description: "..."
+youtubeUrl: "https://youtu.be/dfm_iFmMwmQ?si=gFT0mGI6_SnMhIi1"
 ---
 G.      Bm.     C.        D
 Señor Señor Señor ten piedad
