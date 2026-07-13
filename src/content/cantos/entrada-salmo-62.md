@@ -42,3 +42,12 @@ El es mi roca mi baluarte
 G       Em            A
 de él viene mi esperanza
 
+Se me alegra el corazón,
+¡oh Dios causa de mi gozo!
+Tu amor vale más que la vida,
+te alabarán mis labios.
+
+Tú eres mi Señor,
+mi bien; nada hay fuera de ti.
+Tú eres mi Señor,
+la parte de mi herencia.
