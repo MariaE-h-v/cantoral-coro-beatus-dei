@@ -10,6 +10,7 @@ tags:
   - Comunión
   - Ordinario
 description: "Pan transformado en el cuerpo de cristo, vino transformado en la sangre del señor..."
+youtubeUrl: "https://youtu.be/P3SKhDvFXcM?si=s_oAUXXyZl6SsHMY"
 ---
 C         Am             F          G
 Pan transformado en el cuerpo de cristo

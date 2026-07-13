@@ -9,6 +9,7 @@ tags:
   - Ofertorio 
   - Ordinario
 description: "Recibe oh señor las ofrendas que ponemos ante ti gran Dios..."
+youtubeUrl: "https://youtu.be/pT1wxKQbAc0?si=BQ265MxrXwnBC8Wm"
 ---
 G        D
 Recibe oh Señor
