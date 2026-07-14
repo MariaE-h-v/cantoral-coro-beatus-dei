@@ -59,6 +59,20 @@ export const sheetTabs = [
 		],
 	},
 	{
+		id: 'gregorian',
+		label: 'Gregoriano',
+		description:
+			'Partituras de canto llano para acompañar la liturgia con melodías tradicionales.',
+		items: [
+			{
+				title: 'Veni creator Spiritus',
+				season: 'Pentecostés',
+				level: 'Intermedio',
+				href: 'https://www.verbumgloriae.es/project/veni-creator-spiritus/',
+			}
+		],
+	},
+	{
 		id: 'guitarra',
 		label: 'Guitarra',
 		description:
