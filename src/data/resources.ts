@@ -51,23 +51,11 @@ export const sheetTabs = [
 			'Partituras pensadas para acompañar con introducción, armonía base y apoyo melódico.',
 		items: [
 			{
-				title: 'Antífona de Entrada',
-				season: 'Adviento',
+				title: 'Cantoral Liturgico',
+				season: 'Ordinario',
 				level: 'Intermedio',
-				href: '/recursos/pdfs/piano/antifona-entrada-piano.pdf',
-			},
-			{
-				title: 'Ofertorio de la Luz',
-				season: 'Cuaresma',
-				level: 'Básico',
-				href: '/recursos/pdfs/piano/ofertorio-luz-piano.pdf',
-			},
-			{
-				title: 'Pan de Vida',
-				season: 'Tiempo ordinario',
-				level: 'Intermedio',
-				href: '/recursos/pdfs/piano/pan-de-vida-piano.pdf',
-			},
+				href: '/recursos/pdfs/piano/cantoral-de-cantos-litugicos.pdf',
+			}
 		],
 	},
 	{
