@@ -1,5 +1,5 @@
 ---
-title: "Ven espíritu santo"
+title: "Espíritu santo"
 categoria: "Invocación espíritu santo"
 tipo: "Espíritu santo"
 tiempo: "Pentecostés"
