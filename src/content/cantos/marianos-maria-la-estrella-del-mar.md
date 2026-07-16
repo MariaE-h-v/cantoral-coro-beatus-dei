@@ -10,7 +10,7 @@ tags:
   - Meditación
   - Alabanza
   - Virgen del carmen
-description: "Si lejos de tierra firme..."
+description: "Si lejos de tierra firme te envuelve la tempestad siel viento agita..."
 ---
 Em                   D
 Si lejos de tierra firme
