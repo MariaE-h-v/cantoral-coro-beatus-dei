@@ -1,10 +1,10 @@
 ---
-title: "Mujer por qué lloras?"
+title: "Mi llamado"
 categoria: "Post-Comunión"
 tipo: "Propio"
 tiempo: "Santos"
 author: "Misión País"
-liturgico: false
+liturgico: true
 tags:
   - Post comunión
   - Ordinario
