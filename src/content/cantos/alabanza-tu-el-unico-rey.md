@@ -11,30 +11,84 @@ tags:
 description: "Tú el único rey que tiene que reinar..."
 youtubeUrl: "https://youtu.be/jmVqAKiaUmw?si=_w9E8HUsVSYILaEW"
 ---
-TÚ, EL ÚNICO REY QUE TIENE QUE REINAR
-EL ÚNICO SEÑOR AL QUE VOY A ALABAR,
-HOY LEVANTO EL CORAZÓN AL QUE LO CONQUISTÓ
-SIMPLEMENTE PORQUE TÚ ERES DIOS
- 
-Quiero ponerte por encima de todo
-En cada momento sentarte en el trono
-Que tu alabanza esté siempre en mi boca
+
+
+A            F#m7
+Tú, el Único Rey
+                  D2
+Que tiene que reinar
+            E                   A
+El Único Señor al que voy a alabar
+                E/G#  F#m7
+Hoy levanto el cora__zón
+                  D2
+Al que lo conquistó
+       E4                    A
+Simplemente porque Tú eres Dios
+
+
+A2
+   Quiero ponerte
+               D2(6)
+Por encima de todo
+           F#m7(11)
+En cada momento
+                 E11
+Sentarte en el trono
+A2
+Que tu alabanza
+                    D2(6)
+Esté siempre en mi boca
+         F#m7(11)         E11
 Y reconocer que Tú eres Dios
+
  
-Que alabarte a ti, Señor
-sea siempre lo primero
+D             E11
+Que alabarte a Ti, Señor
+      A      E/G#  F#m7(11)  A/C#
+Sea siempre lo primero
+ D                     E
 Fijo mi mirada en el cielo
 
-TÚ, EL ÚNICO REY QUE TIENE QUE REINAR
-EL ÚNICO SEÑOR AL QUE VOY A ALABAR,
-HOY LEVANTO EL CORAZÓN AL QUE LO CONQUISTÓ
-SIMPLEMENTE PORQUE TÚ ERES DIOS
+
+A     E/G#   F#m                  D
+Tú, el Único Rey que tiene que reinar
+            E4                  A2
+El Único Señor al que voy a alabar
+       E/G#         F#m
+Hoy levanto el corazón
+                  D
+Al que lo conquistó
+       E4                    A
+Simplemente porque Tú eres Dios
+
  
-Y a Ti, toda la alabanza,
-todo el poder y el honor,
-toda la gloria al Señor (x4)
+D              C#m
+Y a Ti, toda la alabanza
+           Bm7
+Todo el poder y el honor
+          E
+Toda la gloria al Señor (x4)
+
  
-TÚ, EL ÚNICO REY QUE TIENE QUE REINAR
-EL ÚNICO SEÑOR AL QUE VOY A ALABAR,
-HOY LEVANTO EL CORAZÓN AL QUE LO CONQUISTÓ
-SIMPLEMENTE PORQUE TÚ ERES DIOS (x2)
+A         E/G#  F#m                 D
+Tú, el Único    Rey que tiene que reinar
+            E                   A
+El Único Señor al que voy a alabar
+                E/G#  F#m
+Hoy levanto el cora__zón
+               E  D
+Al que lo conquistó
+       E
+Simplemente porque Tú eres
+
+ A            F#m                 D
+Tú, el Único Rey que tiene que reinar
+            E                   A
+El Único Señor al que voy a alabar
+                E/G#  F#m
+Hoy levanto el cora__zón
+     E            D
+Al que lo conquistó
+       E                     A
+Simplemente porque Tú eres Dios

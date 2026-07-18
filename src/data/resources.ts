@@ -96,6 +96,26 @@ export const sheetTabs = [
 				level: 'Intermedio',
 				href: '/recursos/pdfs/guitarra/ofertorio-luz-guitarra.pdf',
 			},
+			{
+				title: 'Hoy es tiempo de santos',
+				season: 'Tiempo ordinario',
+				level: 'Intermedio',
+				href: '/recursos/pdfs/guitarra/hoy-es-tiempo-de-santos.pdf',
+			},
+		],
+	},
+	{
+		id: 'coral',
+		label: 'Coral',
+		description:
+			'Partituras para coros que acompañan la liturgia con armonías tradicionales.',
+		items: [
+			{
+				title: 'Cante la Iglesia',
+				season: 'Tiempo ordinario',
+				level: 'Intermedio',
+				href: '/recursos/pdfs/coral/cante-la-iglesia.pdf',
+			}
 		],
 	},
 ];

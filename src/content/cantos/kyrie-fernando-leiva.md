@@ -10,17 +10,17 @@ tags:
 description: "..."
 youtubeUrl: "https://youtu.be/dfm_iFmMwmQ?si=gFT0mGI6_SnMhIi1"
 ---
-G.      Bm.     C.        D
+C      Am      F        G
 Señor Señor Señor ten piedad
-G.      Bm.     C.        D
+C      Am      F        G
 Señor Señor Señor ten piedad
 
-G.      Bm.     C.        D
+C      Am      F          G
 Cristo Cristo Cristo ten piedad
-G.      Bm.     C.        D
+C      Am      F           G
 Cristo Cristo Cristo ten piedad
 
-G.      Bm.     C.        D
+C      Am      F        G
 Señor Señor Señor ten piedad
-G.      Bm.     C.        D
+C      Am      F        G
 Señor Señor Señor ten piedad

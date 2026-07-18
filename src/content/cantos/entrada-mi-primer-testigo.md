@@ -13,26 +13,29 @@ tags:
 description: "Arde tu palabra en mis labios como un fuego devorador..."
 youtubeUrl: "https://youtu.be/g017jmH8VG4?si=EVJaWZ1z412im9IQ"
 ---
-Fa             Sib        Do
+
+capo 3
+
+G           C          D
 Arde tu Palabra en mis labios
-            La          Rem
+          B          Em
 como un fuego devorador;
-Sib                 Fa
+C                  G
 me has seducido Señor
-Solm               Do
+       Am            D
 con la llama de tu Amor.
 
-Fa             Sib        Do
+G         C        D
 Ve donde mis hermanos
-Sib             Do     Fa
+   C         D      G
 y diles que voy al Padre,
-Solm                    Fa
+Am                    G
 a mi Dios que es vuestro Dios.
-Solm                       Do
+     Am                       D
 a mi padre que es vuestro Padre.
-Solm                    Rem
+Am                    Em
 Ve y anuncia a los hombres,
-Sib             Do        Fa
+    C          D       G
 mi Palabra de Salvación.
 
 

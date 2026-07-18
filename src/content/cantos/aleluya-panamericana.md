@@ -12,7 +12,7 @@ youtubeUrl: "https://youtu.be/Lfo2T4v79S8?si=FbzVd8Zc57wmSY0E"
 ---
 CAPO 3
 
-Em           D
+F       Dm
 Aleluya Aleluya
-     C       B7
+ Gm        C7
 Alelu  uu uu ya

@@ -9,31 +9,29 @@ tags:
   - Santo
 description: "..."
 ---
-Intro: Gm C F Dm A7 Dm
-
-Dm  Gm  C    F
+Bm Em  A   D
 Santo, saanto
-Dm            Gm            A7   Dm
+Bm            Em            F#m   Bm
 Santo es el Señor, Dios del universo
-D7       Gm    A             D
+B7       Em    A             D
 Llenos están, el cielo y la tierra
-Dm      Gm      A7 Dm
+Bm      Em      F#m Bm
 De tu gloria, Hosanna
 
-D7  Gm   C    F
+B7  Em   A    D
 Hosanna, Hosanna
-Dm   Gm  A7    Dm
+Bm   Em  F#m    Bm
 Hosanna en el cielo
-D7  Gm   C    F
+B7  Em   A    D
 Hosanna, Hosanna
-Dm  Gm  A7     Dm
+Bm  Em  F#m     Bm
 Hosanna en el cielo
 
-Dm              Gm
+Bm              Em
 Bendito el que viene
-       c          F
+       A          D
 en el nombre del Señor
-Dm             Gm
+Bm             Em
 Hosana en el cielo,
-A7 Dm
+F#m Bm
 Hosanna

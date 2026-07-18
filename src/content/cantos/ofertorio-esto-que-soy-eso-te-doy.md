@@ -12,21 +12,34 @@ tags:
 description: "A veces me pregunto por que yo y solo me respondes porque quiero es un misterio..."
 youtubeUrl: "https://youtu.be/0z6PcknO8uQ?si=V7EOtT-zap9-Y7W0"
 ---
+
+
+G 
 A veces me pregunto: “¿Por qué yo?”
+ Em
 Y solo me respondes: “Porque quiero”.
+   C                            Am
 Es un misterio grande que nos llames
+G
 así, tal como somos, a Tu encuentro.
-
+G
 Entonces redescubro una verdad:
+Em
 Mi vida, nuestra vida es Tu tesoro.
+C
 Se trata entonces solo de ofrecerTe
-con todo nuestro amor,
-esto que somos.
+G
+con todo nuestro amor, esto que somos.
 
+     D               Em
 ¿Qué Te daré?, ¿Qué Te daremos?,
+     C            G
 ¡Si todo, todo, es Tu regalo!
+     D             Em
 Te ofreceré, Te ofreceremos
+          Bm
 esto que somos…
+         C      D       G
 Esto que soy, ¡Eso Te doy!
 
 Esto que soy, esto es lo que Te doy,
