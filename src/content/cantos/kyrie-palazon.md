@@ -11,19 +11,19 @@ tags:
 description: "..."
 youtubeUrl: "https://youtu.be/07IuQnonK1k?si=l3ih3E5tOWVs9ozn"
 ---
-Intro: Bm  A  Bm. Bm
+Intro: Cm  A#  Cm. Cm
 
-Bm     A       Bm. Bm
+Cm     A#       Cm. Cm
 Seeñor ten piedad
-Bm     A       Bm. Bm
+Cm     A#       Cm. Cm
 Seeñor ten piedad
 
-G        A       D     F#7
+G#        A#       D#     G7
 Cristo  ten     piedad
-G        A       D     F#7
+G#        A#       D#     G7
 Cristo  ten     piedad
 
-Bm     A       Bm. Bm
+Cm     A#       Cm. Cm
 Seeñor ten piedad
-Bm     A       Bm Bm
+Cm     A#       Cm. Cm
 Seeñor ten piedad

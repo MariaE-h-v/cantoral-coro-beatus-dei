@@ -10,116 +10,116 @@ tags:
 description: "Va María Magdalena presurosa hasta el sepulcro ..."
 youtubeUrl: "https://youtu.be/8f29iYT3jrA?si=eOsYyvflYIB02i1f"
 ---
-CAPO: 4
-Intro... C G F
-Guitarra y Bajo: F Dm C
+Intro... E B A
+Guitarra y Bajo: A F#m B
 
-C              G
+E              B
 va Maria magdalena
-Dm         Am
+F#m         C#m
 presurosa hasta el sepulcro
-F         C.  Dm              G
+A         E.  F#m              B
 inclinandose ante la tumba vacia
-C               G          Dm         Am
+B               B          F#m         C#m
 finalmente a conseguido encontrar a quien buscaba
-F          Dm   F      G
+A          F#m   A      B
 al Señor Jesus resucitado
 
 Bateria: Bombo y contratiempos
 
-C.         G
+E         B
 y yo voy tambien buscando
-Dm.           Am
+F#m.           C#m
 de los dones el mas grande
-     F   G. G         Bb.   Dm.   G
+     A   B. B         D.   F#m   B
 El mas perfecto, el camino del amor
 
 RITMO BATERIA Y GUITARRA Y BAJO
 
-C           G
+E           B
 El amor de Dios la esencia
-Dm.         Am
+F#m.         C#m
 el amor el don sublime
-          F          C.        Dm.           G
+          A          E.        F#m.          B
 pues los dones y carismas nada son sin el amor
-  C.          G              Dm.            Am.
+  E.          B              F#m.            C#m.
 me presento ante los santos como un niño el mas pequeño
-        F.        Dm.     F.        G
+        A.        F#m.     A.        B
 pues conozco mi miseria y mi debilidad
 
 --- SOLO DE GUITARRA ---
 
-C.   G.  Am. Am. F. Dm.  G. G.
-Bb. Bb.  Dm. Dm. 
+E.   B.  C#m. C#m. E. F#m.  B. B.
+D. D.  F#m. F#m. 
 
 
-C           G   
+E           B   
 Moradores de los cielos
-Dm           Am
+F#m           C#m
 ayudadme en el camino
-          F        C  
+A                 E  
 pues es dura la batalla
-       Dm        F
+       F#m        A
 y preciso de su guia
- Dm              G
+ F#m              B
 y de su intercesion
 
-C                G
+E                B
 como antorcha brilla el justo
-Dm               Am
+F#m               C#m
 en el cielo iluminando
-       F          Dm
+       A          F#m
 como guia del camino 
-        Bb          G
+        D          B
 en la noche de la fe
 
-C          G
+E          B
 Moradores de los cielos
-  Dm       Am
+  F#m       C#m
 recibidme como hermano
-         F         Dm
+         E         F#m
 el mas debil y pequeño
-        F              F    G
+        A              A    B
 y concededme nuestro santo amor
 
 
-C                G 
+E                B 
 y si no me corresponde 
-Dm         Am  
+F#m         C#m  
 realizar obras gloriosas 
-F                Dm      G
+A                F#m      B
 propias de las grandes almas
-          F
+          A
 no me importa
 
-C               G
+
+E               B
 me estaré junto a dios padre
-      Dm        Am
+      F#m        C#m
 muy cerquita de su trono
-   F                  C
+   A                  E
 derramando ahi mis flores
-         Dm        Bb   G
+         F#m        D   B
 y mis canticos de amor
 
-C               G
+E               B
 como un hijo el mas pequeño 
-Dm            Am 
+F#m            C#m 
 admirando a mis hermanos 
-F                Dm
+A                F#m
 procurando el imitarles
-    F            Dm
+    A            F#m
 y cantando sus azañas
-        F             G
+        A             B
 sus virtudes sus palabras
 
-          F        C
+          A        E
 yo por siempre cantaré
 
-C              G
+E              B
 con Maria Magdalena
-Dm               Am
+F#m               C#m
 mi perfume de alabastro
-      F        Dm  G
+      A        F#m  B
 a los pies de mi señor
-      C     F.  G C
+      E     A.  B  E
 derramaré
