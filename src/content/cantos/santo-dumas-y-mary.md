@@ -17,13 +17,13 @@ G.            C
 Santo es el Señor, 
 G7.          C
 Dios del universo. 
-Do            Mim  Lam         Fa                 Sol
+C        Em       Am 
 Llenos están el cielo 
-
+       F              G
 y la tierra de tu gloria. 
-     Do       Fa   Sol7  Do 
+   C     F      G7  C 
 Hosanna en el cielo. 
-       Mi7             Fa           Re7                Solsus Sol
+  E7             F         D7       G
 Bendito el que viene en nombre del Señor. 
-     Do       Fa   Sol7 Do
+  C     F      G7 C
 Hosanna en el cielo.
