@@ -13,98 +13,117 @@ tags:
 description: "Hermosa a los ojos de Dios escuchaste su voz..."
 youtubeUrl: "https://youtu.be/x8voHbsxbeA?si=g5q061FBlbK9iXNT"
 ---
-Sol  La            Re
+G.   A          D
 ¡Hermosa a los ojos de Dios!
-Sol   La          Sim
+G    A         Bm
 Escuchaste su voz,
-                 La
+    A               G
 “¿Quién te acusa?”
-Sol  La           Re
+    A         D
 Y tocó tu corazón
-                       Sol
+                 G
 y recibiste su perdón.
 
-     La          Re
+     A           D
 Al sentirte perdonada
-Sol   La        Sim    La
+G.  A         Bm. A
 te sentiste amada
-Sol       La          Re
+G      A           D
 y quebraste el alabastro
-                 Sol
+          G
 de tu corazón.
 
-Mim                         La
+Em               A
 Derramaste por amor,
-          Re                         Sol
+      D.       A.     G
 tu perfume en adoración.
 
-                    La
+
+             A
 Hermosa tú eres,
-Sim     La          Sol
+Bm.     A.      G
 a los ojos de Dios.
+        G 
 Porque mucho amaste.
 
-                    La
+            A
 Hermosa tú eres,
-Sim     La          Sol
+Bm.     A.      G
 a los ojos de Dios.
 Porque todo entregaste.
 
-       Mim                         La
+    Em.        A
 Él vio tu corazón,
-                      Re
+              D
 y hermosa tú eres.
 
-Sol  La                    Re
+
+G.    A.                    D
 Te anticipaste a ungir su cuerpo
-Sol  La        Sim    La
+G.   A.        Bm  A
 atisbando su dolor.
-Sol  La                    Re
+G.    A          D
 En gratitud y amor,
-                    Sol
+                  G
 entregaste el corazón.
 
-   Mim              La
+   Em             A
 Y ya libre para amar
-          Re
+          D
 caíste a sus pies,
-          Sol
+          G
 para adorar.
 
+             A
 Hermosa tú eres,
+Bm.     A.      G
 a los ojos de Dios.
+         G
 Porque nunca dudaste.
 
+             A
 Hermosa tú eres,
+Bm.     A.      G
 a los ojos de Dios.
 Fiel en la cruz y en la tumba.
 
-        La                         Re
+        A                    D
 Estabas ahí, como novia que ama,
-                         Sol
+                G
 que cree y que espera.
+             A
 Él vio tu corazón,
+              D
 y hermosa tú eres.
 
-Sol        La              Re     Sol
+G           A          D.   G
 Por el derroche de tu amor,
-          Mim                La
+      Em          A
 cautivaste su corazón.
-Mim                    Sol                 Re
+Em                     G        D
 Nunca es bastante, cuando se ama,
-                       La                 Sol
+                A               G
 al Dios de la vida, dueño del amor.
 
+             A
 Hermosa tú eres,
+Bm.     A.      G
 a los ojos de Dios.
 Porque mucho amaste.
 
+             A
 Hermosa tú eres,
+Bm.     A.      G
 a los ojos de Dios.
 Porque todo entregaste.
 
-                         La
+              A
 Amaste como fuiste amada.
+G            D
 Hermosa tú eres.
+G              A
 Él vio tu corazón,
-y hermosa tú eres.
+               Bm.  A G 
+y hermosa tú eres. 
+             D. G. D
+hermosa tu eres
