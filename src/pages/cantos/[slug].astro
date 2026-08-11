@@ -242,6 +242,7 @@ const transposeButtons = document.querySelectorAll('[data-transpose-step]');
 const resetTransposeButton = document.querySelector('[data-reset-transpose]');
 const lyricsText = document.querySelector('[data-lyrics-text]');
 const copyButton = document.querySelector('[data-copy-lyrics]');
+const schemeAddButton = document.querySelector('[data-song-scheme-add]');
 
 const originalLyrics = lyricsText?.textContent?.trim() ?? '';
 let currentTranspose = 0;
@@ -252,6 +253,17 @@ const FLAT_KEYS = new Set([
 	'F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb',
 	'Fm', 'Dm', 'Gm', 'Cm', 'Bbm', 'Ebm', 'Abm', 'Dbm', 'Gbm', 'Cbm',
 ]);
+
+const originalSchemeSong = schemeAddButton
+	? JSON.parse(schemeAddButton.getAttribute('data-song-scheme-song') ?? '{}')
+	: null;
+
+function updateSchemeSongPayload() {
+	if (!schemeAddButton || !originalSchemeSong) return;
+	const transposedText = lyricsText?.textContent?.trim() ?? originalSchemeSong.lyrics ?? '';
+	const updatedSong = { ...originalSchemeSong, lyrics: transposedText };
+	schemeAddButton.setAttribute('data-song-scheme-song', JSON.stringify(updatedSong));
+}
 
 function normalizeNoteName(root, accidental) {
 	return `${root}${accidental ?? ''}`;
@@ -343,6 +355,7 @@ function updateLyrics() {
 	const baseText = originalLyrics;
 	const transposedText = transposeKeyLabel(transposeLyrics(baseText));
 	lyricsText.textContent = transposedText;
+	updateSchemeSongPayload();
 
 	if (transposeLabel) {
 		transposeLabel.textContent = getCurrentToneLabel();

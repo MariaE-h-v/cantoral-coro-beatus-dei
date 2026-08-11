@@ -30,6 +30,8 @@
 			</button>
 		</div>
 
+		<div class="scheme-cart-notice" data-scheme-notice hidden></div>
+
 		<div class="scheme-cart-fields">
 			<label>
 				<span>Nombre del esquema</span>
@@ -64,6 +66,9 @@
 			<button class="scheme-primary-action" type="button" data-scheme-export>
 				Exportar PDF
 			</button>
+			<button class="scheme-secondary-action" type="button" data-scheme-share>
+				Compartir enlace
+			</button>
 			<button class="scheme-secondary-action" type="button" data-scheme-clear>
 				Vaciar
 			</button>
@@ -90,6 +95,9 @@
 				<button class="scheme-primary-action" type="button" data-scheme-preview-export>
 					Exportar PDF
 				</button>
+				<button class="scheme-secondary-action" type="button" data-scheme-preview-share>
+					Compartir enlace
+				</button>
 				<button class="scheme-secondary-action" type="button" data-preview-close>
 					Cerrar
 				</button>
@@ -102,6 +110,7 @@
 
 <script type="module">
 	const STORAGE_KEY = 'beatus-song-scheme-v1';
+	const SHARE_PARAM_KEY = 'scheme';
 	const cartRoot = document.querySelector('[data-scheme-cart]');
 	const toggleButton = cartRoot?.querySelector('[data-scheme-toggle]');
 	const closeButtons = cartRoot?.querySelectorAll('[data-scheme-close]');
@@ -112,7 +121,9 @@
 	const emptyState = cartRoot?.querySelector('[data-scheme-empty]');
 	const previewOpenButton = cartRoot?.querySelector('[data-scheme-preview-open]');
 	const exportButton = cartRoot?.querySelector('[data-scheme-export]');
+	const shareButton = cartRoot?.querySelector('[data-scheme-share]');
 	const previewExportButton = cartRoot?.querySelector('[data-scheme-preview-export]');
+	const previewShareButton = cartRoot?.querySelector('[data-scheme-preview-share]');
 	const clearButton = cartRoot?.querySelector('[data-scheme-clear]');
 	const titleInput = cartRoot?.querySelector('[data-scheme-title-input]');
 	const noteInput = cartRoot?.querySelector('[data-scheme-note-input]');
@@ -121,6 +132,7 @@
 	const previewCloseButtons = cartRoot?.querySelectorAll('[data-preview-close]');
 	const previewBody = cartRoot?.querySelector('[data-scheme-preview-body]');
 	const previewTitle = cartRoot?.querySelector('[data-scheme-preview-title]');
+	const schemeNotice = cartRoot?.querySelector('[data-scheme-notice]');
 
 	const emptyScheme = {
 		title: '',
@@ -128,9 +140,15 @@
 		songs: [],
 	};
 
+	let loadedSchemeFromShare = false;
 	let scheme = loadScheme();
 
 	function loadScheme() {
+		const sharedScheme = loadSchemeFromUrl();
+		if (sharedScheme) {
+			return sharedScheme;
+		}
+
 		try {
 			const stored = window.localStorage.getItem(STORAGE_KEY);
 			if (!stored) return { ...emptyScheme, songs: [] };
@@ -171,6 +189,103 @@
 			href: song.href ?? `/cantos/${song.slug}`,
 			lyrics: song.lyrics ?? '',
 		};
+	}
+
+	function normalizeSongForShare(song) {
+		return {
+			slug: song.slug,
+			title: song.title,
+			categoria: song.categoria,
+			tiempo: song.tiempo,
+			tipo: song.tipo,
+			author: song.author,
+			description: song.description,
+			href: song.href,
+		};
+	}
+
+	function isSchemeShape(value) {
+		return (
+			value &&
+			typeof value === 'object' &&
+			Array.isArray(value.songs) &&
+			value.songs.every(song => typeof song.slug === 'string')
+		);
+	}
+
+	function encodeSchemePayload(payload) {
+		const json = JSON.stringify(payload);
+		const bytes = new TextEncoder().encode(json);
+		let binary = '';
+		for (const byte of bytes) {
+			binary += String.fromCharCode(byte);
+		}
+		return btoa(binary);
+	}
+
+	function decodeSchemePayload(value) {
+		try {
+			const binary = atob(value);
+			const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+			return JSON.parse(new TextDecoder().decode(bytes));
+		} catch {
+			return null;
+		}
+	}
+
+	function applySharedScheme(shared) {
+		if (!isSchemeShape(shared)) return null;
+		return {
+			title: shared.title ?? '',
+			note: shared.note ?? '',
+			songs: shared.songs.map(song => normalizeSong(song)),
+		};
+	}
+
+	function loadSchemeFromUrl() {
+		const params = new URLSearchParams(window.location.search);
+		const token = params.get(SHARE_PARAM_KEY);
+		if (!token) return null;
+
+		const shared = decodeSchemePayload(token);
+		const applied = applySharedScheme(shared);
+		if (applied) {
+			loadedSchemeFromShare = true;
+		}
+		return applied;
+	}
+
+	function buildShareUrl() {
+		const payload = {
+			title: scheme.title,
+			note: scheme.note,
+			songs: scheme.songs.map(normalizeSongForShare),
+		};
+		const token = encodeSchemePayload(payload);
+		return `${window.location.origin}${window.location.pathname}?${SHARE_PARAM_KEY}=${encodeURIComponent(token)}`;
+	}
+
+	function notifyScheme(message) {
+		if (!schemeNotice) return;
+		schemeNotice.textContent = message;
+		schemeNotice.hidden = false;
+		window.clearTimeout(notifyScheme.timeoutId);
+		notifyScheme.timeoutId = window.setTimeout(() => {
+			schemeNotice.hidden = true;
+		}, 3000);
+	}
+
+	function copyShareLink(button) {
+		if (!navigator.clipboard) return;
+		const url = buildShareUrl();
+		const originalLabel = button.textContent;
+		navigator.clipboard.writeText(url).then(() => {
+			button.textContent = 'Enlace copiado';
+			notifyScheme('Enlace copiado al portapapeles');
+			window.setTimeout(() => {
+				button.textContent = originalLabel;
+			}, 1500);
+		});
 	}
 
 	function openCart() {
@@ -505,6 +620,22 @@
 	exportButton?.addEventListener('click', exportScheme);
 	previewExportButton?.addEventListener('click', exportScheme);
 
+	shareButton?.addEventListener('click', () => {
+		if (!scheme.songs.length) {
+			openCart();
+			return;
+		}
+		copyShareLink(shareButton);
+	});
+
+	previewShareButton?.addEventListener('click', () => {
+		if (!scheme.songs.length) {
+			openPreview();
+			return;
+		}
+		copyShareLink(previewShareButton);
+	});
+
 	clearButton?.addEventListener('click', () => {
 		if (!scheme.songs.length) return;
 		scheme.songs = [];
@@ -512,6 +643,11 @@
 		renderList();
 		closePreview();
 	});
+
+	if (loadedSchemeFromShare && scheme.songs.length) {
+		openCart();
+		notifyScheme('Esquema cargado desde enlace compartido');
+	}
 
 	titleInput?.addEventListener('input', () => {
 		scheme.title = titleInput.value;
@@ -656,6 +792,17 @@
 		align-items: flex-start;
 		justify-content: space-between;
 		gap: 16px;
+	}
+
+	.scheme-cart-notice {
+		padding: 14px 16px;
+		border-radius: 16px;
+		background: #f8f7ee;
+		border: 1px solid #e8d3af;
+		color: #6b4b18;
+		font-size: 0.95rem;
+		line-height: 1.5;
+		margin-bottom: 12px;
 	}
 
 	.scheme-cart-head p {
