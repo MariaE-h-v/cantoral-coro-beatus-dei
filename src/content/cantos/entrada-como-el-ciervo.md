@@ -10,13 +10,13 @@ tags:
   - Ordinario
 description: "Como el ciervo al agua va..."
 ---
-SOL RE7 SOL RE7 SOL
+E.                 B.  E.              B.     E
 Como el ciervo al agua va, vamos hacia Ti, Señor,
-             RE7   SOL              RE7     SOL
-pues de Ti tenemos sed, fuente del eterno amor.
-LAm RE          SolLam  RE7         SOL
+E             B.    E.    E           B.     E
+pues de Ti tenemos sed, fuente del eterno amor.+
+A.   F#m   B    E.  F#m.   B      .  E
 Caminamos hacia Ti con alegres cánticos;
-LAm   RE           SOL LAm   RE7          SOL
+A    F#m.   B      E.   F#m   B.          E
 hoy venimos a tu altar para amarte más, Señor.
 
 Quien escucha mi gemir, dice: ¿dónde está tu dios?
