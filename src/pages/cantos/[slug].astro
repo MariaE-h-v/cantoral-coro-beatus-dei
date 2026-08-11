@@ -189,6 +189,23 @@ const songJsonLd = {
 				<div>
 					<p class="eyebrow">Letra y tonos</p>
 					<h2 id="songSheetTitle">Hoja del canto</h2>
+					<div class="transpose-controls">
+						<p class="transpose-label">
+							Mostrando en:
+							<strong data-current-key>Original</strong>
+						</p>
+						<div class="transpose-actions">
+							<button class="transpose-button" type="button" data-transpose-step="-1">
+								Bajar tono
+							</button>
+							<button class="transpose-button" type="button" data-transpose-step="1">
+								Subir tono
+							</button>
+							<button class="transpose-button reset" type="button" data-reset-transpose>
+								Restaurar
+							</button>
+						</div>
+					</div>
 				</div>
 
 				<button class="copy-lyrics" type="button" data-copy-lyrics>
@@ -220,27 +237,155 @@ const songJsonLd = {
 </Layout>
 
 <script>
-	const copyButton = document.querySelector('[data-copy-lyrics]');
-	const lyricsText = document.querySelector('[data-lyrics-text]');
+const transposeLabel = document.querySelector('[data-current-key]');
+const transposeButtons = document.querySelectorAll('[data-transpose-step]');
+const resetTransposeButton = document.querySelector('[data-reset-transpose]');
+const lyricsText = document.querySelector('[data-lyrics-text]');
+const copyButton = document.querySelector('[data-copy-lyrics]');
 
-	copyButton?.addEventListener('click', async () => {
-		const text = lyricsText?.textContent?.trim() ?? '';
-		if (!text) return;
+const originalLyrics = lyricsText?.textContent?.trim() ?? '';
+let currentTranspose = 0;
 
-		try {
-			await navigator.clipboard.writeText(text);
-			const originalText = copyButton.textContent;
-			copyButton.textContent = 'Copiado';
-			window.setTimeout(() => {
-				copyButton.textContent = originalText;
-			}, 1500);
-		} catch {
-			copyButton.textContent = 'No se pudo copiar';
-			window.setTimeout(() => {
-				copyButton.textContent = 'Copiar letra';
-			}, 1500);
-		}
+const SHARP_NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+const FLAT_NOTES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+const FLAT_KEYS = new Set([
+	'F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb',
+	'Fm', 'Dm', 'Gm', 'Cm', 'Bbm', 'Ebm', 'Abm', 'Dbm', 'Gbm', 'Cbm',
+]);
+
+function normalizeNoteName(root, accidental) {
+	return `${root}${accidental ?? ''}`;
+}
+
+function transposeNote(root, accidental, semitones, preferFlats) {
+	const note = normalizeNoteName(root, accidental);
+	const currentIndex = SHARP_NOTES.indexOf(note) >= 0 ? SHARP_NOTES.indexOf(note) : FLAT_NOTES.indexOf(note);
+	if (currentIndex < 0) return note;
+
+	const targetIndex = (currentIndex + semitones + 12) % 12;
+	return preferFlats ? FLAT_NOTES[targetIndex] : SHARP_NOTES[targetIndex];
+}
+
+function getPreferredNotationFromOriginalKey() {
+	const keyRegex = /^Tono:\s*([A-G])([#b]?)(.*)$/m;
+	const match = keyRegex.exec(originalLyrics);
+	if (!match) return null;
+
+	const root = match[1];
+	const accidental = match[2] ?? '';
+	const suffix = (match[3] ?? '').trim();
+	const note = normalizeNoteName(root, accidental);
+	const noteIndex = SHARP_NOTES.indexOf(note) >= 0 ? SHARP_NOTES.indexOf(note) : FLAT_NOTES.indexOf(note);
+	if (noteIndex < 0) return null;
+
+	const targetIndex = (noteIndex + currentTranspose + 12) % 12;
+	const transposedSharp = SHARP_NOTES[targetIndex];
+	const transposedFlat = FLAT_NOTES[targetIndex];
+	const keyNameSharp = `${transposedSharp}${suffix.startsWith('m') ? 'm' : ''}`;
+	const keyNameFlat = `${transposedFlat}${suffix.startsWith('m') ? 'm' : ''}`;
+	return FLAT_KEYS.has(keyNameSharp) || FLAT_KEYS.has(keyNameFlat);
+}
+
+const CHORD_ROOT_REGEX = /(^|[\s\/])([A-G])([#b]?)(?=(?:maj7|maj9|maj|m7b5|m7|m|min7|dim7|dim|aug|sus2|sus4|sus|add9|add11|add13|add7|7|9|11|13|°|ø|\+|-|[0-9]*)?(?:\/([A-G])([#b]?))?(?=$|[\s,;.()\[\]{}]))/g;
+
+function shouldTransposeLine(line) {
+	const matches = [...line.matchAll(CHORD_ROOT_REGEX)].length;
+	if (matches >= 2) return true;
+	if (matches === 1) {
+		const cleaned = line.replace(CHORD_ROOT_REGEX, '').trim();
+		return cleaned === '' || /^[\[\]()\s\d\-\/]*$/.test(cleaned);
+	}
+	return false;
+}
+
+function transposeLyrics(text) {
+	const preferFlatsForKey = getPreferredNotationFromOriginalKey();
+	return text
+		.split('\n')
+		.map(line => {
+			if (!shouldTransposeLine(line)) return line;
+			return line.replace(CHORD_ROOT_REGEX, (match, separator, root, accidental) => {
+				const preferFlats = preferFlatsForKey ?? accidental === 'b';
+				const transposedRoot = transposeNote(root, accidental, currentTranspose, preferFlats);
+				return `${separator}${transposedRoot}`;
+			});
+		})
+		.join('\n');
+}
+
+function getCurrentToneLabel() {
+	const keyRegex = /^Tono:\s*([A-G])([#b]?)(.*)$/m;
+	const match = keyRegex.exec(originalLyrics);
+	if (!match) {
+		return currentTranspose === 0 ? 'Original' : 'Transpuesto';
+	}
+
+	const root = match[1];
+	const accidental = match[2] ?? '';
+	const preferFlatsForKey = getPreferredNotationFromOriginalKey();
+	const preferFlats = preferFlatsForKey ?? accidental === 'b';
+	return transposeNote(root, accidental, currentTranspose, preferFlats);
+}
+
+function transposeKeyLabel(text) {
+	const preferFlatsForKey = getPreferredNotationFromOriginalKey();
+	const keyRegex = /^Tono:\s*([A-G])([#b]?)(.*)$/m;
+	return text.replace(keyRegex, (_, root, accidental, rest) => {
+		const preferFlats = preferFlatsForKey ?? accidental === 'b';
+		const transposed = transposeNote(root, accidental, currentTranspose, preferFlats);
+		return `Tono: ${transposed}${rest}`;
 	});
+}
+
+function updateLyrics() {
+	if (!lyricsText) return;
+
+	const baseText = originalLyrics;
+	const transposedText = transposeKeyLabel(transposeLyrics(baseText));
+	lyricsText.textContent = transposedText;
+
+	if (transposeLabel) {
+		transposeLabel.textContent = getCurrentToneLabel();
+	}
+}
+
+function setTranspose(semitones) {
+	currentTranspose = semitones;
+	updateLyrics();
+}
+
+transposeButtons.forEach(button => {
+	button.addEventListener('click', () => {
+		const step = Number(button.dataset.transposeStep ?? '0');
+		currentTranspose += step;
+		updateLyrics();
+	});
+});
+
+resetTransposeButton?.addEventListener('click', () => {
+	setTranspose(0);
+});
+
+copyButton?.addEventListener('click', async () => {
+	const text = lyricsText?.textContent?.trim() ?? '';
+	if (!text) return;
+
+	try {
+		await navigator.clipboard.writeText(text);
+		const originalText = copyButton.textContent;
+		copyButton.textContent = 'Copiado';
+		window.setTimeout(() => {
+			copyButton.textContent = originalText;
+		}, 1500);
+	} catch {
+		copyButton.textContent = 'No se pudo copiar';
+		window.setTimeout(() => {
+			copyButton.textContent = 'Copiar letra';
+		}, 1500);
+	}
+});
+
+updateLyrics();
 </script>
 
 <style>
@@ -472,6 +617,61 @@ const songJsonLd = {
 		font-family: Georgia, 'Times New Roman', serif;
 		font-size: clamp(1.6rem, 3vw, 2.2rem);
 		font-weight: 500;
+	}
+
+	.transpose-controls {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 16px;
+		margin-top: 16px;
+	}
+
+	.transpose-label {
+		margin: 0;
+		color: #475569;
+		font-size: 0.95rem;
+		line-height: 1.4;
+	}
+
+	.transpose-label strong {
+		color: #1f2937;
+		font-weight: 700;
+	}
+
+	.transpose-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	.transpose-button {
+		display: inline-flex;
+		min-height: 42px;
+		align-items: center;
+		justify-content: center;
+		padding: 0 16px;
+		border: 1px solid rgba(178, 119, 34, 0.18);
+		border-radius: 999px;
+		background: #fff7ed;
+		color: #8f5417;
+		font: inherit;
+		font-weight: 900;
+		cursor: pointer;
+		white-space: nowrap;
+		transition:
+			background 0.18s ease,
+			transform 0.18s ease;
+	}
+
+	.transpose-button:hover {
+		background: #ffedd5;
+		transform: translateY(-1px);
+	}
+
+	.transpose-button.reset {
+		background: white;
+		border-color: #d6d3d1;
+		color: #475569;
 	}
 
 	.detail-actions {
