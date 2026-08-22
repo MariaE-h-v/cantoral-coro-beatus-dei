@@ -40,12 +40,3 @@ Madre Inmaculada,
 Madre del Creador,
 Reina asunta a los cielos,
 Llévanos contigo a Dios. 
-
-¡Ven y reina, Madre de Dios,
-Reina y Madre de la Creación!
-¡Ven y reina en nuestro corazón,
-Para que reine el Señor! 
-¡Ven y reina, Madre de Dios,
-Reina y Madre de la Creación!
-¡Ven y reina en nuestro corazón,
-Para que reine Jesús, el Señor! 
