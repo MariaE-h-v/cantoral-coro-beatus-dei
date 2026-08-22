@@ -38,13 +38,7 @@ Am     Bm C      D   Am Bm   C       D
 De Jesucristo, Señor, Hijo amado del Padre
 
 G         D             Em            C
-Somos incienso que se quema ante el trono
-G           D          Em
-De nuestro Dios en adoración
-G            D        Em           C 
-Ante tu presencia, Señor, venimos hoy
-      G      D            C  G
-A ofrecerte toda nuestra vida
+Somos incienso que se quema ante el trono...
 
 G             D      Em               D
 El amor del Señor gobierna nuestras vidas
@@ -55,12 +49,5 @@ Pues Cristo es quien nos sostiene
 Am      Bm   C       D
 Llenándonos de su Espíritu
 
-
 G         D             Em            C
-Somos incienso que se quema ante el trono
-G           D          Em
-De nuestro Dios en adoración
-G            D        Em           C 
-Ante tu presencia, Señor, venimos hoy
-      G      D            C  G
-A ofrecerte toda nuestra vida
+Somos incienso que se quema ante el trono...
