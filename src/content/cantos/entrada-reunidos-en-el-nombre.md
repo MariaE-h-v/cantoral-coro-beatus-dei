@@ -1,5 +1,6 @@
 ---
 title: "Reunidos en el nombre del señor"
+indice: "E29"
 categoria: "Entrada"
 tipo: "Entrada"
 tiempo: "Ordinario"

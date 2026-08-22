@@ -1,5 +1,6 @@
 ---
 title: "Te ofrecemos padre nuestro"
+indice: "O17"
 categoria: "Ofertorio"
 tipo: "Ofertorio"
 tiempo: "Ordinario"

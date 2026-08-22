@@ -1,5 +1,6 @@
 ---
 title: "Perdona a tu pueblo"
+indice: "P02"
 categoria: "Penitenciales"
 tipo: "Miercoles de ceniza"
 tiempo: "Cuaresma"

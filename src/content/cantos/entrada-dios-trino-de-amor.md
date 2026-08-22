@@ -1,5 +1,6 @@
 ---
 title: "Dios trino de amor"
+indice: "E11"
 categoria: "Entrada"
 tipo: "Trinidad"
 tiempo: "Trinidad"

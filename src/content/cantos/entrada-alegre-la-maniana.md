@@ -1,5 +1,6 @@
 ---
 title: "Alegre la mañana"
+indice: "E03"
 categoria: "Entrada"
 tipo: "Entrada"
 tiempo: "Pascua"

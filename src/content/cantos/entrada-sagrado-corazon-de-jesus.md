@@ -1,5 +1,6 @@
 ---
 title: "Sagrado corazón de Jesús yo creo en ti"
+indice: "E30"
 categoria: "Entrada"
 tipo: "Propio"
 tiempo: "Santos"

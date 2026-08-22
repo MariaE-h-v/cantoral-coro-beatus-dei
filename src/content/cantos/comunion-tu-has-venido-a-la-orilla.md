@@ -1,5 +1,6 @@
 ---
 title: "Tu has venido a la orilla"
+indice: "C38"
 categoria: "Comunión"
 tipo: "Vocacional"
 tiempo: "Ordinario"

@@ -1,5 +1,6 @@
 ---
 title: "Vino y pan en oblación"
+indice: "O20"
 categoria: "Ofertorio"
 tipo: "Ofertorio"
 tiempo: "Ordinario"

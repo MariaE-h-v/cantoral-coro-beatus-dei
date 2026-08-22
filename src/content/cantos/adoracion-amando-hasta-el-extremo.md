@@ -1,5 +1,6 @@
 ---
 title: "Amando hasta el extremo"
+indice: "AD02"
 categoria: "Adoración"
 tipo: "Hora santa"
 tiempo: "Ordinario"

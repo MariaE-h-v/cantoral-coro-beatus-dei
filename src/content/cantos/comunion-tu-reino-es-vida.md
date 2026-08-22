@@ -1,5 +1,6 @@
 ---
 title: "Tu reino es vida"
+indice: "C39"
 categoria: "Comunión"
 tipo: "Propio"
 tiempo: "Ordinario"

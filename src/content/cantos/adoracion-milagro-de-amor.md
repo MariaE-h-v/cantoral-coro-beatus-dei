@@ -1,5 +1,6 @@
 ---
 title: "Milagro de amor"
+indice: "AD13"
 categoria: "Adoración"
 tipo: "Adoración"
 tiempo: "Ordinario"

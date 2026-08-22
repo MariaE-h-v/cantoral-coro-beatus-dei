@@ -1,5 +1,6 @@
 ---
 title: "El señor es mi luz"
+indice: "C11"
 categoria: "Comunión"
 tipo: "Propio"
 tiempo: "Ordinario"

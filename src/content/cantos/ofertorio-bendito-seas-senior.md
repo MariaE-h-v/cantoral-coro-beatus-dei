@@ -1,5 +1,6 @@
 ---
 title: "Bendito seas señor"
+indice: "O02"
 categoria: "Ofertorio"
 tipo: "Ordinario"
 tiempo: "Ordinario"

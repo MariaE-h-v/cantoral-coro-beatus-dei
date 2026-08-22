@@ -1,5 +1,6 @@
 ---
 title: "Dulce madre"
+indice: "M05"
 categoria: "Marianos"
 tipo: "Marianos"
 tiempo: "Ordinario"

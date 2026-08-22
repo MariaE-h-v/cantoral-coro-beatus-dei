@@ -1,5 +1,6 @@
 ---
 title: "Tu señor"
+indice: "AD24"
 categoria: "Adoración"
 tipo: "Meditación"
 tiempo: "Ordinario"

@@ -1,5 +1,6 @@
 ---
 title: "Mi estandarte"
+indice: "M13"
 categoria: "Marianos"
 tipo: "Marianos"
 tiempo: "Ordinario"

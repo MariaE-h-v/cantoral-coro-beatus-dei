@@ -1,5 +1,6 @@
 ---
 title: "Alegría de vivir"
+indice: "E04"
 categoria: "Entrada"
 tipo: "Entrada"
 tiempo: "Ordinario"

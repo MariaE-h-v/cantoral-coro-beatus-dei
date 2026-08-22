@@ -1,5 +1,6 @@
 ---
 title: "Pan de vida (Bajo)"
+indice: "C30"
 categoria: "Comunión"
 tipo: "Eucarístico"
 tiempo: "Ordinario"

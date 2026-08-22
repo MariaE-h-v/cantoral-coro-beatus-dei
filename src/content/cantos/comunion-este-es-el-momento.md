@@ -1,5 +1,6 @@
 ---
 title: "Este es el momento mas bello"
+indice: "C16"
 categoria: "Comunión"
 tipo: "Eucarístico"
 tiempo: "Ordinario"

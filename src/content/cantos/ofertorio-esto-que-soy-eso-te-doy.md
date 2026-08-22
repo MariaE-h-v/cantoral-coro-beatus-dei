@@ -1,5 +1,6 @@
 ---
 title: "Esto que soy eso te doy"
+indice: "O08"
 categoria: "Ofertorio"
 tipo: "Celebración"
 tiempo: "Ordinario"

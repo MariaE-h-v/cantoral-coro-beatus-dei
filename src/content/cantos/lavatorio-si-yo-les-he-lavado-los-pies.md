@@ -1,5 +1,6 @@
 ---
 title: "Les he lavado los pies"
+indice: "LP01"
 categoria: "Lavatorio de pies"
 tipo: "Lavatorio de pies"
 tiempo: "Triduo pascual"

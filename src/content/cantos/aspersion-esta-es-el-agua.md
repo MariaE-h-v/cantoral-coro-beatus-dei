@@ -1,5 +1,6 @@
 ---
 title: "Agua pura"
+indice: "AS01"
 categoria: "Aspersión"
 tipo: "Aspersión"
 tiempo: "Pascua"

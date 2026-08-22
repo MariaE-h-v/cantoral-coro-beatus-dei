@@ -1,5 +1,6 @@
 ---
 title: "Verbum panis"
+indice: "C43"
 categoria: "Comunión"
 tipo: "Comunión"
 tiempo: "Navidad"

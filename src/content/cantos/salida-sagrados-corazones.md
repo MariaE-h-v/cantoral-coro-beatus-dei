@@ -1,5 +1,6 @@
 ---
 title: "Sagrados corazones"
+indice: "SA18"
 categoria: "Salida"
 tipo: "Salida"
 tiempo: "Santos"

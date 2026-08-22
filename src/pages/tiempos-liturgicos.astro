@@ -11,6 +11,7 @@ const songs = Object.entries(rawSongs)
 
 		return {
 			title: data.title ?? slug,
+			indice: data.indice ?? '',
 			categoria: data.categoria ?? 'Canto',
 			tipo: data.tipo ?? 'Canto',
 			tiempo: data.tiempo ?? 'Sin tiempo',
@@ -203,6 +204,7 @@ const songsForSeason = (aliases: string[]) => {
 												</span>
 
 												<span class="song-meta">
+													{song.indice ? <span class="song-index-badge">{song.indice}</span> : null}
 													<span>{song.categoria}</span>
 													<span>{song.author}</span>
 												</span>
@@ -557,6 +559,14 @@ const songsForSeason = (aliases: string[]) => {
 		border-radius: 999px;
 		background: #f8fafc;
 		border: 1px solid #e5e7eb;
+	}
+
+	.song-meta .song-index-badge {
+		background: #24456f;
+		border-color: rgba(36, 69, 111, 0.22);
+		color: white;
+		font-weight: 900;
+		letter-spacing: 0.08em;
 	}
 
 	.season-empty {

@@ -1,5 +1,6 @@
 ---
 title: "Cante la iglesia"
+indice: "E07"
 categoria: "Entrada"
 tipo: "Entrada"
 tiempo: "Ordinario"

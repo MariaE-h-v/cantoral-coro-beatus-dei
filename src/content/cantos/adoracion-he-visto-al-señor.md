@@ -1,5 +1,6 @@
 ---
 title: "He visto al señor"
+indice: "AD10"
 categoria: "Adoración"
 tipo: "Propio"
 tiempo: "Santos"

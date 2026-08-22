@@ -1,5 +1,6 @@
 ---
 title: "Madre de todos los hombres"
+indice: "SA02"
 categoria: "Salida"
 tipo: "Marianos"
 tiempo: "Cuaresma"

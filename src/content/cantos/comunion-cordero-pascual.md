@@ -1,5 +1,6 @@
 ---
 title: "Cordero pascual"
+indice: "C07"
 categoria: "Comunión"
 tipo: "Propio"
 tiempo: "Triduo Pascual"

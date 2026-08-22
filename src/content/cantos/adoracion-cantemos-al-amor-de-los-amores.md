@@ -1,5 +1,6 @@
 ---
 title: "Cantemos al amor de los amores"
+indice: "AD04"
 categoria: "Adoración"
 tipo: "Hora santa"
 tiempo: "Ordinario"

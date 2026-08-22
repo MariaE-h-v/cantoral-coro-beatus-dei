@@ -1,5 +1,6 @@
 ---
 title: "Mi primer testigo"
+indice: "E23"
 categoria: "Entrada"
 tipo: "Propio"
 tiempo: "Santos"

@@ -1,5 +1,6 @@
 ---
 title: "Pan y vino sobre el altar (Ofrendas de amor)"
+indice: "O13"
 categoria: "Ofertorio"
 tipo: "Ofertorio"
 tiempo: "Ordinario"

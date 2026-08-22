@@ -1,5 +1,6 @@
 ---
 title: "Vida en abundancia"
+indice: "AD27"
 categoria: "Adoración"
 tipo: "Meditación"
 tiempo: "Ordinario"

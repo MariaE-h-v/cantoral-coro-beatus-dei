@@ -1,5 +1,6 @@
 ---
 title: "Aleluya Misal"
+indice: "A06"
 categoria: "Aleluya"
 tipo: "Aleluya"
 tiempo: "Ordinario"

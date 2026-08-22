@@ -1,5 +1,6 @@
 ---
 title: "¿Qué tenían tus ojos Jesús?"
+indice: "PC02"
 categoria: "Post-Comunión"
 tipo: "Propio"
 tiempo: "Ordinario"

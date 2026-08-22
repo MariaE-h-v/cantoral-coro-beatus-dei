@@ -1,5 +1,6 @@
 ---
 title: "Ven y sigueme"
+indice: "C42"
 categoria: "Comunión"
 tipo: "Vocacional"
 tiempo: "Ordinario"

@@ -1,5 +1,6 @@
 ---
 title: "Entraré"
+indice: "AD07"
 categoria: "Adoración"
 tipo: "Meditación"
 tiempo: "Ordinario"

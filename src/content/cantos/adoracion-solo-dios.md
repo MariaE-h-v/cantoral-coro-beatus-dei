@@ -1,5 +1,6 @@
 ---
 title: "Solo Dios"
+indice: "AD21"
 categoria: "Adoración"
 tipo: "Meditación"
 tiempo: "Ordinario"

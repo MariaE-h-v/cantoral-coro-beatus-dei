@@ -1,5 +1,6 @@
 ---
 title: "Perpetuo socorro"
+indice: "M16"
 categoria: "Marianos"
 tipo: "Marianos"
 tiempo: "Ordinario"

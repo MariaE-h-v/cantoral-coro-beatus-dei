@@ -1,5 +1,6 @@
 ---
 title: "Entra"
+indice: "AD06"
 categoria: "Adoración"
 tipo: "Adoración"
 tiempo: "Ordinario"

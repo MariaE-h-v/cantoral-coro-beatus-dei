@@ -1,5 +1,6 @@
 ---
 title: "Fuente bautismal"
+indice: "E16"
 categoria: "Entrada"
 tipo: "Bautizo"
 tiempo: "Ordinario"

@@ -1,5 +1,6 @@
 ---
 title: "Hoy es tiempo de santos"
+indice: "C22"
 categoria: "Comunión"
 tipo: "Propio"
 tiempo: "Ordinario"

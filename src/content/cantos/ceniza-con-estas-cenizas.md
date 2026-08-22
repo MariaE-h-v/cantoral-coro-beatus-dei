@@ -1,5 +1,6 @@
 ---
 title: "Con éstas cenizas señor"
+indice: "IC01"
 categoria: "Imposición de ceniza"
 tipo: "Miercoles de ceniza"
 tiempo: "Cuaresma"

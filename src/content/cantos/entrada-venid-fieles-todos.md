@@ -1,5 +1,6 @@
 ---
 title: "Venid fieles todos"
+indice: "E37"
 categoria: "Entrada"
 tipo: "Entrada"
 tiempo: "Navidad"

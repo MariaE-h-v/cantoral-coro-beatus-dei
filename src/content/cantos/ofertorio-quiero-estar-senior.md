@@ -1,5 +1,6 @@
 ---
 title: "Quiero estar señor en tu presencia"
+indice: "O15"
 categoria: "Ofertorio"
 tipo: "Ofertorio"
 tiempo: "Ordinario"

@@ -1,5 +1,6 @@
 ---
 title: "El rey del universo"
+indice: "AD05"
 categoria: "Adoración"
 tipo: "Meditación"
 tiempo: "Ordinario"

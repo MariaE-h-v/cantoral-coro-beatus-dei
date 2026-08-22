@@ -1,5 +1,6 @@
 ---
 title: "Aleluya Busca primero el reino de Dios"
+indice: "A02"
 categoria: "Aleluya"
 tipo: "Aleluya"
 tiempo: "Ordinario"

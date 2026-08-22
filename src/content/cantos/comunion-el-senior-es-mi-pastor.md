@@ -1,5 +1,6 @@
 ---
 title: "Jesús, el Buen Pastor"
+indice: "C12"
 categoria: "Comunión"
 tipo: "Propio"
 tiempo: "Ordinario"

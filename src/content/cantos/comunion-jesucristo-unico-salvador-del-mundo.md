@@ -1,5 +1,6 @@
 ---
 title: "Jesucristo único salvador del mundo"
+indice: "C23"
 categoria: "Comunión"
 tipo: "Propio"
 tiempo: "Ordinario"

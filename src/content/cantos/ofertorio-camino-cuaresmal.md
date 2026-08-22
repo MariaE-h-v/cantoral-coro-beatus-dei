@@ -1,5 +1,6 @@
 ---
 title: "Camino cuaresmal"
+indice: "O03"
 categoria: "Ofertorio"
 tipo: "Ofertorio"
 tiempo: "Cuaresma"

@@ -1,5 +1,6 @@
 ---
 title: "Hazme instrumento de tu paz"
+indice: "AD09"
 categoria: "Adoración"
 tipo: "Oracion"
 tiempo: "Santos"

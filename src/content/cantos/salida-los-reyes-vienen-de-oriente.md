@@ -1,5 +1,6 @@
 ---
 title: "Los reyes vienen de oriente"
+indice: "SA15"
 categoria: "Salida"
 tipo: "Salida"
 tiempo: "Navidad"

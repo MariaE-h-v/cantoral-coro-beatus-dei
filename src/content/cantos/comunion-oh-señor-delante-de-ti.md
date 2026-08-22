@@ -1,5 +1,6 @@
 ---
 title: "Oh señor delante de ti"
+indice: "C28"
 categoria: "Comunión"
 tipo: "Ordinario"
 tiempo: "Pascua"

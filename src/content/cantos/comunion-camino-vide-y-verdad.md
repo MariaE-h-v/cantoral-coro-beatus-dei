@@ -1,5 +1,6 @@
 ---
 title: "Camino vida y verdad"
+indice: "C05"
 categoria: "Comunión"
 tipo: "Propio"
 tiempo: "Pascua"

@@ -1,5 +1,6 @@
 ---
 title: "Aleluya Misa Panamericana"
+indice: "A10"
 categoria: "Aleluya"
 tipo: "Aleluya"
 tiempo: "Ordinario"

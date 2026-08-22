@@ -1,5 +1,6 @@
 ---
 title: "Este pan y vino"
+indice: "O07"
 categoria: "Ofertorio"
 tipo: "Ofertorio"
 tiempo: "Ordinario"

@@ -1,5 +1,6 @@
 ---
 title: "Santo"
+indice: "S03"
 categoria: "Santo"
 tipo: "Santo"
 tiempo: "Ordinario"

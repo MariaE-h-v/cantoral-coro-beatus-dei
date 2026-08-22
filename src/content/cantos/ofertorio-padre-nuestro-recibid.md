@@ -1,5 +1,6 @@
 ---
 title: "Padre nuestro recibid"
+indice: "O12"
 categoria: "Ofertorio"
 tipo: "Ofertorio"
 tiempo: "Ordinario"

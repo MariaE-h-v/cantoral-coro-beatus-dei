@@ -1,5 +1,6 @@
 ---
 title: "Ha vencido el cordero"
+indice: "E18"
 categoria: "Entrada"
 tipo: "Entrada"
 tiempo: "Pascua"

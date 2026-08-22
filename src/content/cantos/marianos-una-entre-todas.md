@@ -1,5 +1,6 @@
 ---
 title: "Una entre todas"
+indice: "M20"
 categoria: "Marianos"
 tipo: "Marianos"
 tiempo: "Ordinario"

@@ -1,5 +1,6 @@
 ---
 title: "Caminaré"
+indice: "E06"
 categoria: "Entrada"
 tipo: "Cuaresma"
 tiempo: "Cuaresma"

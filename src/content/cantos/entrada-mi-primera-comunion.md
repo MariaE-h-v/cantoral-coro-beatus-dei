@@ -1,5 +1,6 @@
 ---
 title: "Mi primera comunión"
+indice: "E24"
 categoria: "Entrada"
 tipo: "Entrada"
 tiempo: "Primera comunión"

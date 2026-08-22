@@ -1,5 +1,6 @@
 ---
 title: "La misericordia del señor"
+indice: "C25"
 categoria: "Comunión"
 tipo: "Propio"
 tiempo: "Pascua"

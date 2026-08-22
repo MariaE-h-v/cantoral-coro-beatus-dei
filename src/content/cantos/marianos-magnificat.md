@@ -1,5 +1,6 @@
 ---
 title: "Magnificat"
+indice: "M10"
 categoria: "Marianos"
 tipo: "Marianos"
 tiempo: "Ordinario"

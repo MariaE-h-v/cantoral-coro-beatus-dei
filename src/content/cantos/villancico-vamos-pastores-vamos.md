@@ -1,5 +1,6 @@
 ---
 title: "Vamos pastores vamos"
+indice: "ADN07"
 categoria: "Adoración Niño Dios"
 tipo: "Villancico"
 tiempo: "Navidad"

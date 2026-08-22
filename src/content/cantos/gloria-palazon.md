@@ -1,5 +1,6 @@
 ---
 title: "Gloria"
+indice: "G02"
 categoria: "Gloria"
 tipo: "Gloria"
 tiempo: "Ordinario"

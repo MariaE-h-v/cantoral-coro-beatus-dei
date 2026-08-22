@@ -1,5 +1,6 @@
 ---
 title: "Somos del señor"
+indice: "SA19"
 categoria: "Salida"
 tipo: "Salida"
 tiempo: "Ordinario"

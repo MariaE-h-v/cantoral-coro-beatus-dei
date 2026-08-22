@@ -1,5 +1,6 @@
 ---
 title: "Hambre de Dios"
+indice: "C20"
 categoria: "Comunión"
 tipo: "Comunión"
 tiempo: "Ordinario"

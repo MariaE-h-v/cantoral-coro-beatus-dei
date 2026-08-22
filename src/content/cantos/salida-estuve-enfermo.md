@@ -1,5 +1,6 @@
 ---
 title: "Estuve enfermo"
+indice: "SA10"
 categoria: "Salida"
 tipo: "Salida"
 tiempo: "Unción de enfermos"

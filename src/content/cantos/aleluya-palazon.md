@@ -1,5 +1,6 @@
 ---
 title: "Aleluya Palazon"
+indice: "A09"
 categoria: "Aleluya"
 tipo: "Aleluya"
 tiempo: "Ordinario"

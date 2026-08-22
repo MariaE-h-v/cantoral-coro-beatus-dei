@@ -1,5 +1,6 @@
 ---
 title: "Rito de aspersión"
+indice: "AS02"
 categoria: "Aspersión"
 tipo: "Aspersión"
 tiempo: "Pascua"

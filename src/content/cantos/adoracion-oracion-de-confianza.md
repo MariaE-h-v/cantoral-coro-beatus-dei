@@ -1,5 +1,6 @@
 ---
 title: "Oración de confianza"
+indice: "AD15"
 categoria: "Adoración"
 tipo: "Meditativo"
 tiempo: "Ordinario"

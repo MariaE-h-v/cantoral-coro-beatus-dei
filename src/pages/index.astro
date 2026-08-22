@@ -258,6 +258,7 @@ const resources = [
 		return escapeHtml(JSON.stringify({
 			slug: song.slug,
 			title: song.title,
+			indice: song.indice,
 			categoria: song.categoria,
 			tipo: song.tipo,
 			tiempo: song.tiempo,
@@ -281,7 +282,10 @@ const resources = [
 			<article class="${cardClass}"${cardStyle}>
 				<div class="song-card-head">
 					<div>
-						<p class="song-category">${escapeHtml(song.categoria)}</p>
+						<div class="song-card-kicker">
+							${song.indice ? `<span class="song-index-badge">${escapeHtml(song.indice)}</span>` : ''}
+							<p class="song-category">${escapeHtml(song.categoria)}</p>
+						</div>
 						<h3>${escapeHtml(song.title)}</h3>
 					</div>
 

@@ -1,5 +1,6 @@
 ---
 title: "Hemos entregado"
+indice: "O10"
 categoria: "Ofertorio"
 tipo: "Ofertorio"
 tiempo: "Ordinario"

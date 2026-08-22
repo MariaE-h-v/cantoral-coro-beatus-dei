@@ -1,5 +1,6 @@
 ---
 title: "Descansa en Dios"
+indice: "C09"
 categoria: "Comunión"
 tipo: "Comunión"
 tiempo: "Unción de enfermos"

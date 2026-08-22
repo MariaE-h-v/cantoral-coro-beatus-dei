@@ -4,10 +4,12 @@ import type { APIContext } from 'astro';
 export const prerender = true;
 
 const songModules = import.meta.glob('../content/cantos/*.md', { eager: true });
+const schemeModules = import.meta.glob('../content/esquemas/*.md', { eager: true });
 
 const staticRoutes = [
 	{ path: '/', priority: '1.0', changefreq: 'weekly' },
 	{ path: '/cantos', priority: '0.9', changefreq: 'weekly' },
+	{ path: '/esquemas', priority: '0.8', changefreq: 'weekly' },
 	{ path: '/tiempos-liturgicos', priority: '0.8', changefreq: 'monthly' },
 	{ path: '/tipos-de-misas', priority: '0.8', changefreq: 'monthly' },
 	{ path: '/recursos', priority: '0.8', changefreq: 'monthly' },
@@ -28,6 +30,14 @@ const songRoutes = Object.keys(songModules)
 	}))
 	.sort((a, b) => a.path.localeCompare(b.path));
 
+const schemeRoutes = Object.keys(schemeModules)
+	.map(file => ({
+		path: `/esquemas/${path.basename(file, '.md')}`,
+		priority: '0.7',
+		changefreq: 'monthly',
+	}))
+	.sort((a, b) => a.path.localeCompare(b.path));
+
 const escapeXml = (value: string) =>
 	value
 		.replace(/&/g, '&amp;')
@@ -43,7 +53,7 @@ const getSiteOrigin = ({ site, url }: APIContext) => {
 
 export function GET(context: APIContext) {
 	const siteOrigin = getSiteOrigin(context);
-	const routes = [...staticRoutes, ...songRoutes];
+	const routes = [...staticRoutes, ...songRoutes, ...schemeRoutes];
 	const urls = routes
 		.map(route => {
 			const loc = new URL(route.path, siteOrigin).toString();

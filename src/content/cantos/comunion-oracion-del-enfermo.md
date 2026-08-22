@@ -1,5 +1,6 @@
 ---
 title: "Oración de un enfermo (salmo 41)"
+indice: "C29"
 categoria: "Comunión"
 tipo: "Meditativo"
 tiempo: "Unción de enfermos"

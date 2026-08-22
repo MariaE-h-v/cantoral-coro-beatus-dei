@@ -1,5 +1,6 @@
 ---
 title: "Huayno al Sagrado corazón"
+indice: "SA13"
 categoria: "Salida"
 tipo: "Propio"
 tiempo: "Santos"

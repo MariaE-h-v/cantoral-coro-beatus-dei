@@ -1,5 +1,6 @@
 ---
 title: "Bienaventurados"
+indice: "C04"
 categoria: "Comunión"
 tipo: "Propio"
 tiempo: "Ordinario"

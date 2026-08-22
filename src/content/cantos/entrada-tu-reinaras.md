@@ -1,5 +1,6 @@
 ---
 title: "Tu reinarás"
+indice: "PR01"
 categoria: "Procesión"
 tipo: "Entrada"
 tiempo: "Ramos"

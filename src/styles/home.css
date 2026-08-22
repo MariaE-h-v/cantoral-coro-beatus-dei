@@ -291,14 +291,40 @@ body {
 	padding: 16px;
 }
 
+.featured-card-kicker,
+.song-card-kicker {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin: 0 0 8px;
+}
+
 .featured-badge,
 .song-category {
-	margin: 0 0 8px;
+	margin: 0;
 	font-size: 0.72rem;
 	letter-spacing: 0.14em;
 	text-transform: uppercase;
 	color: #b27722;
 	font-weight: 800;
+}
+
+.song-index-badge {
+	display: inline-flex;
+	min-height: 24px;
+	align-items: center;
+	justify-content: center;
+	padding: 0.28em 0.68em;
+	border-radius: 999px;
+	background: #24456f;
+	color: white;
+	font-size: 0.72rem;
+	font-weight: 900;
+	letter-spacing: 0.08em;
+	line-height: 1;
+	white-space: nowrap;
+	box-shadow: 0 10px 22px rgba(36, 69, 111, 0.16);
 }
 
 .featured-card h3 {

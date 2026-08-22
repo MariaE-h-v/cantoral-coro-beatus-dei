@@ -1,5 +1,6 @@
 ---
 title: "Salida"
+indice: "SA07"
 categoria: "Salida"
 tipo: "Santa Teresa"
 tiempo: "Santos"

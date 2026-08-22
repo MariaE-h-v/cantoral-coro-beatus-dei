@@ -1,5 +1,6 @@
 ---
 title: "Gloria trinitario"
+indice: "E17"
 categoria: "Entrada"
 tipo: "Trinidad"
 tiempo: "Trinidad"

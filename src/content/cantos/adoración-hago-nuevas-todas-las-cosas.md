@@ -1,5 +1,6 @@
 ---
 title: "Hago nuevas todas las cosas"
+indice: "C01"
 categoria: "Comunión"
 tipo: "Meditación"
 tiempo: "Ordinario"

@@ -1,5 +1,6 @@
 ---
 title: "Que díficil señor"
+indice: "AD32"
 categoria: "Adoración"
 tipo: "Vocacional"
 tiempo: "Ordinario"

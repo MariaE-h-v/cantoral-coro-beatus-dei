@@ -1,5 +1,6 @@
 ---
 title: "Vengan a mi"
+indice: "AD26"
 categoria: "Adoración"
 tipo: "Meditación"
 tiempo: "Ordinario"

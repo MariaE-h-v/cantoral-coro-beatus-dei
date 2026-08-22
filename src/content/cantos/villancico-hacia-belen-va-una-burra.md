@@ -1,5 +1,6 @@
 ---
 title: "Hacia Belén va una burra"
+indice: "ADN03"
 categoria: "Adoración Niño Dios"
 tipo: "Villancico"
 tiempo: "Navidad"

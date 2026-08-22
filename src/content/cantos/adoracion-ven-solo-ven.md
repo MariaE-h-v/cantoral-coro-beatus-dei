@@ -1,5 +1,6 @@
 ---
 title: "Ven solo ven"
+indice: "AD25"
 categoria: "Adoración"
 tipo: "Espiritu santo"
 tiempo: "Ordinario"

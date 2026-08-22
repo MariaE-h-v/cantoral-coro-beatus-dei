@@ -1,5 +1,6 @@
 ---
 title: "Cuando el pobre nada tiene"
+indice: "O05"
 categoria: "Ofertorio"
 tipo: "Celebración"
 tiempo: "Ordinario"

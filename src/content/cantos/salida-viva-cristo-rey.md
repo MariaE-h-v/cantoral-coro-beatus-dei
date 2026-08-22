@@ -1,5 +1,6 @@
 ---
 title: "Viva cristo rey"
+indice: "SA22"
 categoria: "Salida"
 tipo: "Propio"
 tiempo: "Ordinario"

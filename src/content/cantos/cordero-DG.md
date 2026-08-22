@@ -1,5 +1,6 @@
 ---
 title: "Cordero de dios"
+indice: "CD02"
 categoria: "Cordero de Dios"
 tipo: "Cordero de dios"
 tiempo: "Ordinario"

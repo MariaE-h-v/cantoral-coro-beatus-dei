@@ -1,5 +1,6 @@
 ---
 title: "Danos un corazón"
+indice: "SA05"
 categoria: "Salida"
 tipo: "Miercoles de ceniza"
 tiempo: "Cuaresma"

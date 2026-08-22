@@ -1,5 +1,6 @@
 ---
 title: "Pan de vida"
+indice: "AD16"
 categoria: "Adoración"
 tipo: "Hora santa"
 tiempo: "Ordinario"

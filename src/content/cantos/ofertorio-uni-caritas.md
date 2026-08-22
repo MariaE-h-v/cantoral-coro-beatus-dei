@@ -1,5 +1,6 @@
 ---
 title: "Ubi caritas"
+indice: "O19"
 categoria: "Ofertorio"
 tipo: "Ofertorio"
 tiempo: "Triduo pascual"

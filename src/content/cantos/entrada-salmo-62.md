@@ -1,5 +1,6 @@
 ---
 title: "Salmo 62"
+indice: "E32"
 categoria: "Entrada"
 tipo: "Entrada"
 tiempo: "Ordinario"

@@ -1,5 +1,6 @@
 ---
 title: "Un mandamiento nuevo"
+indice: "C40"
 categoria: "Comunión"
 tipo: "Jueves santo"
 tiempo: "Triduo Pascual"

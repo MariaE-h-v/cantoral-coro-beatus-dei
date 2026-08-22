@@ -1,5 +1,6 @@
 ---
 title: "Pentecostés"
+indice: "C32"
 categoria: "Comunión"
 tipo: "Propio"
 tiempo: "Pentecostés"

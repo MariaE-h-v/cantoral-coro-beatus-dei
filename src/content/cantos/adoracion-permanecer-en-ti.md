@@ -1,5 +1,6 @@
 ---
 title: "Permanecer en ti"
+indice: "AD17"
 categoria: "Adoración"
 tipo: "Adoración"
 tiempo: "Ordinario"

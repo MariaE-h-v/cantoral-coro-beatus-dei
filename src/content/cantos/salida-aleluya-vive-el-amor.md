@@ -1,5 +1,6 @@
 ---
 title: "Aleluya vive el amor!"
+indice: "SA04"
 categoria: "Salida"
 tipo: "Salida"
 tiempo: "Pascua"

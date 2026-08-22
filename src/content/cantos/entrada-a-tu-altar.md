@@ -1,5 +1,6 @@
 ---
 title: "A tu altar"
+indice: "E01"
 categoria: "Entrada"
 tipo: "Entrada"
 tiempo: "Cuaresma"

@@ -1,5 +1,6 @@
 ---
 title: "La familia sagrada"
+indice: "C24"
 categoria: "Comunión"
 tipo: "Comunión"
 tiempo: "Navidad"

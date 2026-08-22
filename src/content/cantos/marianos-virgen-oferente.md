@@ -1,5 +1,6 @@
 ---
 title: "Virgen oferente"
+indice: "M22"
 categoria: "Marianos"
 tipo: "Marianos"
 tiempo: "Cuaresma"

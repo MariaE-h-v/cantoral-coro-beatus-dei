@@ -6,6 +6,7 @@ const { songs, tiempoOptions, categoryOptions, authorOptions } = Astro.props;
 const filterSongs = songs.map(song => ({
 	slug: song.slug,
 	title: song.title,
+	indice: song.indice ?? '',
 	categoria: song.categoria ?? 'Canto',
 	tipo: song.tipo ?? 'Canto',
 	tiempo: song.tiempo ?? 'Sin tiempo',
@@ -16,6 +17,7 @@ const filterSongs = songs.map(song => ({
 	liturgico: Boolean(song.liturgico),
 	seasonBackground: song.seasonBackground ?? getLiturgicalBackground(song.tiempo, song.tags),
 	searchText: [
+		song.indice,
 		song.title,
 		song.description,
 		song.tipo,

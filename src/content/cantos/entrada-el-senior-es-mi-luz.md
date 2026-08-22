@@ -1,5 +1,6 @@
 ---
 title: "El señor es mi luz y mi salvación"
+indice: "E15"
 categoria: "Entrada"
 tipo: "Entrada"
 tiempo: "Ordinario"

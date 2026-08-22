@@ -1,5 +1,6 @@
 ---
 title: "Alma misionera"
+indice: "C47"
 categoria: "Comunión"
 tipo: "Vocacional"
 tiempo: "Ordinario"

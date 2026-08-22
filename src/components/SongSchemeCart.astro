@@ -177,10 +177,75 @@
 			.replace(/'/g, '&#039;');
 	}
 
+	function normalizeText(value) {
+		return String(value ?? '')
+			.normalize('NFD')
+			.replace(/[\u0300-\u036f]/g, '')
+			.toLowerCase()
+			.trim();
+	}
+
+	const liturgicalPrintAccents = [
+		{
+			label: 'Adviento',
+			color: '#6d3a88',
+			matches: ['adviento'],
+		},
+		{
+			label: 'Navidad',
+			color: '#c8902f',
+			matches: ['navidad', 'natividad'],
+		},
+		{
+			label: 'Cuaresma',
+			color: '#6f3a8d',
+			matches: ['cuaresma'],
+		},
+		{
+			label: 'Triduo',
+			color: '#9f2f2f',
+			matches: ['triduo', 'semana santa', 'jueves santo', 'viernes santo', 'vigilia pascual'],
+		},
+		{
+			label: 'Pascua',
+			color: '#d0a12f',
+			matches: ['pascua', 'pascual'],
+		},
+		{
+			label: 'Ordinario',
+			color: '#2f7d4b',
+			matches: ['ordinario'],
+		},
+		{
+			label: 'Santos',
+			color: '#8f5417',
+			matches: ['santos', 'santo', 'solemnidad', 'fiesta'],
+		},
+	];
+
+	function getLiturgicalPrintAccent(song) {
+		const liturgicalText = normalizeText(song?.tiempo);
+		const accent = liturgicalPrintAccents.find(item =>
+			item.matches.some(match => liturgicalText.includes(match))
+		);
+
+		return accent?.color ?? '#24456f';
+	}
+
+	function getLiturgicalPrintLabel(song) {
+		const liturgicalText = normalizeText(song?.tiempo);
+		const accent = liturgicalPrintAccents.find(item =>
+			item.matches.some(match => liturgicalText.includes(match))
+		);
+
+		return accent?.label ?? song?.tiempo ?? 'Sin tiempo';
+	}
+
 	function normalizeSong(song) {
 		return {
 			slug: song.slug,
 			title: song.title ?? 'Canto sin título',
+			indice: song.indice ?? '',
 			categoria: song.categoria ?? 'Canto',
 			tipo: song.tipo ?? 'Canto',
 			tiempo: song.tiempo ?? 'Sin tiempo',
@@ -195,6 +260,7 @@
 		return {
 			slug: song.slug,
 			title: song.title,
+			indice: song.indice,
 			categoria: song.categoria,
 			tiempo: song.tiempo,
 			tipo: song.tipo,
@@ -355,7 +421,7 @@
 					<article class="scheme-song-card">
 						<div class="scheme-song-index">${index + 1}</div>
 						<div class="scheme-song-body">
-							<span>${escapeHtml(song.categoria)}</span>
+							<span>${song.indice ? `${escapeHtml(song.indice)} · ` : ''}${escapeHtml(song.categoria)}</span>
 							<strong>${escapeHtml(song.title)}</strong>
 							<small>${escapeHtml(song.tiempo)} · ${escapeHtml(song.author)}</small>
 						</div>
@@ -432,25 +498,47 @@
 					<h2>Orden del esquema</h2>
 					<ol>
 						${scheme.songs
-							.map(song => `<li>${escapeHtml(song.title)} <span>${escapeHtml(song.categoria)}</span></li>`)
+							.map(song => `
+								<li>
+									${song.indice ? `<strong>${escapeHtml(song.indice)}</strong> ` : ''}
+									${escapeHtml(song.title)}
+									<span>${escapeHtml(song.categoria)}</span>
+								</li>
+							`)
 							.join('')}
 					</ol>
 				</section>
 
 				${scheme.songs
-					.map((song, index) => `
-						<section class="scheme-print-song">
-							<p class="scheme-print-kicker">${index + 1}. ${escapeHtml(song.categoria)}</p>
-							<h2>${escapeHtml(song.title)}</h2>
-							<div class="scheme-print-meta">
-								<span>${escapeHtml(song.tiempo)}</span>
-								<span>${escapeHtml(song.tipo)}</span>
-								<span>${escapeHtml(song.author)}</span>
-							</div>
-							${song.description ? `<p class="scheme-print-description">${escapeHtml(song.description)}</p>` : ''}
-							<pre class="scheme-print-lyrics"><code>${formatLyrics(song.lyrics)}</code></pre>
-						</section>
-					`)
+					.map((song, index) => {
+						const accentColor = getLiturgicalPrintAccent(song);
+						const seasonLabel = getLiturgicalPrintLabel(song);
+						const indexLabel = song.indice || String(index + 1).padStart(2, '0');
+
+						return `
+							<section class="scheme-print-song" style="--scheme-print-accent: ${accentColor};">
+								<div class="scheme-print-side-tab" aria-hidden="true">
+									<span>${escapeHtml(indexLabel)}</span>
+								</div>
+								<div class="scheme-print-season-tab" aria-hidden="true">
+									<span>${escapeHtml(seasonLabel)}</span>
+								</div>
+
+								<div class="scheme-print-song-content">
+									<p class="scheme-print-kicker">${index + 1}. ${song.indice ? `${escapeHtml(song.indice)} · ` : ''}${escapeHtml(song.categoria)}</p>
+									<h2>${escapeHtml(song.title)}</h2>
+									<div class="scheme-print-meta">
+										${song.indice ? `<span class="scheme-index-chip">${escapeHtml(song.indice)}</span>` : ''}
+										<span>${escapeHtml(song.tiempo)}</span>
+										<span>${escapeHtml(song.tipo)}</span>
+										<span>${escapeHtml(song.author)}</span>
+									</div>
+									${song.description ? `<p class="scheme-print-description">${escapeHtml(song.description)}</p>` : ''}
+									<pre class="scheme-print-lyrics"><code>${formatLyrics(song.lyrics)}</code></pre>
+								</div>
+							</section>
+						`;
+					})
 					.join('')}
 			</div>
 		`;
@@ -477,7 +565,7 @@
 							.map((song, index) => `
 								<li>
 									<a href="#scheme-preview-song-${index + 1}">
-										<strong>${index + 1}. ${escapeHtml(song.title)}</strong>
+										<strong>${index + 1}. ${song.indice ? `${escapeHtml(song.indice)} · ` : ''}${escapeHtml(song.title)}</strong>
 										<span>${escapeHtml(song.categoria)}</span>
 									</a>
 								</li>
@@ -491,12 +579,13 @@
 						<section id="scheme-preview-song-${index + 1}" class="scheme-preview-song">
 							<div class="scheme-preview-song-head">
 								<div>
-									<p>${index + 1}. ${escapeHtml(song.categoria)}</p>
+									<p>${index + 1}. ${song.indice ? `${escapeHtml(song.indice)} · ` : ''}${escapeHtml(song.categoria)}</p>
 									<h2>${escapeHtml(song.title)}</h2>
 								</div>
 								<a href="${escapeHtml(song.href)}">Detalle</a>
 							</div>
 							<div class="scheme-preview-meta">
+								${song.indice ? `<span class="scheme-index-chip">${escapeHtml(song.indice)}</span>` : ''}
 								<span>${escapeHtml(song.tiempo)}</span>
 								<span>${escapeHtml(song.tipo)}</span>
 								<span>${escapeHtml(song.author)}</span>
@@ -587,6 +676,18 @@
 		}
 	});
 	document.addEventListener('song-scheme-cards-rendered', updateButtons);
+	document.addEventListener('song-scheme-replace', event => {
+		const nextScheme = event instanceof CustomEvent ? event.detail : null;
+		const appliedScheme = applySharedScheme(nextScheme);
+		if (!appliedScheme) return;
+
+		scheme = appliedScheme;
+		saveScheme();
+		renderList();
+		closePreview();
+		openCart();
+		notifyScheme('Esquema cargado en el separador');
+	});
 
 	list?.addEventListener('click', event => {
 		const target = event.target instanceof Element ? event.target : null;
@@ -1289,6 +1390,13 @@
 		font-weight: 800;
 	}
 
+	.scheme-preview :global(.scheme-preview-meta .scheme-index-chip) {
+		background: #24456f;
+		border-color: rgba(36, 69, 111, 0.22);
+		color: white;
+		letter-spacing: 0.08em;
+	}
+
 	.scheme-preview :global(.scheme-preview-description) {
 		margin: 0 0 14px;
 		color: #64748b;
@@ -1430,6 +1538,8 @@
 			font-family: Georgia, 'Times New Roman', serif;
 			font-size: 11pt;
 			line-height: 1.45;
+			-webkit-print-color-adjust: exact;
+			print-color-adjust: exact;
 		}
 
 		:global(.scheme-print-page) {
@@ -1490,22 +1600,106 @@
 			margin-bottom: 4px;
 		}
 
+		:global(.scheme-print-index li strong) {
+			color: #111827;
+			font-size: 9pt;
+			letter-spacing: 0.08em;
+		}
+
 		:global(.scheme-print-index span) {
 			color: #8f5417;
 			font-size: 9pt;
 		}
 
 		:global(.scheme-print-song) {
-			margin-bottom: 24px;
-			padding-top: 16px;
+			position: relative;
+			min-height: 72px;
+			margin: 0 0 22px;
+			padding: 14px 16mm 16px 22mm;
 			border-top: 1px solid #e5e7eb;
+			border-bottom: 1px solid #f1e8dd;
 			break-inside: avoid;
 			page-break-inside: avoid;
 		}
 
+		:global(.scheme-print-song)::before {
+			content: '';
+			position: absolute;
+			top: 12px;
+			bottom: 12px;
+			left: 18mm;
+			width: 2px;
+			border-radius: 999px;
+			background: var(--scheme-print-accent, #24456f);
+			opacity: 0.24;
+		}
+
+		:global(.scheme-print-side-tab) {
+			position: absolute;
+			top: 14px;
+			left: 0;
+			display: inline-flex;
+			width: 15mm;
+			min-height: 28mm;
+			align-items: center;
+			justify-content: center;
+			padding: 4mm 1.5mm;
+			border-radius: 0 7px 7px 0;
+			background: var(--scheme-print-accent, #24456f);
+			color: white;
+			box-sizing: border-box;
+			-webkit-print-color-adjust: exact;
+			print-color-adjust: exact;
+		}
+
+		:global(.scheme-print-season-tab) {
+			position: absolute;
+			top: 14px;
+			right: 0;
+			display: inline-flex;
+			width: 10mm;
+			min-height: 36mm;
+			align-items: center;
+			justify-content: center;
+			padding: 3mm 1.4mm;
+			border-radius: 7px 0 0 7px;
+			background: var(--scheme-print-accent, #24456f);
+			color: white;
+			box-sizing: border-box;
+			-webkit-print-color-adjust: exact;
+			print-color-adjust: exact;
+		}
+
+		:global(.scheme-print-season-tab span) {
+			color: white;
+			font-family: Inter, system-ui, sans-serif;
+			font-size: 7.5pt;
+			font-weight: 900;
+			letter-spacing: 0.08em;
+			line-height: 1;
+			text-transform: uppercase;
+			writing-mode: vertical-rl;
+			transform: rotate(180deg);
+			white-space: nowrap;
+		}
+
+		:global(.scheme-print-side-tab span) {
+			color: white;
+			font-family: Inter, system-ui, sans-serif;
+			font-size: 9.5pt;
+			font-weight: 900;
+			letter-spacing: 0.08em;
+			line-height: 1;
+			text-transform: uppercase;
+		}
+
+		:global(.scheme-print-song-content) {
+			min-width: 0;
+		}
+
 		:global(.scheme-print-kicker) {
 			margin: 0 0 4px;
-			color: #8f5417;
+			color: var(--scheme-print-accent, #8f5417);
 			font-size: 9pt;
 			font-weight: 700;
 			letter-spacing: 0.1em;
@@ -1525,6 +1719,13 @@
 			padding: 2px 7px;
 			border: 1px solid #e5e7eb;
 			border-radius: 999px;
+		}
+
+		:global(.scheme-print-meta .scheme-index-chip) {
+			border-color: var(--scheme-print-accent, #24456f);
+			color: var(--scheme-print-accent, #24456f);
+			font-weight: 700;
+			letter-spacing: 0.08em;
 		}
 
 		:global(.scheme-print-description) {

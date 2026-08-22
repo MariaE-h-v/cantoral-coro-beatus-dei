@@ -1,5 +1,6 @@
 ---
 title: "El profeta"
+indice: "SA23"
 categoria: "Salida"
 tipo: "Vocacional"
 tiempo: "Ordinario"

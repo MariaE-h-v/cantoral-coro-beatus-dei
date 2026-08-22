@@ -1,5 +1,6 @@
 ---
 title: "Como el ciervo"
+indice: "E08"
 categoria: "Entrada"
 tipo: "Ordinario"
 tiempo: "Ordinario"

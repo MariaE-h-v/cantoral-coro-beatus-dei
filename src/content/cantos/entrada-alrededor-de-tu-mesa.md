@@ -1,5 +1,6 @@
 ---
 title: "Alrededor de tu mesa"
+indice: "E05"
 categoria: "Entrada"
 tipo: "Ordinario"
 tiempo: "Ordinario"

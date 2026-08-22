@@ -1,5 +1,6 @@
 ---
 title: "Al recibirte en comunión"
+indice: "C03"
 categoria: "Comunión"
 tipo: "Eucarístico"
 tiempo: "Ordinario"

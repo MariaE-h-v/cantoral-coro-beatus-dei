@@ -26,6 +26,7 @@ const frontmatter = current.frontmatter ?? {};
 const lyrics = typeof current.rawContent === 'function' ? current.rawContent() : '';
 const cleanLyrics = lyrics.replace(/^\s*\n/, '').replace(/\s+$/, '');
 const songTitle = frontmatter.title ?? slug;
+const songIndex = frontmatter.indice ?? '';
 const songCategory = frontmatter.categoria ?? 'Sin categoría';
 const songType = frontmatter.tipo ?? 'Sin tipo';
 const songSeason = frontmatter.tiempo ?? 'Sin tiempo';
@@ -66,6 +67,7 @@ const getYouTubeEmbedUrl = (value: unknown) => {
 const liturgicalSeasonBackground = getLiturgicalBackground(songSeason, songTags);
 const youtubeEmbedUrl = getYouTubeEmbedUrl(youtubeUrl);
 const detailBadges = [
+	...(songIndex ? [{ label: 'Índice', value: songIndex, status: 'indice' }] : []),
 	{ label: 'Momento', value: songCategory },
 	{ label: 'Tipo', value: songType },
 	{ label: 'Tiempo', value: songSeason },
@@ -79,6 +81,7 @@ const detailBadges = [
 const schemeSong = JSON.stringify({
 	slug,
 	title: songTitle,
+	indice: songIndex,
 	categoria: frontmatter.categoria ?? 'Canto',
 	tipo: frontmatter.tipo ?? 'Canto',
 	tiempo: frontmatter.tiempo ?? 'Sin tiempo',
@@ -227,7 +230,10 @@ const songJsonLd = {
 							href={`/cantos/${song.slug}`}
 						>
 							<h3>{song.title}</h3>
-							<p>{song.tiempo ?? 'Sin tiempo'}</p>
+							<p>
+								{song.indice ? <span class="related-index">{song.indice}</span> : null}
+								{song.tiempo ?? 'Sin tiempo'}
+							</p>
 						</a>
 					))}
 				</div>
@@ -522,6 +528,22 @@ updateLyrics();
 	.detail-badge.liturgico span,
 	.detail-badge.liturgico strong {
 		color: #15803d;
+	}
+
+	.detail-badge.indice {
+		background: #24456f;
+		border-color: rgba(36, 69, 111, 0.22);
+		box-shadow: 0 12px 28px rgba(36, 69, 111, 0.18);
+	}
+
+	.detail-badge.indice span,
+	.detail-badge.indice strong {
+		color: white;
+	}
+
+	.detail-badge.indice strong {
+		font-size: 0.94rem;
+		letter-spacing: 0.08em;
 	}
 
 	.detail-badge.neutral {
@@ -824,6 +846,25 @@ updateLyrics();
 	.related-card p {
 		margin: 0;
 		color: #475569;
+	}
+
+	.related-index {
+		display: inline-flex;
+		min-height: 23px;
+		align-items: center;
+		justify-content: center;
+		margin-right: 8px;
+		padding: 0.26em 0.62em;
+		border-radius: 999px;
+		background: #24456f;
+		color: white;
+		font-size: 0.72rem;
+		font-weight: 900;
+		letter-spacing: 0.08em;
+		line-height: 1;
+		vertical-align: middle;
+		white-space: nowrap;
+		box-shadow: 0 10px 22px rgba(36, 69, 111, 0.16);
 	}
 
 	@media (max-width: 720px) {

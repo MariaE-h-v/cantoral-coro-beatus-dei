@@ -1,5 +1,6 @@
 ---
 title: "Ven y Reina Madre de Dios"
+indice: "M21"
 categoria: "Marianos"
 tipo: "Marianos"
 tiempo: "Ordinario"

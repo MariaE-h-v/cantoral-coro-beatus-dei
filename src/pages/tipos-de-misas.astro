@@ -11,6 +11,7 @@ const songs = Object.entries(rawSongs)
 
 		return {
 			title: data.title ?? slug,
+			indice: data.indice ?? '',
 			categoria: data.categoria ?? 'Canto',
 			tipo: data.tipo ?? 'Canto',
 			tiempo: data.tiempo ?? 'Sin tiempo',
@@ -149,6 +150,7 @@ const massTypes = [
 ];
 
 const songValues = (song: typeof songs[number]) => [
+	song.indice,
 	song.title,
 	song.description,
 	song.tipo,
@@ -287,6 +289,7 @@ const groups = Array.from(new Set(massTypes.map(type => type.group)));
 																</span>
 
 																<span class="song-meta">
+																	{song.indice ? <span class="song-index-badge">{song.indice}</span> : null}
 																	<span>{song.categoria}</span>
 																	<span>{song.tiempo}</span>
 																</span>
@@ -650,6 +653,14 @@ const groups = Array.from(new Set(massTypes.map(type => type.group)));
 		border-radius: 999px;
 		background: #f8fafc;
 		border: 1px solid #e5e7eb;
+	}
+
+	.song-meta .song-index-badge {
+		background: #24456f;
+		border-color: rgba(36, 69, 111, 0.22);
+		color: white;
+		font-weight: 900;
+		letter-spacing: 0.08em;
 	}
 
 	.mass-type-empty {

@@ -1,5 +1,6 @@
 ---
 title: "Te entrego"
+indice: "AD22"
 categoria: "Adoración"
 tipo: "Meditación"
 tiempo: "Ordinario"

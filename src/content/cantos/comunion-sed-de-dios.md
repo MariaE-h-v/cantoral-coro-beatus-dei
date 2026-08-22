@@ -1,5 +1,6 @@
 ---
 title: "Sed de Dios"
+indice: "C35"
 categoria: "Comunión"
 tipo: "Comunión"
 tiempo: "Pascua"

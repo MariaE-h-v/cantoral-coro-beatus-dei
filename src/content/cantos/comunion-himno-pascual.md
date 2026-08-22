@@ -1,5 +1,6 @@
 ---
 title: "Himno Pascual"
+indice: "C21"
 categoria: "Comunión"
 tipo: "Himno"
 tiempo: "Ramos"

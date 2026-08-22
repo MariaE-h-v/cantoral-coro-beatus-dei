@@ -1,5 +1,6 @@
 ---
 title: "Señor a quien iremos"
+indice: "C36"
 categoria: "Comunión"
 tipo: "Comunión"
 tiempo: "Ordinario"
@@ -8,7 +9,7 @@ liturgico: true
 tags:
   - Comunión
   - Ordinario
-description: "Señor a quien iremos tu tienes palabraz de vida..."
+description: "Señor a quien iremos tu tienes palabras de vida..."
 ---
 F         C     Dm
 Señor a quien iremos

@@ -1,5 +1,6 @@
 ---
 title: "Aleluya Gregoriano modo 6"
+indice: "A07"
 categoria: "Aleluya"
 tipo: "Aleluya"
 tiempo: "Ordinario"

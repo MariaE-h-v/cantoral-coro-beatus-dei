@@ -1,5 +1,6 @@
 ---
 title: "Temblando de amor"
+indice: "AD08"
 categoria: "Adoración"
 tipo: "Adoración"
 tiempo: "Ordinario"

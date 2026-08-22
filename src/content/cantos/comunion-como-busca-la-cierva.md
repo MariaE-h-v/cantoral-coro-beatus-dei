@@ -1,5 +1,6 @@
 ---
 title: "Como busca la cierva"
+indice: "C06"
 categoria: "Comunión"
 tipo: "Propio"
 tiempo: "Ordinario"

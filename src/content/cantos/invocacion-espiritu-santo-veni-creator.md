@@ -1,5 +1,6 @@
 ---
 title: "Veni creátor spíritus"
+indice: "IE01"
 categoria: "Invocación espíritu santo"
 tipo: "Veni creátor spíritus"
 tiempo: "Pentecostés"

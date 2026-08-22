@@ -1,5 +1,6 @@
 ---
 title: "Toma nuestros corazones"
+indice: "O16"
 categoria: "Ofertorio"
 tipo: "Ofertorio"
 tiempo: "Ordinario"

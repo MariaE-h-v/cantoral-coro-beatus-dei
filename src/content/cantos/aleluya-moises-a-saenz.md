@@ -1,5 +1,6 @@
 ---
 title: "Aleluya"
+indice: "A08"
 categoria: "Aleluya"
 tipo: "Aleluya"
 tiempo: "Adviento"

@@ -1,5 +1,6 @@
 ---
 title: "Llevemos al señor"
+indice: "O11"
 categoria: "Ofertorio"
 tipo: "Ofertorio"
 tiempo: "Ordinario"

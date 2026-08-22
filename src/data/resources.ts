@@ -35,6 +35,13 @@ export const resourceCategories = [
 		meta: 'PDFs',
 	},
 	{
+		title: 'Esquemas',
+		description: 'Modelos de cantos listos para cargar en el separador y usar en misa.',
+		icon: '▦',
+		href: '/esquemas',
+		meta: 'Markdown',
+	},
+	{
 		title: 'Tipos de Misas',
 		description: 'Guía para elegir cantos en sacramentos, acción de gracias y celebraciones de la Palabra.',
 		icon: '✚',

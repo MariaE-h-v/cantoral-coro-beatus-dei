@@ -1,5 +1,6 @@
 ---
 title: "Eucaristía milagro de amor"
+indice: "C18"
 categoria: "Comunión"
 tipo: "Eucarístico"
 tiempo: "Ordinario"

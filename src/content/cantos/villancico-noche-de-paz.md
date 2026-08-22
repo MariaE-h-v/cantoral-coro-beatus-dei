@@ -1,5 +1,6 @@
 ---
 title: "Noche de Paz"
+indice: "ADN06"
 categoria: "Adoración Niño Dios"
 tipo: "Villancico"
 tiempo: "Navidad"

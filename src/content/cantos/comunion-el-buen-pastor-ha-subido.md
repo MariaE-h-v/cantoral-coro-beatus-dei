@@ -1,5 +1,6 @@
 ---
 title: "El buen pastor ha subido"
+indice: "C10"
 categoria: "Comunión"
 tipo: "Propio"
 tiempo: "Pascua"

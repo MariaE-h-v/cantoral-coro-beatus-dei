@@ -18,6 +18,7 @@ const songs = Object.entries(rawSongs).map(([file, module]) => {
 
 	return {
 		title: data.title ?? slug,
+		indice: data.indice ?? '',
 		categoria: data.categoria ?? '',
 		tipo: data.tipo ?? '',
 		tiempo: data.tiempo ?? '',
@@ -449,6 +450,7 @@ const songs = Object.entries(rawSongs).map(([file, module]) => {
 
 	function getSearchText(song) {
 		return normalizeText([
+			song.indice,
 			song.title,
 			song.categoria,
 			song.tipo,
@@ -505,6 +507,7 @@ const songs = Object.entries(rawSongs).map(([file, module]) => {
 		return songs
 			.map(song => {
 				const title = normalizeText(song.title);
+				const indice = normalizeText(song.indice);
 				const author = normalizeText(song.author);
 				const category = normalizeText(song.categoria);
 				const type = normalizeText(song.tipo);
@@ -514,6 +517,10 @@ const songs = Object.entries(rawSongs).map(([file, module]) => {
 				const fullText = getSearchText(song);
 
 				let score = 0;
+
+				if (indice === normalizedQuery) score += 130;
+				if (indice.startsWith(normalizedQuery)) score += 85;
+				if (indice.includes(normalizedQuery)) score += 55;
 
 				if (title === normalizedQuery) score += 120;
 				if (title.startsWith(normalizedQuery)) score += 90;
@@ -584,6 +591,7 @@ const songs = Object.entries(rawSongs).map(([file, module]) => {
 			item.setAttribute('data-index', String(index));
 
 			const metaParts = [
+				song.indice,
 				song.tiempo,
 				song.author,
 			].filter(Boolean);

@@ -1,5 +1,6 @@
 ---
 title: "Emaús"
+indice: "C13"
 categoria: "Comunión"
 tipo: "Propio"
 tiempo: "Pascua"

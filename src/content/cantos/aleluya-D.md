@@ -1,5 +1,6 @@
 ---
 title: "Aleluya D"
+indice: "A03"
 categoria: "Aleluya"
 tipo: "Aleluya"
 tiempo: "Ordinario"

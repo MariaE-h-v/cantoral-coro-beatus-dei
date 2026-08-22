@@ -1,5 +1,6 @@
 ---
 title: "Estoy que te doy"
+indice: "O09"
 categoria: "Ofertorio"
 tipo: "Ofertorio"
 tiempo: "Ordinario"

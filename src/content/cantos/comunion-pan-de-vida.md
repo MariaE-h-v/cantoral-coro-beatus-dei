@@ -1,5 +1,6 @@
 ---
 title: "Pan de vida"
+indice: "C31"
 categoria: "Comunión"
 tipo: "Eucarístico"
 tiempo: "Ordinario"

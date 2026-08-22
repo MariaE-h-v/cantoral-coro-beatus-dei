@@ -1,5 +1,6 @@
 ---
 title: "Me rindo a ti"
+indice: "AD12"
 categoria: "Adoración"
 tipo: "Hora santa"
 tiempo: "Ordinario"

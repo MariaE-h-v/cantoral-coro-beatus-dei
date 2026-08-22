@@ -1,5 +1,6 @@
 ---
 title: "Todos los que han sido bautizados"
+indice: "SA20"
 categoria: "Salida"
 tipo: "Propio"
 tiempo: "Bautizo"

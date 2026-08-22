@@ -1,5 +1,6 @@
 ---
 title: "Renace la esperanza"
+indice: "SA17"
 categoria: "Salida"
 tipo: "Salida"
 tiempo: "Pascua"

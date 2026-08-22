@@ -1,5 +1,6 @@
 ---
 title: "El cielo canta alegría"
+indice: "E12"
 categoria: "Entrada"
 tipo: "Entrada"
 tiempo: "Pascua"

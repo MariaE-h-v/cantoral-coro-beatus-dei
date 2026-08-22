@@ -1,5 +1,6 @@
 ---
 title: "Entre tus manos"
+indice: "O06"
 categoria: "Ofertorio"
 tipo: "Ofertorio"
 tiempo: "Ordinario"

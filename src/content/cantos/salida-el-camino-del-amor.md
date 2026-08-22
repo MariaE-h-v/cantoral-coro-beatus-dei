@@ -1,5 +1,6 @@
 ---
 title: "El camino del amor"
+indice: "SA09"
 categoria: "Salida"
 tipo: "Salida"
 tiempo: "Pascua"

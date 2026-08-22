@@ -1,5 +1,6 @@
 ---
 title: "Mi Dios está vivo"
+indice: "C26"
 categoria: "Comunión"
 tipo: "Propio"
 tiempo: "Pascua"

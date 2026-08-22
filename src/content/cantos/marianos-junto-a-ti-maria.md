@@ -1,5 +1,6 @@
 ---
 title: "Junto a ti María"
+indice: "M07"
 categoria: "Marianos"
 tipo: "Marianos"
 tiempo: "Ordinario"

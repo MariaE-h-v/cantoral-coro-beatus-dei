@@ -1,5 +1,6 @@
 ---
 title: "El niño del tambor"
+indice: "ADN02"
 categoria: "Adoración Niño Dios"
 tipo: "Villancico"
 tiempo: "Navidad"

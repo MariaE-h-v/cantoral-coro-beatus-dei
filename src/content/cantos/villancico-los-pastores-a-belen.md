@@ -1,5 +1,6 @@
 ---
 title: "Los pastores a Belén"
+indice: "ADN05"
 categoria: "Adoración Niño Dios"
 tipo: "Villancico"
 tiempo: "Navidad"

@@ -1,5 +1,6 @@
 ---
 title: "Alma de Cristo"
+indice: "PC03"
 categoria: "Post-comunión"
 tipo: "Post-comunión"
 tiempo: "Ordinario"

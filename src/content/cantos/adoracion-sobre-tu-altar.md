@@ -1,5 +1,6 @@
 ---
 title: "Sobre tu altar"
+indice: "AD20"
 categoria: "Adoración"
 tipo: "Adoración"
 tiempo: "Ordinario"

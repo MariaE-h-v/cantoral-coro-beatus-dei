@@ -1,5 +1,6 @@
 ---
 title: "Éste es el cordero de Dios"
+indice: "C15"
 categoria: "Comunión"
 tipo: "Propio"
 tiempo: "Ordinario"

@@ -1,5 +1,6 @@
 ---
 title: "Que alegría cuando me dijeron"
+indice: "E28"
 categoria: "Entrada"
 tipo: "Entrada"
 tiempo: "Ordinario"

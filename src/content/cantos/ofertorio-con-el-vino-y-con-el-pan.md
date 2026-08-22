@@ -1,5 +1,6 @@
 ---
 title: "Con el vino y con el pan"
+indice: "O04"
 categoria: "Ofertorio"
 tipo: "Ofertorio"
 tiempo: "Ordinario"

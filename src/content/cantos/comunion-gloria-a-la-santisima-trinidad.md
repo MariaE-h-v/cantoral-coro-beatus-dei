@@ -1,5 +1,6 @@
 ---
 title: "Gloria a la santísima trinidad"
+indice: "C19"
 categoria: "Comunión"
 tipo: "Trinidad"
 tiempo: "Ordinario"

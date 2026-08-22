@@ -1,5 +1,6 @@
 ---
 title: "Dios nos convoca"
+indice: "E10"
 categoria: "Entrada"
 tipo: "Entrada"
 tiempo: "Ordinario"

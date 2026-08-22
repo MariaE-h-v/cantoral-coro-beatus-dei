@@ -1,5 +1,6 @@
 ---
 title: "Adeste fideles"
+indice: "E02"
 categoria: "Entrada"
 tipo: "Entrada"
 tiempo: "Navidad"

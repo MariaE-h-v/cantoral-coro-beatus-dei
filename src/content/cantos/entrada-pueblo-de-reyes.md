@@ -1,5 +1,6 @@
 ---
 title: "Pueblo de reyes"
+indice: "E27"
 categoria: "Entrada"
 tipo: "Entrada"
 tiempo: "Ordinario"

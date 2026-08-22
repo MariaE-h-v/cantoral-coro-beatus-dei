@@ -1,5 +1,6 @@
 ---
 title: "Señor ten piedad"
+indice: "ST01"
 categoria: "Señor ten piedad"
 tipo: "Señor ten piedad"
 tiempo: "Ordinario"

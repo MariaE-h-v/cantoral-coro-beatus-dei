@@ -1,5 +1,6 @@
 ---
 title: "Ven e Ilumina"
+indice: "IE02"
 categoria: "Invocación espíritu santo"
 tipo: "Invocación espíritu"
 tiempo: "Pentecostés"

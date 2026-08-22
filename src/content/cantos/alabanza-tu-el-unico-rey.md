@@ -1,5 +1,6 @@
 ---
 title: "Tú el único Rey"
+indice: "AL01"
 categoria: "Alabanza"
 tipo: "Ordinario"
 tiempo: "Ordinario"

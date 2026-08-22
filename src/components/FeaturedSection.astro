@@ -18,6 +18,7 @@ const { featuredSongs } = Astro.props;
 			const schemeSong = JSON.stringify({
 				slug: song.slug,
 				title: song.title,
+				indice: song.indice ?? '',
 				categoria: song.categoria ?? 'Canto',
 				tipo: song.tipo ?? 'Canto',
 				tiempo: song.tiempo ?? 'Sin tiempo',
@@ -42,7 +43,10 @@ const { featuredSongs } = Astro.props;
 					</a>
 
 					<div class="featured-content">
-						<p class="featured-badge">{song.categoria ?? 'Canto'}</p>
+						<div class="featured-card-kicker">
+							{song.indice ? <span class="song-index-badge">{song.indice}</span> : null}
+							<p class="featured-badge">{song.categoria ?? 'Canto'}</p>
+						</div>
 
 						<h3>
 							<a href={`/cantos/${song.slug}`}>{song.title}</a>

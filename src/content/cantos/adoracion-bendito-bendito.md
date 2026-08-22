@@ -1,5 +1,6 @@
 ---
 title: "Bendito bendito"
+indice: "AD03"
 categoria: "Adoración"
 tipo: "Hora santa"
 tiempo: "Ordinario"

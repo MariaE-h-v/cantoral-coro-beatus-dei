@@ -1,5 +1,6 @@
 ---
 title: "Te presentamos el vino y el pan"
+indice: "O18"
 categoria: "Ofertorio"
 tipo: "Ofertorio"
 tiempo: "Ordinario"

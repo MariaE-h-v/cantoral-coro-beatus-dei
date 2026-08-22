@@ -1,5 +1,6 @@
 ---
 title: "Himno a San José"
+indice: "SA01"
 categoria: "Salida"
 tipo: "Salida"
 tiempo: "Santos"

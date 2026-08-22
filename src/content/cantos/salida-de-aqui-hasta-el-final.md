@@ -1,5 +1,6 @@
 ---
 title: "Salida"
+indice: "SA06"
 categoria: "Salida"
 tipo: "Matrimonio"
 tiempo: "Matrimonio"

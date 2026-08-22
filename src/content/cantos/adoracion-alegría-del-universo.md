@@ -1,5 +1,6 @@
 ---
 title: "Alegría del universo"
+indice: "AD01"
 categoria: "Adoración"
 tipo: "Adoración"
 tiempo: "Pascua"

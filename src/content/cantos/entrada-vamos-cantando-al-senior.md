@@ -1,5 +1,6 @@
 ---
 title: "Vamos cantando al señor"
+indice: "E35"
 categoria: "Entrada"
 tipo: "Entrada"
 tiempo: "Ordinario"

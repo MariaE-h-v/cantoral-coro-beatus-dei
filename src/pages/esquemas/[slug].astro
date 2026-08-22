@@ -1,0 +1,542 @@
+---
+import path from 'node:path';
+import Layout from '../../layouts/Layout.astro';
+import { getLiturgicalBackground } from '../../utils/liturgicalSeason';
+
+const schemeModules = import.meta.glob('../../content/esquemas/*.md', { eager: true });
+const songModules = import.meta.glob('../../content/cantos/*.md', { eager: true });
+
+export async function getStaticPaths() {
+	const pages = import.meta.glob('../../content/esquemas/*.md', { eager: true });
+	return Object.keys(pages).map(file => ({
+		params: { slug: path.basename(file, '.md') },
+	}));
+}
+
+const normalize = (value: unknown) =>
+	String(value ?? '')
+		.normalize('NFD')
+		.replace(/[\u0300-\u036f]/g, '')
+		.replace(/[-_]+/g, ' ')
+		.toLowerCase()
+		.trim();
+
+const slugFromHref = (href: unknown) => {
+	const cleanHref = String(href ?? '').split('?')[0].replace(/\/+$/, '');
+	return cleanHref ? path.basename(cleanHref) : '';
+};
+
+const songs = Object.entries(songModules).map(([file, module]) => {
+	const markdown = module as any;
+	const data = markdown.frontmatter ?? {};
+	const slug = path.basename(file, '.md');
+	const lyrics = typeof markdown.rawContent === 'function' ? markdown.rawContent() : '';
+
+	return {
+		slug,
+		title: data.title ?? slug,
+		indice: data.indice ?? '',
+		categoria: data.categoria ?? 'Canto',
+		tipo: data.tipo ?? 'Canto',
+		tiempo: data.tiempo ?? 'Sin tiempo',
+		author: data.author ?? 'Autor desconocido',
+		description: data.description ?? '',
+		href: `/cantos/${slug}`,
+		lyrics,
+	};
+});
+
+const findSong = (item: Record<string, unknown>) => {
+	const itemSlug = String(item.slug ?? slugFromHref(item.href) ?? '');
+	const itemIndice = normalize(item.indice);
+	const itemTitle = normalize(item.title ?? item.canto);
+
+	return songs.find(song => {
+		if (itemSlug && song.slug === itemSlug) return true;
+		if (itemIndice && normalize(song.indice) === itemIndice) return true;
+		if (itemTitle && normalize(song.title) === itemTitle) return true;
+		return false;
+	});
+};
+
+const slug = Astro.params.slug;
+const entry = Object.entries(schemeModules).find(([file]) => path.basename(file, '.md') === slug);
+if (!entry) {
+	throw new Error(`Esquema no encontrado: ${slug}`);
+}
+
+const [, module] = entry;
+const current = module as any;
+const Content = current.Content;
+const frontmatter = current.frontmatter ?? {};
+const rawSchemeSongs = Array.isArray(frontmatter.cantos) ? frontmatter.cantos : [];
+const schemeTitle = frontmatter.title ?? slug;
+const schemeDescription =
+	frontmatter.description ?? 'Esquema de cantos preparado para una celebracion liturgica.';
+const schemeType = frontmatter.tipo ?? 'Celebracion';
+const schemeSeason = frontmatter.tiempo ?? 'Sin tiempo';
+const schemeTags = Array.isArray(frontmatter.tags) ? frontmatter.tags : [];
+const schemeBackground = getLiturgicalBackground(schemeSeason, schemeTags);
+
+const schemeSongs = rawSchemeSongs.map((rawItem: unknown, index: number) => {
+	const item =
+		typeof rawItem === 'string'
+			? { title: rawItem }
+			: ((rawItem ?? {}) as Record<string, unknown>);
+	const song = findSong(item);
+
+	return {
+		momento: item.momento ?? song?.categoria ?? `Canto ${index + 1}`,
+		nota: item.nota ?? '',
+		title: item.title ?? item.canto ?? song?.title ?? 'Canto pendiente',
+		indice: item.indice ?? song?.indice ?? '',
+		href: item.href ?? song?.href ?? '',
+		tiempo: item.tiempo ?? song?.tiempo ?? schemeSeason,
+		author: item.author ?? song?.author ?? '',
+		description: item.description ?? song?.description ?? '',
+		song,
+	};
+});
+
+const schemePayloadSongs = schemeSongs
+	.filter(item => item.song)
+	.map(item => ({
+		slug: item.song.slug,
+		title: item.song.title,
+		indice: item.song.indice,
+		categoria: item.song.categoria,
+		tipo: item.song.tipo,
+		tiempo: item.song.tiempo,
+		author: item.song.author,
+		description: item.song.description,
+		href: item.song.href,
+		lyrics: item.song.lyrics,
+	}));
+
+const schemePayload = JSON.stringify({
+	title: schemeTitle,
+	note: schemeDescription,
+	songs: schemePayloadSongs,
+});
+const schemeJsonLd = {
+	'@type': 'CreativeWork',
+	name: schemeTitle,
+	description: schemeDescription,
+	inLanguage: 'es-MX',
+	keywords: [schemeType, schemeSeason, ...schemeTags].filter(Boolean).join(', '),
+	isAccessibleForFree: true,
+};
+---
+
+<Layout
+	title={`${schemeTitle} - esquema de cantos`}
+	description={schemeDescription}
+	image={schemeBackground || '/assets/portada-impresion-cantos.webp'}
+	type="article"
+	jsonLd={schemeJsonLd}
+>
+	<main class="scheme-detail-page">
+		<section
+			class:list={['scheme-detail-hero', { 'has-background': Boolean(schemeBackground) }]}
+			style={schemeBackground ? `--scheme-detail-bg: url("${schemeBackground}");` : undefined}
+		>
+			<div>
+				<a class="scheme-back-link" href="/esquemas">← Esquemas</a>
+				<p class="scheme-label">Esquema litúrgico</p>
+				<h1>{schemeTitle}</h1>
+				<p>{schemeDescription}</p>
+
+				<div class="scheme-hero-badges">
+					<span>{schemeType}</span>
+					<span>{schemeSeason}</span>
+					<span>{schemeSongs.length} {schemeSongs.length === 1 ? 'canto' : 'cantos'}</span>
+				</div>
+
+				<button
+					class="scheme-load-button"
+					type="button"
+					data-load-scheme
+					data-scheme-template={schemePayload}
+					disabled={schemePayloadSongs.length === 0}
+				>
+					Cargar en separador
+				</button>
+			</div>
+		</section>
+
+		<section class="scheme-detail-list" aria-labelledby="schemeSongsTitle">
+			<div class="scheme-section-head">
+				<div>
+					<p class="scheme-label">Orden sugerido</p>
+					<h2 id="schemeSongsTitle">Cantos del esquema</h2>
+				</div>
+			</div>
+
+			<div class="scheme-song-rows">
+				{schemeSongs.map((item, index) => (
+					<article class:list={['scheme-song-row', { 'is-missing': !item.song }]}>
+						<div class="scheme-song-number">{index + 1}</div>
+						<div class="scheme-song-main">
+							<div class="scheme-song-kicker">
+								{item.indice ? <span>{item.indice}</span> : null}
+								<strong>{item.momento}</strong>
+							</div>
+							<h3>{item.title}</h3>
+							{item.description ? <p>{item.description}</p> : null}
+							{item.nota ? <small>{item.nota}</small> : null}
+						</div>
+						<div class="scheme-song-meta">
+							{item.tiempo ? <span>{item.tiempo}</span> : null}
+							{item.author ? <span>{item.author}</span> : null}
+							{item.href ? (
+								<a href={item.href}>Ver canto</a>
+							) : (
+								<span>Canto no vinculado</span>
+							)}
+						</div>
+					</article>
+				))}
+			</div>
+		</section>
+
+		{Content ? (
+			<section class="scheme-notes" aria-labelledby="schemeNotesTitle">
+				<p class="scheme-label">Notas</p>
+				<h2 id="schemeNotesTitle">Indicaciones del esquema</h2>
+				<div class="scheme-notes-content">
+					<Content />
+				</div>
+			</section>
+		) : null}
+	</main>
+</Layout>
+
+<script>
+	const STORAGE_KEY = 'beatus-song-scheme-v1';
+
+	document.querySelectorAll('[data-load-scheme]').forEach(button => {
+		button.addEventListener('click', () => {
+			const rawPayload = button.getAttribute('data-scheme-template');
+			if (!rawPayload) return;
+
+			try {
+				const scheme = JSON.parse(rawPayload);
+				window.localStorage.setItem(STORAGE_KEY, JSON.stringify(scheme));
+				document.dispatchEvent(new CustomEvent('song-scheme-replace', { detail: scheme }));
+
+				const originalText = button.textContent;
+				button.textContent = 'Esquema cargado';
+				window.setTimeout(() => {
+					button.textContent = originalText;
+				}, 1600);
+			} catch {
+				button.textContent = 'No se pudo cargar';
+				window.setTimeout(() => {
+					button.textContent = 'Cargar en separador';
+				}, 1600);
+			}
+		});
+	});
+</script>
+
+<style>
+	.scheme-detail-page {
+		width: min(1040px, calc(100% - 40px));
+		margin: 0 auto;
+		padding: 36px 0 60px;
+		font-family: Inter, system-ui, sans-serif;
+	}
+
+	.scheme-detail-hero {
+		display: flex;
+		align-items: center;
+		min-height: 330px;
+		margin-bottom: 24px;
+		padding: 32px;
+		border-radius: 28px;
+		background:
+			linear-gradient(135deg, rgba(255, 248, 239, 0.98), rgba(255, 255, 255, 0.95)),
+			white;
+		border: 1px solid #eee7dc;
+		box-shadow: 0 24px 70px rgba(15, 23, 42, 0.07);
+	}
+
+	.scheme-detail-hero.has-background {
+		background:
+			linear-gradient(90deg, rgba(255, 248, 239, 0.98) 0%, rgba(255, 248, 239, 0.9) 56%, rgba(255, 248, 239, 0.58) 100%),
+			var(--scheme-detail-bg) center / cover no-repeat,
+			white;
+	}
+
+	.scheme-detail-hero > div {
+		max-width: 760px;
+	}
+
+	.scheme-back-link {
+		display: inline-flex;
+		margin-bottom: 18px;
+		color: #8f5417;
+		font-weight: 900;
+		text-decoration: none;
+	}
+
+	.scheme-label {
+		margin: 0 0 8px;
+		color: #b27722;
+		font-size: 0.78rem;
+		font-weight: 900;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+	}
+
+	.scheme-detail-hero h1,
+	.scheme-section-head h2,
+	.scheme-notes h2 {
+		margin: 0;
+		color: #171717;
+		font-family: Georgia, 'Times New Roman', serif;
+		font-weight: 500;
+		line-height: 1;
+	}
+
+	.scheme-detail-hero h1 {
+		font-size: clamp(2.5rem, 5vw, 4.4rem);
+	}
+
+	.scheme-detail-hero p:not(.scheme-label) {
+		max-width: 680px;
+		margin: 16px 0 0;
+		color: #64748b;
+		font-size: 1.03rem;
+		line-height: 1.75;
+	}
+
+	.scheme-hero-badges {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 9px;
+		margin-top: 18px;
+	}
+
+	.scheme-hero-badges span,
+	.scheme-song-meta span,
+	.scheme-song-meta a {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.38em 0.76em;
+		border-radius: 999px;
+		background: #f8fafc;
+		border: 1px solid #e5e7eb;
+		color: #475569;
+		font-size: 0.84rem;
+		font-weight: 800;
+		text-decoration: none;
+	}
+
+	.scheme-load-button {
+		display: inline-flex;
+		min-height: 46px;
+		align-items: center;
+		justify-content: center;
+		margin-top: 22px;
+		padding: 0 18px;
+		border: 0;
+		border-radius: 999px;
+		background: linear-gradient(135deg, #d49b37 0%, #b27722 54%, #8f5417 100%);
+		color: white;
+		font: inherit;
+		font-weight: 900;
+		cursor: pointer;
+		box-shadow: 0 14px 30px rgba(143, 84, 23, 0.2);
+	}
+
+	.scheme-load-button:disabled {
+		cursor: not-allowed;
+		opacity: 0.52;
+		box-shadow: none;
+	}
+
+	.scheme-detail-list,
+	.scheme-notes {
+		display: grid;
+		gap: 18px;
+		margin-top: 28px;
+	}
+
+	.scheme-section-head h2,
+	.scheme-notes h2 {
+		font-size: clamp(1.8rem, 3vw, 2.45rem);
+	}
+
+	.scheme-song-rows {
+		display: grid;
+		gap: 12px;
+	}
+
+	.scheme-song-row {
+		display: grid;
+		grid-template-columns: 44px minmax(0, 1fr) minmax(210px, auto);
+		gap: 16px;
+		align-items: center;
+		padding: 16px;
+		border-radius: 18px;
+		background: white;
+		border: 1px solid #eee7dc;
+		box-shadow: 0 14px 36px rgba(15, 23, 42, 0.05);
+	}
+
+	.scheme-song-row.is-missing {
+		border-style: dashed;
+		background: #fffaf4;
+	}
+
+	.scheme-song-number {
+		display: inline-flex;
+		width: 44px;
+		height: 44px;
+		align-items: center;
+		justify-content: center;
+		border-radius: 15px;
+		background: #24456f;
+		color: white;
+		font-weight: 900;
+	}
+
+	.scheme-song-main {
+		min-width: 0;
+	}
+
+	.scheme-song-kicker {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 7px;
+		margin-bottom: 5px;
+		color: #b27722;
+		font-size: 0.72rem;
+		font-weight: 900;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+
+	.scheme-song-kicker span {
+		display: inline-flex;
+		min-height: 23px;
+		align-items: center;
+		justify-content: center;
+		padding: 0.26em 0.62em;
+		border-radius: 999px;
+		background: #24456f;
+		color: white;
+		font-size: 0.7rem;
+		letter-spacing: 0.08em;
+		line-height: 1;
+	}
+
+	.scheme-song-main h3 {
+		margin: 0;
+		color: #111827;
+		font-size: 1.12rem;
+		line-height: 1.3;
+	}
+
+	.scheme-song-main p,
+	.scheme-song-main small {
+		display: block;
+		margin-top: 5px;
+		color: #64748b;
+		line-height: 1.55;
+	}
+
+	.scheme-song-main small {
+		color: #8a5a1c;
+		font-weight: 800;
+	}
+
+	.scheme-song-meta {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		gap: 7px;
+	}
+
+	.scheme-song-meta a {
+		background: #fff7ed;
+		border-color: #f1e4d1;
+		color: #8f5417;
+	}
+
+	.scheme-notes {
+		padding: 24px;
+		border-radius: 22px;
+		background: #fffaf4;
+		border: 1px solid #f1e4d1;
+	}
+
+	.scheme-notes-content {
+		color: #475569;
+		line-height: 1.75;
+	}
+
+	.scheme-notes-content :global(h2),
+	.scheme-notes-content :global(h3) {
+		color: #171717;
+		font-family: Georgia, 'Times New Roman', serif;
+		font-weight: 500;
+	}
+
+	.scheme-notes-content :global(p) {
+		margin: 0 0 12px;
+	}
+
+	@media (max-width: 820px) {
+		.scheme-song-row {
+			grid-template-columns: 44px minmax(0, 1fr);
+		}
+
+		.scheme-song-meta {
+			grid-column: 2;
+			justify-content: flex-start;
+		}
+	}
+
+	@media (max-width: 720px) {
+		.scheme-detail-page {
+			width: min(100% - 32px, 1040px);
+			padding: 24px 0 44px;
+		}
+
+		.scheme-detail-hero {
+			min-height: auto;
+			padding: 22px;
+			border-radius: 22px;
+		}
+
+		.scheme-detail-hero.has-background {
+			background:
+				linear-gradient(180deg, rgba(255, 248, 239, 0.98) 0%, rgba(255, 248, 239, 0.92) 58%, rgba(255, 248, 239, 0.74) 100%),
+				var(--scheme-detail-bg) center / cover no-repeat,
+				white;
+		}
+
+		.scheme-load-button {
+			width: 100%;
+		}
+
+		.scheme-song-row {
+			grid-template-columns: 38px minmax(0, 1fr);
+			gap: 13px;
+			padding: 14px;
+		}
+
+		.scheme-song-number {
+			width: 38px;
+			height: 38px;
+			border-radius: 13px;
+		}
+
+		.scheme-song-meta {
+			grid-column: 1 / -1;
+		}
+	}
+</style>

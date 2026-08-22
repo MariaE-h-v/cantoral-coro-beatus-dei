@@ -1,5 +1,6 @@
 ---
 title: "Donde hay amor"
+indice: "O01"
 categoria: "Ofertorio"
 tipo: "Ofertorio"
 tiempo: "Triduo pascual"

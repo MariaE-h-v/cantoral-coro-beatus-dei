@@ -1,5 +1,6 @@
 ---
 title: "No solo de pan vive el hombre"
+indice: "C27"
 categoria: "Comunión"
 tipo: "Propio"
 tiempo: "Cuaresma"
