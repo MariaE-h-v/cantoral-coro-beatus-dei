@@ -14,23 +14,23 @@ youtubeUrl: "https://youtu.be/RZ9uhqhzvVk?si=VMLVRE8ybBIZwB9r"
 ---
    G         C          G
 Reunidos en el nombre del Señor,
-        C       A7            D
+D/F#.    Em.      A7.         D
 que nos ha congregado ante su altar,
-      Am           D7         G   Em
+      Am           D           G   Em
 / celebremos el misterio de la fe,
-         C6       D7         G
+         Am        D         G
 bajo el signo del amor y la unidad./
 
 
          G        D             G
 1. Tú, Señor, da sentido a nuestra vida,
-      Em         A7         D
+D/F#   Em         A7         D
 tu presencia nos ayuda a caminar,
-     G       B7             Em
+D/F#   G       B7             Em
 tu Palabra es fuente de agua viva,
-      C          Am
+D      C          A7
 que nosotros, sedientos,
-     Bm     C6    D7    G
+     D     C6     D7   G
 a tu mesa venimos a buscar.
 
 
