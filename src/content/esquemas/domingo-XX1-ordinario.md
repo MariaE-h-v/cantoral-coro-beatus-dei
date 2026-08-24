@@ -1,6 +1,6 @@
 ---
 title: "Misa Domingo XXI Tiempo Ordinario"
-description: "La liturgia de este domingo nos dirige a los cristianos –pero al mismo tiempo a todo hombre y a toda mujer– la doble pregunta que Jesús planteó un día a sus discípulos: «¿Quién dice la gente que es el Hijo del hombre?». Y: «¿Ustedes quién dicen que soy yo?»… En nombre de todos, con impulso y decisión, fue Pedro quien tomó la palabra para decir: «Tú eres el Cristo, el Hijo del Dios vivo». Solemne profesión de fe, que desde entonces la Iglesia sigue repitiendo…"
+description: " Y: «¿Ustedes quién dicen que soy yo?»… En nombre de todos, con impulso y decisión, fue Pedro quien tomó la palabra para decir: «Tú eres el Cristo, el Hijo del Dios vivo»"
 tipo: "Misa dominical"
 tiempo: "Tiempo ordinario"
 tags:
