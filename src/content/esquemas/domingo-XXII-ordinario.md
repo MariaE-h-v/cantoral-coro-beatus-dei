@@ -34,14 +34,14 @@ cantos:
     indice: "CD01"
     slug: "cordero-alejandro-mejia"
   - momento: "Comunión"
-    indice: "C36"
-    slug: "comunion-senior-a-quien-iremos"
+    indice: "C48"
+    slug: "comunion-bienaventuranzas-de-la-paz
   - momento: "Post comunión"
-    indice: "C31"
-    slug: "comunion-pan-de-vida"
+    indice: "PC06"
+    slug: "post-comunion-tomare-mi-cruz"
   - momento: "Salida"
-    indice: "M21"
-    slug: "marianos-ven-y-reina"
+    indice: "M18"
+    slug: "marianos-salve-regina"
 ---
 
 ## Notas para el coro
