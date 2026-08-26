@@ -1,0 +1,1168 @@
+---
+import path from 'node:path';
+import Layout from '../../layouts/Layout.astro';
+
+const rawSongs = import.meta.glob('../../content/cantos/*.md', { eager: true });
+
+const normalize = (value: unknown) =>
+	String(value ?? '')
+		.normalize('NFD')
+		.replace(/[\u0300-\u036f]/g, '')
+		.toLowerCase()
+		.trim();
+
+const adventSongs = Object.entries(rawSongs)
+	.map(([file, module]) => {
+		const data = (module as any).frontmatter ?? {};
+		const slug = path.basename(file, '.md');
+		const tags = Array.isArray(data.tags) ? data.tags : [];
+
+		return {
+			title: data.title ?? slug,
+			indice: data.indice ?? '',
+			categoria: data.categoria ?? 'Canto',
+			tipo: data.tipo ?? 'Canto',
+			tiempo: data.tiempo ?? '',
+			author: data.author ?? 'Autor desconocido',
+			description: data.description ?? 'Canto disponible para consulta dentro del cantoral.',
+			tags,
+			href: `/cantos/${slug}`,
+		};
+	})
+	.filter(song =>
+		normalize(song.tiempo).includes('adviento') ||
+		song.tags.some(tag => normalize(tag).includes('adviento'))
+	)
+	.sort((a, b) => a.title.localeCompare(b.title));
+
+const priorities = [
+	{
+		title: 'Esperanza vigilante',
+		text: 'El Adviento mira a Cristo que vino y a Cristo que volverá. La música debe sostener espera, deseo y confianza.',
+	},
+	{
+		title: 'Alegría contenida',
+		text: 'Puede haber belleza y gozo, pero todavía no con el brillo festivo propio de Navidad.',
+	},
+	{
+		title: 'Sobriedad instrumental',
+		text: 'Voces claras, dinámicas cuidadas, momentos a capela y acompañamiento moderado ayudan a no anticipar la Navidad.',
+	},
+];
+
+const liturgyPriorities = [
+	'Aleluya',
+	'Santo',
+	'Aclamación memorial',
+	'Gran Amén',
+	'Cordero de Dios',
+	'Salmo responsorial',
+	'Entrada y comunión',
+];
+
+const massOrder = [
+	{
+		moment: 'Entrada',
+		note: 'Canto propio de Adviento o musicalización de la antífona de entrada.',
+	},
+	{
+		moment: 'Corona de Adviento',
+		note: 'Acompañarla sobriamente cuando el rito lo indique, sin volverla una ceremonia paralela.',
+	},
+	{
+		moment: 'Señor, ten piedad',
+		note: 'Sí se canta. Puede mantenerse el ordinario que la asamblea ya conoce.',
+	},
+	{
+		moment: 'Gloria',
+		note: 'No se canta los domingos de Adviento, para reservar su regreso festivo a Navidad.',
+	},
+	{
+		moment: 'Salmo y Aleluya',
+		note: 'El salmo debe ser el propio del día. El Aleluya sí se canta en Adviento.',
+	},
+	{
+		moment: 'Presentación de dones',
+		note: 'Puede usarse un canto apropiado, música instrumental o silencio.',
+	},
+	{
+		moment: 'Santo, memorial y Amén',
+		note: 'Conviene priorizar melodías en las que participe toda la asamblea.',
+	},
+	{
+		moment: 'Comunión',
+		note: 'Antífona de comunión o canto adecuado al misterio celebrado.',
+	},
+	{
+		moment: 'Salida',
+		note: 'Puede elegirse pastoralmente un canto de Adviento o un canto mariano de esperanza.',
+	},
+];
+
+const adventSundays = [
+	{
+		day: 'I Domingo',
+		date: '29 noviembre 2026',
+		title: 'Vigilancia',
+		idea: 'Cristo viene. Manténganse despiertos.',
+		themes: 'Venida de Cristo, esperanza, Maranatha, Reino de Dios.',
+		suggestions: [
+			'A ti levanto mi alma',
+			'Ven, Señor, a nuestra vida',
+			'Llegará la libertad',
+			'Sabed que el Señor vendrá',
+		],
+	},
+	{
+		day: 'II Domingo',
+		date: '6 diciembre 2026',
+		title: 'Preparen el camino',
+		idea: 'Juan Bautista llama a quitar lo que impide recibir a Cristo.',
+		themes: 'Conversión, promesa, salvación, esperanza.',
+		suggestions: [
+			'Preparad los caminos del Señor',
+			'Vamos a preparar el camino',
+			'Pueblo de Sión',
+			'Ven, Señor, no tardes',
+		],
+	},
+	{
+		day: 'III Domingo',
+		date: '13 diciembre 2026',
+		title: 'Gaudete',
+		idea: 'Alégrense, el Señor está cerca.',
+		themes: 'Alegría, cercanía del Señor, consuelo y salvación.',
+		suggestions: [
+			'Gaudete',
+			'Alégrate y goza, Jerusalén',
+			'Cerca está el Señor',
+			'Mirad a vuestro Dios',
+		],
+	},
+	{
+		day: 'IV Domingo',
+		date: '20 diciembre 2026',
+		title: 'María y la Encarnación',
+		idea: 'La mirada se dirige al Dios que se hace hombre.',
+		themes: 'Emmanuel, María, Anunciación, cumplimiento de las promesas.',
+		suggestions: [
+			'Rorate Caeli',
+			'Oh ven, oh ven, Emmanuel',
+			'Ven a nuestro mundo',
+			'Santa María de la Esperanza',
+		],
+	},
+];
+
+const authors = [
+	{
+		name: 'Francisco Palazón',
+		text: 'Muy útil para cantar textos cercanos a la Escritura y al sentido del tiempo.',
+		works: 'A ti levanto mi alma, Preparad los caminos del Señor, Anunciando tu venida.',
+	},
+	{
+		name: 'Carmelo Erdozaín',
+		text: 'Aporta repertorio pastoral para preparar camino, espera y cercanía del Señor.',
+		works: 'Vamos a preparar el camino, Cerca está el Señor, La Virgen sueña caminos.',
+	},
+	{
+		name: 'Antonio Alcalde',
+		text: 'Especialmente valioso por su enfoque litúrgico y su colección de Nuevo Adviento.',
+		works: 'Ven, Señor, a nuestra vida, Virgen del Adviento, Mirad a vuestro Dios.',
+	},
+	{
+		name: 'Juan Antonio Espinosa',
+		text: 'Ayuda a expresar esperanza comunitaria y tono mariano bien integrado.',
+		works: 'Llegará la libertad, Santa María de la Esperanza.',
+	},
+];
+
+const avoidSongs = [
+	'Noche de paz',
+	'Campana sobre campana',
+	'Adeste Fideles',
+	'Ángeles cantando están',
+	'Venid, pastorcillos',
+];
+
+const sourceLinks = [
+	{
+		label: 'USCCB, sentido del Adviento',
+		href: 'https://www.usccb.org/prayer-worship/liturgical-year/advent',
+	},
+	{
+		label: 'Instrucción General del Misal Romano',
+		href: 'https://www.vatican.va/roman_curia/congregations/ccdds/documents/rc_con_ccdds_doc_20030317_ordinamento-messale_sp.html',
+	},
+	{
+		label: 'Bendición de la corona de Adviento',
+		href: 'https://www.usccb.org/es/prayers/bendicion-de-la-corona-de-adviento',
+	},
+	{
+		label: 'Misal Romano en Liturgia Papal',
+		href: 'https://liturgiapapal.org/index.php/recursos-lit%C3%BArgicos/libros-lit%C3%BArgicos/604-misal-romano.html',
+	},
+];
+
+const jsonLd = {
+	'@type': 'Article',
+	headline: 'Guía para el coro durante el Tiempo de Adviento',
+	description:
+		'Guía litúrgica y musical para preparar cantos de Adviento, con prioridades del coro, domingos, repertorio sugerido y cantos disponibles.',
+	inLanguage: 'es-MX',
+	image: '/assets/adviento-guia-hero.png',
+};
+---
+
+<Layout
+	title="Guía de Adviento para el coro"
+	description="Guía litúrgica y musical para preparar los cantos del Tiempo de Adviento, con criterios, domingos, repertorio sugerido y cantos disponibles."
+	image="/assets/adviento-guia-hero.png"
+	canonical="/tiempos-liturgicos/adviento"
+	type="article"
+	jsonLd={jsonLd}
+>
+	<main class="advent-page">
+		<section class="advent-hero" data-parallax>
+			<img
+				class="advent-hero-bg"
+				src="/assets/adviento-guia-hero.png"
+				alt=""
+				loading="eager"
+				data-parallax-layer
+				data-speed="0.1"
+			/>
+			<div class="advent-hero-shade"></div>
+			<div class="advent-hero-copy" data-reveal>
+				<a class="back-link" href="/tiempos-liturgicos">Tiempos litúrgicos</a>
+				<p class="eyebrow">Guía para el coro</p>
+				<h1>Tiempo de Adviento</h1>
+				<p>
+					Una preparación musical para cantar la espera de Cristo con esperanza,
+					vigilancia, conversión y alegría contenida.
+				</p>
+				<div class="hero-actions">
+					<a href="#cantos-adviento">Ver cantos</a>
+					<a href="/recursos/pdfs/planeaciones/adviento.pdf" target="_blank" rel="noreferrer">
+						Descargar PDF
+					</a>
+				</div>
+			</div>
+			<div class="hero-calendar" aria-label="Domingos de Adviento 2026" data-reveal>
+				{adventSundays.map((sunday, index) => (
+					<div class="calendar-candle">
+						<span>{index + 1}</span>
+						<strong>{sunday.date}</strong>
+						<small>{sunday.title}</small>
+					</div>
+				))}
+			</div>
+		</section>
+
+		<section class="advent-intro">
+			<div class="intro-copy" data-reveal>
+				<p class="eyebrow">Sentido musical</p>
+				<h2>No es Navidad todavía</h2>
+				<p>
+					El Adviento recuerda la primera venida de Cristo y despierta la espera
+					de su segunda venida gloriosa. Por eso el coro no canta desde la prisa,
+					sino desde una belleza sobria que sostiene el deseo: ven, Señor.
+				</p>
+			</div>
+
+			<div class="intro-image-wrap" data-parallax data-reveal>
+				<img
+					src="/assets/adviento-guia-coro.png"
+					alt="Vela morada de Adviento junto a una partitura antigua"
+					loading="lazy"
+					data-parallax-layer
+					data-speed="-0.06"
+				/>
+			</div>
+		</section>
+
+		<section class="principles-grid" aria-label="Principios musicales de Adviento">
+			{priorities.map(priority => (
+				<article data-reveal>
+					<span></span>
+					<h2>{priority.title}</h2>
+					<p>{priority.text}</p>
+				</article>
+			))}
+		</section>
+
+		<section class="priority-section">
+			<div data-reveal>
+				<p class="eyebrow">Prioridad del coro</p>
+				<h2>Primero cantar la liturgia</h2>
+				<p>
+					Antes de preparar cinco cantos elaborados, conviene asegurar las partes
+					que pertenecen directamente al rito y favorecen la respuesta de la asamblea.
+				</p>
+			</div>
+
+			<ol data-reveal>
+				{liturgyPriorities.map(priority => <li>{priority}</li>)}
+			</ol>
+		</section>
+
+		<section class="mass-map">
+			<div class="section-head" data-reveal>
+				<p class="eyebrow">Orden musical</p>
+				<h2>Misa durante Adviento</h2>
+			</div>
+
+			<div class="mass-map-list">
+				{massOrder.map(item => (
+					<article data-reveal>
+						<h3>{item.moment}</h3>
+						<p>{item.note}</p>
+					</article>
+				))}
+			</div>
+		</section>
+
+		<section class="sunday-path">
+			<div class="section-head" data-reveal>
+				<p class="eyebrow">Adviento 2026</p>
+				<h2>Cuatro domingos, una progresión</h2>
+				<p>
+					El Adviento de 2026 comienza el 29 de noviembre y abre el ciclo B.
+					El repertorio puede crecer domingo a domingo: vigilancia, conversión,
+					alegría y Encarnación.
+				</p>
+			</div>
+
+			<div class="sunday-list">
+				{adventSundays.map((sunday, index) => (
+					<article data-reveal>
+						<div class="sunday-number">{index + 1}</div>
+						<div>
+							<p>{sunday.day} · {sunday.date}</p>
+							<h3>{sunday.title}</h3>
+							<strong>{sunday.idea}</strong>
+							<span>{sunday.themes}</span>
+							<ul>
+								{sunday.suggestions.map(song => <li>{song}</li>)}
+							</ul>
+						</div>
+					</article>
+				))}
+			</div>
+		</section>
+
+		<section id="cantos-adviento" class="advent-songs">
+			<div class="section-head" data-reveal>
+				<p class="eyebrow">Cantoral</p>
+				<h2>Cantos de Adviento disponibles</h2>
+			</div>
+
+			{adventSongs.length ? (
+				<div class="song-card-grid">
+					{adventSongs.map(song => (
+						<a class="song-card" href={song.href} data-reveal>
+							<div>
+								{song.indice ? <span>{song.indice}</span> : null}
+								<p>{song.categoria}</p>
+							</div>
+							<h3>{song.title}</h3>
+							<p>{song.description}</p>
+							<small>{song.author}</small>
+						</a>
+					))}
+				</div>
+			) : (
+				<p class="empty-state" data-reveal>
+					Aún no hay cantos marcados como Adviento en el cantoral.
+				</p>
+			)}
+		</section>
+
+		<section class="authors-section">
+			<div class="section-head" data-reveal>
+				<p class="eyebrow">Repertorio sugerido</p>
+				<h2>Autores útiles para ampliar Adviento</h2>
+			</div>
+
+			<div class="authors-grid">
+				{authors.map(author => (
+					<article data-reveal>
+						<h3>{author.name}</h3>
+						<p>{author.text}</p>
+						<strong>{author.works}</strong>
+					</article>
+				))}
+			</div>
+		</section>
+
+		<section class="avoid-section" data-reveal>
+			<div>
+				<p class="eyebrow">Cuidar el tiempo</p>
+				<h2>Lo que conviene reservar para Navidad</h2>
+				<p>
+					En Adviento cantamos ven, Señor. Los villancicos navideños tienen su
+					lugar propio cuando la Iglesia comienza a cantar: el Señor ha venido.
+				</p>
+			</div>
+
+			<ul>
+				{avoidSongs.map(song => <li>{song}</li>)}
+			</ul>
+		</section>
+
+		<section class="sources-section" data-reveal>
+			<p class="eyebrow">Fuentes de consulta</p>
+			<div>
+				{sourceLinks.map(source => (
+					<a href={source.href} target="_blank" rel="noreferrer">{source.label}</a>
+				))}
+			</div>
+		</section>
+	</main>
+</Layout>
+
+<script>
+	const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+	const parallaxLayers = Array.from(document.querySelectorAll<HTMLElement>('[data-parallax-layer]'));
+
+	const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
+
+	const updateParallax = () => {
+		if (reduceMotion.matches) return;
+
+		parallaxLayers.forEach(layer => {
+			const section = layer.closest<HTMLElement>('[data-parallax]');
+			if (!section) return;
+
+			const rect = section.getBoundingClientRect();
+			const speed = Number(layer.dataset.speed ?? '0.08');
+			const sectionMidpoint = rect.top + rect.height / 2;
+			const viewportMidpoint = window.innerHeight / 2;
+			const offset = clamp((viewportMidpoint - sectionMidpoint) * speed, -70, 70);
+
+			layer.style.setProperty('--parallax-y', `${offset}px`);
+		});
+	};
+
+	let ticking = false;
+
+	const requestParallax = () => {
+		if (ticking) return;
+		ticking = true;
+		window.requestAnimationFrame(() => {
+			updateParallax();
+			ticking = false;
+		});
+	};
+
+	const revealObserver = new IntersectionObserver(
+		entries => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					entry.target.classList.add('is-visible');
+					revealObserver.unobserve(entry.target);
+				}
+			});
+		},
+		{ threshold: 0.18 }
+	);
+
+	document.querySelectorAll('[data-reveal]').forEach(element => {
+		revealObserver.observe(element);
+	});
+
+	updateParallax();
+	window.addEventListener('scroll', requestParallax, { passive: true });
+	window.addEventListener('resize', requestParallax);
+</script>
+
+<style>
+	.advent-page {
+		--advent-ink: #171423;
+		--advent-muted: #655d70;
+		--advent-violet: #3a1f52;
+		--advent-plum: #6f3d87;
+		--advent-rose: #c77d94;
+		--advent-gold: #c99238;
+		--advent-cream: #fff8ef;
+		--advent-green: #1f4a3a;
+		width: min(1180px, calc(100% - 56px));
+		margin: 0 auto;
+		padding: 42px 0 34px;
+		color: var(--advent-ink);
+		font-family: Inter, system-ui, sans-serif;
+	}
+
+	.advent-page h1,
+	.advent-page h2,
+	.advent-page h3 {
+		margin: 0;
+		color: var(--advent-ink);
+		font-family: Georgia, 'Times New Roman', serif;
+		font-weight: 500;
+		letter-spacing: 0;
+	}
+
+	.advent-page p {
+		margin: 0;
+		color: var(--advent-muted);
+		line-height: 1.72;
+	}
+
+	.eyebrow {
+		color: var(--advent-gold);
+		font-size: 0.78rem;
+		font-weight: 900;
+		letter-spacing: 0;
+		text-transform: uppercase;
+	}
+
+	.advent-hero {
+		position: relative;
+		display: grid;
+		min-height: 660px;
+		overflow: hidden;
+		align-items: end;
+		margin-bottom: 34px;
+		padding: 42px;
+		border-radius: 28px;
+		background: #1f1729;
+		box-shadow: 0 28px 80px rgba(18, 13, 31, 0.22);
+		isolation: isolate;
+	}
+
+	.advent-hero-bg {
+		position: absolute;
+		inset: -70px 0;
+		z-index: -2;
+		width: 100%;
+		height: calc(100% + 140px);
+		object-fit: cover;
+		transform: translate3d(0, var(--parallax-y, 0), 0) scale(1.04);
+		will-change: transform;
+	}
+
+	.advent-hero-shade {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background:
+			linear-gradient(90deg, rgba(23, 20, 35, 0.9) 0%, rgba(42, 24, 57, 0.78) 44%, rgba(42, 24, 57, 0.18) 100%),
+			linear-gradient(0deg, rgba(13, 10, 20, 0.86) 0%, rgba(13, 10, 20, 0.1) 55%);
+	}
+
+	.advent-hero-copy {
+		max-width: 720px;
+	}
+
+	.back-link {
+		display: inline-flex;
+		margin-bottom: 18px;
+		color: #f7dba3;
+		font-weight: 800;
+		text-decoration: none;
+	}
+
+	.advent-hero .eyebrow,
+	.advent-hero h1,
+	.advent-hero p {
+		color: white;
+		text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35);
+	}
+
+	.advent-hero .eyebrow {
+		color: #f4c978;
+	}
+
+	.advent-hero h1 {
+		max-width: 760px;
+		font-size: 4.8rem;
+		line-height: 0.96;
+	}
+
+	.advent-hero p:not(.eyebrow) {
+		max-width: 640px;
+		margin-top: 18px;
+		color: rgba(255, 255, 255, 0.86);
+		font-size: 1.08rem;
+	}
+
+	.hero-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+		margin-top: 24px;
+	}
+
+	.hero-actions a {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 46px;
+		padding: 0.76rem 1.05rem;
+		border-radius: 999px;
+		font-weight: 900;
+		text-decoration: none;
+	}
+
+	.hero-actions a:first-child {
+		background: #f8d184;
+		color: #21142f;
+		box-shadow: 0 16px 34px rgba(248, 209, 132, 0.24);
+	}
+
+	.hero-actions a:last-child {
+		background: rgba(255, 255, 255, 0.14);
+		border: 1px solid rgba(255, 255, 255, 0.28);
+		color: white;
+		backdrop-filter: blur(12px);
+	}
+
+	.hero-calendar {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 10px;
+		margin-top: 34px;
+	}
+
+	.calendar-candle {
+		position: relative;
+		display: grid;
+		gap: 5px;
+		min-height: 128px;
+		padding: 34px 14px 14px;
+		border-radius: 18px;
+		background: rgba(255, 248, 239, 0.12);
+		border: 1px solid rgba(255, 255, 255, 0.18);
+		backdrop-filter: blur(14px);
+		color: white;
+	}
+
+	.calendar-candle::before {
+		content: '';
+		position: absolute;
+		top: 12px;
+		left: 16px;
+		width: 10px;
+		height: 16px;
+		border-radius: 999px 999px 999px 0;
+		background: #ffd487;
+		box-shadow: 0 0 22px rgba(255, 190, 92, 0.65);
+		transform: rotate(45deg);
+		animation: flamePulse 2.8s ease-in-out infinite;
+	}
+
+	.calendar-candle span {
+		position: absolute;
+		top: 12px;
+		right: 14px;
+		color: rgba(255, 255, 255, 0.76);
+		font-weight: 900;
+	}
+
+	.calendar-candle strong {
+		color: white;
+		font-size: 0.94rem;
+	}
+
+	.calendar-candle small {
+		color: rgba(255, 255, 255, 0.72);
+		font-weight: 800;
+	}
+
+	.advent-intro,
+	.priority-section,
+	.avoid-section {
+		display: grid;
+		grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+		gap: 28px;
+		align-items: center;
+		margin-bottom: 28px;
+	}
+
+	.intro-copy,
+	.priority-section > div,
+	.section-head,
+	.avoid-section > div {
+		display: grid;
+		gap: 12px;
+	}
+
+	.intro-copy h2,
+	.priority-section h2,
+	.section-head h2,
+	.avoid-section h2 {
+		font-size: 2.45rem;
+		line-height: 1.04;
+	}
+
+	.intro-image-wrap {
+		position: relative;
+		min-height: 460px;
+		overflow: hidden;
+		border-radius: 28px;
+		background: #2b2034;
+		box-shadow: 0 24px 70px rgba(18, 13, 31, 0.13);
+	}
+
+	.intro-image-wrap img {
+		position: absolute;
+		inset: -40px 0;
+		width: 100%;
+		height: calc(100% + 80px);
+		object-fit: cover;
+		transform: translate3d(0, var(--parallax-y, 0), 0) scale(1.03);
+		will-change: transform;
+	}
+
+	.principles-grid,
+	.mass-map-list,
+	.authors-grid,
+	.song-card-grid {
+		display: grid;
+		gap: 14px;
+	}
+
+	.principles-grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		margin-bottom: 28px;
+	}
+
+	.principles-grid article,
+	.mass-map-list article,
+	.authors-grid article,
+	.song-card,
+	.priority-section ol,
+	.avoid-section,
+	.sources-section {
+		border: 1px solid #eadfd2;
+		background: rgba(255, 248, 239, 0.88);
+		box-shadow: 0 18px 46px rgba(18, 13, 31, 0.06);
+	}
+
+	.principles-grid article {
+		display: grid;
+		gap: 10px;
+		min-height: 230px;
+		padding: 22px;
+		border-radius: 22px;
+	}
+
+	.principles-grid article span {
+		width: 44px;
+		height: 8px;
+		border-radius: 999px;
+		background: linear-gradient(90deg, var(--advent-violet), var(--advent-gold), var(--advent-green));
+	}
+
+	.principles-grid h2 {
+		font-size: 1.55rem;
+		line-height: 1.12;
+	}
+
+	.priority-section {
+		padding: 28px;
+		border-radius: 28px;
+		background:
+			linear-gradient(110deg, rgba(255, 248, 239, 0.98) 0%, rgba(255, 248, 239, 0.76) 58%, rgba(58, 31, 82, 0.1) 100%),
+			url('/assets/detalle-bg-adviento.webp') center / cover no-repeat;
+		border: 1px solid #eadfd2;
+	}
+
+	.priority-section ol {
+		display: grid;
+		gap: 8px;
+		margin: 0;
+		padding: 16px;
+		border-radius: 22px;
+		list-style: none;
+		counter-reset: priority;
+	}
+
+	.priority-section li {
+		display: grid;
+		grid-template-columns: 36px minmax(0, 1fr);
+		gap: 10px;
+		align-items: center;
+		color: var(--advent-ink);
+		font-weight: 900;
+	}
+
+	.priority-section li::before {
+		counter-increment: priority;
+		content: counter(priority);
+		display: inline-flex;
+		width: 36px;
+		height: 36px;
+		align-items: center;
+		justify-content: center;
+		border-radius: 999px;
+		background: var(--advent-violet);
+		color: white;
+	}
+
+	.mass-map,
+	.sunday-path,
+	.advent-songs,
+	.authors-section {
+		margin-bottom: 32px;
+	}
+
+	.section-head {
+		max-width: 760px;
+		margin-bottom: 16px;
+	}
+
+	.mass-map-list {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	.mass-map-list article {
+		display: grid;
+		gap: 8px;
+		min-height: 160px;
+		padding: 18px;
+		border-radius: 20px;
+	}
+
+	.mass-map-list h3,
+	.authors-grid h3,
+	.song-card h3 {
+		font-size: 1.22rem;
+		line-height: 1.16;
+	}
+
+	.sunday-path {
+		position: relative;
+		overflow: hidden;
+		padding: 30px;
+		border-radius: 28px;
+		background:
+			linear-gradient(120deg, rgba(40, 27, 52, 0.95), rgba(72, 37, 84, 0.86)),
+			url('/assets/adviento-guia-hero.png') center / cover no-repeat;
+		color: white;
+	}
+
+	.sunday-path .section-head h2,
+	.sunday-path .section-head p {
+		color: white;
+	}
+
+	.sunday-list {
+		display: grid;
+		gap: 14px;
+	}
+
+	.sunday-list article {
+		display: grid;
+		grid-template-columns: 54px minmax(0, 1fr);
+		gap: 14px;
+		padding: 18px;
+		border-radius: 20px;
+		background: rgba(255, 255, 255, 0.12);
+		border: 1px solid rgba(255, 255, 255, 0.18);
+		backdrop-filter: blur(12px);
+	}
+
+	.sunday-number {
+		display: inline-flex;
+		width: 54px;
+		height: 54px;
+		align-items: center;
+		justify-content: center;
+		border-radius: 999px;
+		background: #f8d184;
+		color: #21142f;
+		font-weight: 900;
+	}
+
+	.sunday-list p,
+	.sunday-list strong,
+	.sunday-list span {
+		display: block;
+	}
+
+	.sunday-list p,
+	.sunday-list span {
+		color: rgba(255, 255, 255, 0.72);
+	}
+
+	.sunday-list h3 {
+		margin-top: 2px;
+		color: white;
+		font-size: 1.5rem;
+	}
+
+	.sunday-list strong {
+		margin-top: 6px;
+		color: white;
+	}
+
+	.sunday-list ul,
+	.avoid-section ul {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin: 12px 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.sunday-list li,
+	.avoid-section li {
+		padding: 0.44rem 0.72rem;
+		border-radius: 999px;
+		font-size: 0.86rem;
+		font-weight: 850;
+	}
+
+	.sunday-list li {
+		background: rgba(255, 255, 255, 0.15);
+		color: white;
+	}
+
+	.song-card-grid {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+
+	.song-card {
+		display: grid;
+		gap: 10px;
+		min-height: 245px;
+		padding: 18px;
+		border-radius: 22px;
+		color: inherit;
+		text-decoration: none;
+		background:
+			linear-gradient(180deg, rgba(255, 248, 239, 0.96), rgba(255, 248, 239, 0.82)),
+			url('/assets/detalle-bg-adviento.webp') center / cover no-repeat;
+		transition:
+			transform 180ms ease,
+			box-shadow 180ms ease;
+	}
+
+	.song-card:hover {
+		transform: translateY(-3px);
+		box-shadow: 0 24px 54px rgba(18, 13, 31, 0.11);
+	}
+
+	.song-card > div {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 10px;
+	}
+
+	.song-card span {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.38rem 0.58rem;
+		border-radius: 999px;
+		background: var(--advent-violet);
+		color: white;
+		font-size: 0.78rem;
+		font-weight: 900;
+	}
+
+	.song-card > div p {
+		color: var(--advent-gold);
+		font-weight: 900;
+	}
+
+	.song-card small {
+		align-self: end;
+		color: var(--advent-muted);
+		font-weight: 850;
+	}
+
+	.authors-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.authors-grid article {
+		display: grid;
+		gap: 10px;
+		padding: 20px;
+		border-radius: 22px;
+	}
+
+	.authors-grid strong {
+		color: var(--advent-violet);
+		line-height: 1.55;
+	}
+
+	.avoid-section {
+		padding: 26px;
+		border-radius: 28px;
+	}
+
+	.avoid-section li {
+		background: #fff;
+		border: 1px solid #eadfd2;
+		color: var(--advent-violet);
+	}
+
+	.sources-section {
+		display: grid;
+		gap: 12px;
+		padding: 22px;
+		border-radius: 22px;
+	}
+
+	.sources-section div {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	.sources-section a {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.62rem 0.82rem;
+		border-radius: 999px;
+		background: white;
+		border: 1px solid #eadfd2;
+		color: var(--advent-violet);
+		font-weight: 850;
+		text-decoration: none;
+	}
+
+	.empty-state {
+		padding: 20px;
+		border-radius: 18px;
+		background: var(--advent-cream);
+		border: 1px dashed #d9cabc;
+	}
+
+	[data-reveal] {
+		opacity: 0;
+		transform: translateY(18px);
+		transition:
+			opacity 680ms ease,
+			transform 680ms ease;
+	}
+
+	[data-reveal].is-visible {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	@keyframes flamePulse {
+		0%,
+		100% {
+			transform: rotate(45deg) scale(0.94);
+			opacity: 0.82;
+		}
+
+		50% {
+			transform: rotate(45deg) scale(1.08);
+			opacity: 1;
+		}
+	}
+
+	@media (max-width: 1040px) {
+		.advent-hero {
+			min-height: 640px;
+		}
+
+		.hero-calendar,
+		.song-card-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.advent-intro,
+		.priority-section,
+		.avoid-section {
+			grid-template-columns: 1fr;
+		}
+
+		.principles-grid,
+		.mass-map-list {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 720px) {
+		.advent-page {
+			width: min(100% - 32px, 1180px);
+			padding-top: 28px;
+		}
+
+		.advent-hero {
+			min-height: 760px;
+			padding: 24px;
+			border-radius: 22px;
+		}
+
+		.advent-hero-bg {
+			object-position: 54% center;
+		}
+
+		.advent-hero-shade {
+			background:
+				linear-gradient(180deg, rgba(23, 20, 35, 0.84) 0%, rgba(42, 24, 57, 0.72) 45%, rgba(13, 10, 20, 0.9) 100%);
+		}
+
+		.advent-hero h1 {
+			font-size: 3.25rem;
+		}
+
+		.hero-calendar,
+		.principles-grid,
+		.mass-map-list,
+		.authors-grid,
+		.song-card-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.calendar-candle {
+			min-height: 96px;
+		}
+
+		.intro-copy h2,
+		.priority-section h2,
+		.section-head h2,
+		.avoid-section h2 {
+			font-size: 2.1rem;
+		}
+
+		.intro-image-wrap {
+			min-height: 390px;
+			border-radius: 22px;
+		}
+
+		.priority-section,
+		.sunday-path,
+		.avoid-section {
+			padding: 22px;
+			border-radius: 22px;
+		}
+
+		.sunday-list article {
+			grid-template-columns: 1fr;
+		}
+
+		.sunday-number {
+			width: 46px;
+			height: 46px;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.advent-hero-bg,
+		.intro-image-wrap img,
+		[data-reveal],
+		.calendar-candle::before,
+		.song-card {
+			animation: none;
+			transform: none;
+			transition: none;
+		}
+
+		[data-reveal] {
+			opacity: 1;
+		}
+	}
+</style>

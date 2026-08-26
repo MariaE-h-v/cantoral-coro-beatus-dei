@@ -42,8 +42,3 @@ Em-D-G   G - C - D
 El Señor nos dará
 C        D          Em
 El nos dará su amistad  (X2)
-
-Em-D-G   G - C - D
-El Señor nos dará
-C        D          Em
-El nos dará su amistad  (X2)

@@ -11,6 +11,7 @@ const staticRoutes = [
 	{ path: '/cantos', priority: '0.9', changefreq: 'weekly' },
 	{ path: '/esquemas', priority: '0.8', changefreq: 'weekly' },
 	{ path: '/tiempos-liturgicos', priority: '0.8', changefreq: 'monthly' },
+	{ path: '/tiempos-liturgicos/adviento', priority: '0.8', changefreq: 'monthly' },
 	{ path: '/tipos-de-misas', priority: '0.8', changefreq: 'monthly' },
 	{ path: '/recursos', priority: '0.8', changefreq: 'monthly' },
 	{ path: '/recursos/acordes', priority: '0.7', changefreq: 'monthly' },

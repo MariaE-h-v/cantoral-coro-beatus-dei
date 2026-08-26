@@ -12,14 +12,10 @@ tags:
 description: "Tomaré mi cruz y lo seguiré moriré a mi mismo para poder vivir..."
 youtubeUrl: "https://www.youtube.com/watch?v=yzF4Ljwh1EE"
 ---
-Intro
 
 | Am    C/G | F | C      F   G | F      C ||
 
-
-Estribillo 1
-
-      C                 F    C
+     C                 F    C
 Tomaré mi cruz y lo seguiré.
 
       Am                    F        G
@@ -31,8 +27,6 @@ Crucificado con Cristo, venceré.
       C                 F    G      F   C
 Ya no vivo yo, sino Cristo vive en mí.
 
-
-Estrofa 1
 
       Am              Am/G        Dmadd9/F       Em
 El misterio de la cruz   es un miste - rio de amor
@@ -46,17 +40,3 @@ Por     su entrega él cambió    muerte    en    resurrección,
        B♭          F/A              Dm7          Gsus4    G
 derrota en victoria, humillación    en exaltación.
 
-
-Estribillo 2
-
-      C                 F    C
-Tomaré mi cruz y lo seguiré.
-
-      Am                    F        G
-Moriré a mí mismo para poder vivir.
-
-      Am        Am/G          F
-Crucificado con Cristo, venceré.
-
-      C                 F    G      F   C
-Ya no vivo yo, sino Cristo vive en mí.
