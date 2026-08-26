@@ -35,7 +35,7 @@ cantos:
     slug: "cordero-alejandro-mejia"
   - momento: "Comunión"
     indice: "C48"
-    slug: "comunion-bienaventuranzas-de-la-paz
+    slug: "comunion-bienaventuranzas-de-la-paz"
   - momento: "Post comunión"
     indice: "PC06"
     slug: "post-comunion-tomare-mi-cruz"
