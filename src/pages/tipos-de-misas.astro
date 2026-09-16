@@ -55,13 +55,15 @@ const massTypes = [
 		id: 'matrimonio',
 		icon: 'M',
 		subtitle: 'Alianza de amor y bendición',
-		background: '/assets/tiempos-card-santos.png',
+		background: '/assets/matrimonio-guia-hero.png',
 		description:
 			'Repertorio para una celebración nupcial, con cantos sobre el amor fiel, la entrega, la alianza y la vida compartida ante Dios.',
 		moments: ['Entrada', 'Ofertorio', 'Comunión', 'Meditación', 'Salida'],
 		matchTerms: ['Matrimonio', 'Boda'],
 		fallbackTerms: ['Amor', 'Familia', 'Alianza', 'Donde hay amor'],
 		filterQuery: 'Matrimonio',
+		planningHref: '/tipos-de-misas/matrimonio',
+		planningLabel: 'Ver guía',
 	},
 	{
 		group: 'Sacramentos',
@@ -245,6 +247,8 @@ const groups = Array.from(new Set(massTypes.map(type => type.group)));
 							.map(type => {
 								const typeSongs = songsForMassType(type);
 								const filterTarget = `/cantos?q=${encodeURIComponent(type.filterQuery)}`;
+								const planningHref = type.planningHref ?? '/recursos/planeaciones';
+								const planningLabel = type.planningLabel ?? 'Ver planeación';
 
 								return (
 									<article
@@ -266,8 +270,8 @@ const groups = Array.from(new Set(massTypes.map(type => type.group)));
 												<a class="mass-type-link" href={filterTarget}>
 													Ver en el cantoral
 												</a>
-												<a class="mass-type-planning-link" href="/recursos/planeaciones">
-													Ver planeación
+												<a class="mass-type-planning-link" href={planningHref}>
+													{planningLabel}
 												</a>
 											</div>
 										</div>

@@ -38,7 +38,4 @@ Llevemos al Señor trabajo y dolor
 Em                    D       Em
 Llevemos al altar ofrendas de paz
 
-Em-D-G   G - C - D
-El Señor nos dará
-C        D          Em
-El nos dará su amistad  (X2)
+x

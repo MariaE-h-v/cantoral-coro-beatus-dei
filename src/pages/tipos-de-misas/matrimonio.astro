@@ -1,0 +1,1391 @@
+---
+import path from 'node:path';
+import Layout from '../../layouts/Layout.astro';
+
+const rawSongs = import.meta.glob('../../content/cantos/*.md', { eager: true });
+
+const normalize = (value: unknown) =>
+	String(value ?? '')
+		.normalize('NFD')
+		.replace(/[\u0300-\u036f]/g, '')
+		.replace(/[-_]+/g, ' ')
+		.toLowerCase()
+		.trim();
+
+const songs = Object.entries(rawSongs)
+	.map(([file, module]) => {
+		const data = (module as any).frontmatter ?? {};
+		const slug = path.basename(file, '.md');
+		const tags = Array.isArray(data.tags) ? data.tags : [];
+
+		return {
+			title: data.title ?? slug,
+			indice: data.indice ?? '',
+			categoria: data.categoria ?? 'Canto',
+			tipo: data.tipo ?? 'Canto',
+			tiempo: data.tiempo ?? '',
+			author: data.author ?? 'Autor desconocido',
+			description: data.description ?? 'Canto disponible para consulta dentro del cantoral.',
+			tags,
+			href: `/cantos/${slug}`,
+		};
+	})
+	.sort((a, b) => a.title.localeCompare(b.title));
+
+const songValues = (song: typeof songs[number]) => [
+	song.indice,
+	song.title,
+	song.description,
+	song.tipo,
+	song.categoria,
+	song.tiempo,
+	song.author,
+	...song.tags,
+];
+
+const scoreSong = (song: typeof songs[number], terms: string[], fallback = false) => {
+	const normalizedTerms = terms.map(term => normalize(term)).filter(Boolean);
+	const normalizedValues = songValues(song).map(value => normalize(value));
+	const primaryValues = [song.tiempo, song.tipo].map(value => normalize(value));
+	const tagValues = song.tags.map(tag => normalize(tag));
+	let score = 0;
+
+	for (const term of normalizedTerms) {
+		if (primaryValues.some(value => value === term)) score += fallback ? 12 : 24;
+		if (tagValues.some(value => value === term)) score += fallback ? 10 : 20;
+		if (normalizedValues.some(value => value === term)) score += fallback ? 6 : 12;
+		if (normalizedValues.some(value => value.includes(term))) score += fallback ? 3 : 8;
+	}
+
+	return score;
+};
+
+const marriageSongTerms = ['Matrimonio', 'Boda'];
+const fallbackSongTerms = [
+	'Amor',
+	'Familia',
+	'Alianza',
+	'Donde hay amor',
+	'Ubi Caritas',
+	'Eucaristía',
+	'Ofertorio',
+	'Comunión',
+];
+
+const directSongMatches = songs
+	.map(song => ({ song, score: scoreSong(song, marriageSongTerms) }))
+	.filter(result => result.score > 0);
+
+const relatedSongs = (directSongMatches.length
+	? directSongMatches
+	: songs
+			.map(song => ({ song, score: scoreSong(song, fallbackSongTerms, true) }))
+			.filter(result => result.score > 0))
+	.sort((a, b) => b.score - a.score || a.song.title.localeCompare(b.song.title))
+	.slice(0, 12)
+	.map(result => result.song);
+
+const sacramentCenter = [
+	'Palabra de Dios',
+	'Consentimiento',
+	'Alianza matrimonial',
+	'Bendición nupcial',
+	'Eucaristía, cuando hay Misa',
+];
+
+const musicLanguage = [
+	'Alianza',
+	'Fidelidad',
+	'Entrega',
+	'Amor de Cristo',
+	'Unidad',
+	'Gracia',
+	'Vocación',
+	'Familia',
+	'Servicio',
+	'Eucaristía',
+	'Acción de gracias',
+];
+
+const celebrationForms = [
+	{
+		title: 'Matrimonio dentro de la Misa',
+		text: 'Liturgia de la Palabra, Sacramento del Matrimonio y Liturgia Eucarística.',
+	},
+	{
+		title: 'Matrimonio sin Misa',
+		text: 'Palabra, consentimiento, Padrenuestro y Bendición nupcial, sin Liturgia Eucarística.',
+	},
+	{
+		title: 'Rito con circunstancias particulares',
+		text: 'Tiene forma propia cuando se celebra entre católico y catecúmeno o no cristiano.',
+	},
+];
+
+const massOrder = [
+	{
+		moment: 'Música previa',
+		note: 'Puede ser música sacra instrumental o vocal, sin convertir el templo en recepción.',
+	},
+	{
+		moment: 'Procesión de entrada',
+		note: 'Canto litúrgico o música sacra que reúna a la asamblea y abra la celebración.',
+	},
+	{
+		moment: 'Acto penitencial',
+		note: 'En la Misa ritual del Matrimonio se omite. No prepararlo automáticamente.',
+	},
+	{
+		moment: 'Gloria',
+		note: 'Se canta según las rúbricas y el formulario que confirme el celebrante.',
+	},
+	{
+		moment: 'Salmo responsorial',
+		note: 'Es Palabra de Dios cantada; no se sustituye por una canción bonita.',
+	},
+	{
+		moment: 'Aleluya',
+		note: 'Debe ser aclamación al Evangelio: asamblea, versículo bíblico y asamblea.',
+	},
+	{
+		moment: 'Consentimiento',
+		note: 'Silencio total. Las palabras de los esposos deben escucharse claramente.',
+	},
+	{
+		moment: 'Después del consentimiento',
+		note: 'Buen lugar para una aclamación breve o canto de alabanza nupcial.',
+	},
+	{
+		moment: 'Anillos, arras y lazo',
+		note: 'Integrarlos sin multiplicar canciones para cada gesto.',
+	},
+	{
+		moment: 'Ofertorio',
+		note: 'Canto de ofrenda, altar, pan y vino, o música instrumental sobria.',
+	},
+	{
+		moment: 'Santo, memorial y Amén',
+		note: 'Aclamaciones de la Iglesia; deben favorecer la participación de la asamblea.',
+	},
+	{
+		moment: 'Bendición nupcial',
+		note: 'No cubrirla con música. Es uno de los momentos centrales del sacramento.',
+	},
+	{
+		moment: 'Cordero de Dios',
+		note: 'Acompaña la fracción del Pan y conserva su forma litúrgica.',
+	},
+	{
+		moment: 'Comunión',
+		note: 'Priorizar un canto claramente eucarístico, no sólo una canción sobre amor.',
+	},
+	{
+		moment: 'Salida',
+		note: 'Canto o pieza instrumental festiva y apropiada para el final.',
+	},
+];
+
+const psalms = [
+	{
+		title: 'Salmo 32/33',
+		text: 'La misericordia del Señor llena la tierra; confianza en Dios.',
+	},
+	{
+		title: 'Salmo 33/34',
+		text: 'Bendecir al Señor y gustar su bondad, con resonancia eucarística.',
+	},
+	{
+		title: 'Salmo 102/103',
+		text: 'Dios misericordioso y compasivo; amor fiel de Dios.',
+	},
+	{
+		title: 'Salmo 111/112',
+		text: 'Felicidad del que teme al Señor y vive justamente.',
+	},
+	{
+		title: 'Salmo 127/128',
+		text: 'Bendición del hogar, matrimonio y familia.',
+	},
+	{
+		title: 'Salmo 144/145',
+		text: 'Bondad y misericordia de Dios para todas sus criaturas.',
+	},
+	{
+		title: 'Salmo 148',
+		text: 'Toda la creación alaba al Señor; muy útil en celebraciones festivas.',
+	},
+];
+
+const keyMoments = [
+	{
+		title: 'La entrada no es un desfile',
+		text: 'La procesión abre la acción litúrgica. Puede hacerse con un mismo canto para todos, mostrando que ambos esposos se presentan ante Dios y la Iglesia.',
+	},
+	{
+		title: 'El consentimiento habla en silencio',
+		text: 'No piano, no guitarra suave, no fondo instrumental. El silencio ayuda a que el sacramento hable.',
+	},
+	{
+		title: 'Después del consentimiento sí hay una oportunidad',
+		text: 'Una aclamación breve de alabanza o Ubi Caritas puede funcionar mucho mejor aquí que forzar ese repertorio en Comunión.',
+	},
+	{
+		title: 'Comunión es Comunión',
+		text: 'En ese momento la acción principal es comulgar el Cuerpo y la Sangre de Cristo. El texto debe ser primordialmente eucarístico.',
+	},
+];
+
+const antiphons = [
+	{
+		title: 'Formulario A',
+		entry: 'Entrada: que el Señor envíe auxilio desde el santuario y lleve a cumplimiento los deseos de los esposos.',
+		communion: 'Comunión: Cristo amó a la Iglesia y se entregó por ella.',
+	},
+	{
+		title: 'Formulario B',
+		entry: 'Entrada: que la misericordia de Dios llene la vida y dé fecundidad a la obra de los esposos.',
+		communion: 'Comunión: que se amen unos a otros como Cristo los ha amado.',
+	},
+	{
+		title: 'Formulario C',
+		entry: 'Entrada: bendecir continuamente al Señor por su bondad.',
+		communion: 'Comunión: gusten y vean qué bueno es el Señor.',
+	},
+];
+
+const readings = [
+	{
+		title: 'Génesis 1,26-28.31',
+		text: 'Creación, imagen de Dios, bendición y fecundidad.',
+	},
+	{
+		title: 'Génesis 2,18-24',
+		text: 'Serán los dos una sola carne; comunión y ayuda mutua.',
+	},
+	{
+		title: 'Tobías 8,4b-8',
+		text: 'Los esposos comienzan rezando juntos y pidiendo llegar juntos a la vejez.',
+	},
+	{
+		title: 'Cantar de los Cantares 2 y 8',
+		text: 'Lenguaje amoroso bíblico: el amor es fuerte como la muerte.',
+	},
+	{
+		title: '1 Corintios 13',
+		text: 'El matrimonio como escuela de caridad: amor paciente, servidor y perseverante.',
+	},
+	{
+		title: 'Efesios 5',
+		text: 'Cristo y la Iglesia como clave sacramental del matrimonio cristiano.',
+	},
+	{
+		title: 'Juan 2,1-11',
+		text: 'Las bodas de Caná: Cristo presente transforma la vida matrimonial.',
+	},
+	{
+		title: 'Juan 15',
+		text: 'Permanezcan en mi amor; el matrimonio como vocación espiritual.',
+	},
+];
+
+const authors = [
+	{
+		name: 'Carmelo Erdozaín',
+		text: 'Especialmente útil por Juntos marchamos a Ti y repertorio de comunidad, entrega y Eucaristía.',
+	},
+	{
+		name: 'Francisco Palazón',
+		text: 'Muy recomendable para ordinario, salmos, cantos de entrada y unidad litúrgica.',
+	},
+	{
+		name: 'Alejandro Mejía',
+		text: 'Sus ordinarios pueden dar continuidad musical al Gloria, Santo, aclamaciones y Cordero.',
+	},
+	{
+		name: 'Jaime Cortez',
+		text: 'Repertorio contemporáneo para comunidades hispanas, incluyendo cantos matrimoniales.',
+	},
+	{
+		name: 'Música sacra clásica',
+		text: 'Mozart, Bach, Franck, Palestrina, Victoria y gregoriano, siempre según el rito y la asamblea.',
+	},
+];
+
+const schemes = [
+	{
+		title: 'Profundamente litúrgico',
+		items: [
+			'Entrada: Juntos marchamos a Ti',
+			'Salmo: Salmo 127/128',
+			'Consentimiento: silencio',
+			'Alabanza: Ubi Caritas',
+			'Comunión: Jn 13,34 o Panis Angelicus',
+		],
+	},
+	{
+		title: 'Contemporáneo y juvenil',
+		items: [
+			'Entrada: Nos unimos por la gracia de Dios',
+			'Gloria: texto litúrgico íntegro',
+			'Aclamación: Demos gracias a Dios',
+			'Ofertorio: canto de entrega',
+			'Comunión: canto claramente eucarístico',
+		],
+	},
+	{
+		title: 'Clásico y solemne',
+		items: [
+			'Preludio: órgano o pieza sacra',
+			'Aleluya: gregoriano',
+			'Sanctus y Agnus Dei: gregoriano',
+			'Comunión: Ave Verum Corpus o Panis Angelicus',
+			'Salida: pieza festiva apropiada',
+		],
+	},
+];
+
+const priorities = [
+	'Salmo responsorial',
+	'Aleluya',
+	'Gloria',
+	'Santo',
+	'Aclamación memorial',
+	'Gran Amén',
+	'Cordero de Dios',
+	'Comunión',
+	'Entrada',
+	'Aclamación después del consentimiento',
+	'Ofertorio',
+	'Salida',
+];
+
+const avoidSongs = [
+	'Canciones románticas seculares',
+	'Favoritas de los novios sin función litúrgica',
+	'Canto de paz añadido por costumbre',
+	'Ave María automáticamente en Comunión',
+	'Canciones cristianas usadas en cualquier momento sin revisar texto y función',
+];
+
+const sourceLinks = [
+	{
+		label: 'Catecismo: Sacramento del Matrimonio',
+		href: 'https://www.vatican.va/archive/catechism_sp/p2s2c3a7_sp.html',
+	},
+	{
+		label: 'Sacrosanctum Concilium',
+		href: 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19631204_sacrosanctum-concilium_sp.html',
+	},
+	{
+		label: 'Instrucción General del Misal Romano',
+		href: 'https://www.vatican.va/roman_curia/congregations/ccdds/documents/rc_con_ccdds_doc_20030317_ordinamento-messale_sp.html',
+	},
+	{
+		label: 'Misal Romano en Liturgia Papal',
+		href: 'https://liturgiapapal.org/index.php/recursos-lit%C3%BArgicos/libros-lit%C3%BArgicos/604-misal-romano.html',
+	},
+];
+
+const jsonLd = {
+	'@type': 'Article',
+	headline: 'Guía para el coro en el Sacramento del Matrimonio',
+	description:
+		'Guía litúrgica y musical para preparar cantos en una boda católica, con criterios, orden de la Misa, salmos, lecturas y repertorio sugerido.',
+	inLanguage: 'es-MX',
+	image: '/assets/matrimonio-guia-hero.png',
+};
+---
+
+<Layout
+	title="Guía de Matrimonio para el coro"
+	description="Guía litúrgica y musical para preparar cantos en el Sacramento del Matrimonio, con criterios, orden de la Misa, salmos, lecturas y repertorio sugerido."
+	image="/assets/matrimonio-guia-hero.png"
+	canonical="/tipos-de-misas/matrimonio"
+	type="article"
+	jsonLd={jsonLd}
+>
+	<main class="marriage-page">
+		<section class="marriage-hero" data-parallax>
+			<img
+				class="marriage-hero-bg"
+				src="/assets/matrimonio-guia-hero.png"
+				alt=""
+				loading="eager"
+				data-parallax-layer
+				data-speed="0.09"
+			/>
+			<div class="marriage-hero-shade"></div>
+			<div class="marriage-hero-copy" data-reveal>
+				<a class="back-link" href="/tipos-de-misas">Tipos de Misas</a>
+				<p class="eyebrow">Guía para el coro</p>
+				<h1>Sacramento del Matrimonio</h1>
+				<p>
+					Una guía para elegir cantos que expresen alianza, fidelidad, entrega,
+					Eucaristía y la vocación de amar como Cristo ama a su Iglesia.
+				</p>
+				<div class="hero-actions">
+					<a href="#cantos-matrimonio">Ver cantos</a>
+					<a href="#esquemas-nupciales">Ver esquemas</a>
+				</div>
+			</div>
+			<div class="sacrament-strip" aria-label="Centro litúrgico de la celebración" data-reveal>
+				{sacramentCenter.map(item => <span>{item}</span>)}
+			</div>
+		</section>
+
+		<section class="marriage-intro">
+			<div class="intro-copy" data-reveal>
+				<p class="eyebrow">Sentido sacramental</p>
+				<h2>No es sólo una ceremonia romántica</h2>
+				<p>
+					El coro sirve a la celebración de un sacramento. La música no debe girar
+					alrededor de la fotografía, la entrada de la novia o una canción favorita,
+					sino alrededor del consentimiento, la alianza nupcial, la bendición y la
+					Eucaristía cuando hay Misa.
+				</p>
+			</div>
+
+			<div class="intro-image-wrap" data-parallax data-reveal>
+				<img
+					src="/assets/matrimonio-guia-coro.png"
+					alt="Anillos de matrimonio junto a un crucifijo y una partitura"
+					loading="lazy"
+					data-parallax-layer
+					data-speed="-0.05"
+				/>
+			</div>
+		</section>
+
+		<section class="language-section">
+			<div class="section-head" data-reveal>
+				<p class="eyebrow">Lenguaje musical</p>
+				<h2>Lo que debe escucharse</h2>
+			</div>
+			<div class="language-grid">
+				{musicLanguage.map(item => <span data-reveal>{item}</span>)}
+			</div>
+		</section>
+
+		<section class="forms-grid" aria-label="Formas de celebrar el Matrimonio">
+			{celebrationForms.map(form => (
+				<article data-reveal>
+					<span></span>
+					<h2>{form.title}</h2>
+					<p>{form.text}</p>
+				</article>
+			))}
+		</section>
+
+		<section class="order-section">
+			<div class="section-head" data-reveal>
+				<p class="eyebrow">Orden musical</p>
+				<h2>Matrimonio dentro de la Misa</h2>
+			</div>
+
+			<div class="order-list">
+				{massOrder.map(item => (
+					<article data-reveal>
+						<h3>{item.moment}</h3>
+						<p>{item.note}</p>
+					</article>
+				))}
+			</div>
+		</section>
+
+		<section class="moment-section">
+			<div class="section-head" data-reveal>
+				<p class="eyebrow">Discernimiento</p>
+				<h2>Momentos que piden especial cuidado</h2>
+			</div>
+
+			<div class="moment-grid">
+				{keyMoments.map(moment => (
+					<article data-reveal>
+						<h3>{moment.title}</h3>
+						<p>{moment.text}</p>
+					</article>
+				))}
+			</div>
+		</section>
+
+		<section class="psalm-section">
+			<div class="section-head" data-reveal>
+				<p class="eyebrow">Palabra cantada</p>
+				<h2>Salmos apropiados para Matrimonio</h2>
+				<p>
+					El Salmo responsorial no es un canto intermedio: es Palabra de Dios.
+					Conviene pedir las lecturas antes de cerrar el repertorio.
+				</p>
+			</div>
+
+			<div class="psalm-grid">
+				{psalms.map(psalm => (
+					<article data-reveal>
+						<h3>{psalm.title}</h3>
+						<p>{psalm.text}</p>
+					</article>
+				))}
+			</div>
+		</section>
+
+		<section class="antiphon-section">
+			<div class="section-head" data-reveal>
+				<p class="eyebrow">Antífonas propias</p>
+				<h2>Formularios A, B y C</h2>
+			</div>
+
+			<div class="antiphon-list">
+				{antiphons.map(form => (
+					<article data-reveal>
+						<h3>{form.title}</h3>
+						<p>{form.entry}</p>
+						<strong>{form.communion}</strong>
+					</article>
+				))}
+			</div>
+		</section>
+
+		<section class="reading-section">
+			<div class="section-head" data-reveal>
+				<p class="eyebrow">Lecturas</p>
+				<h2>La música debe dialogar con la Palabra</h2>
+			</div>
+
+			<div class="reading-grid">
+				{readings.map(reading => (
+					<article data-reveal>
+						<h3>{reading.title}</h3>
+						<p>{reading.text}</p>
+					</article>
+				))}
+			</div>
+		</section>
+
+		<section id="cantos-matrimonio" class="marriage-songs">
+			<div class="section-head" data-reveal>
+				<p class="eyebrow">Cantoral</p>
+				<h2>Cantos relacionados</h2>
+			</div>
+
+			{relatedSongs.length ? (
+				<div class="song-card-grid">
+					{relatedSongs.map(song => (
+						<a class="song-card" href={song.href} data-reveal>
+							<div>
+								{song.indice ? <span>{song.indice}</span> : null}
+								<p>{song.categoria}</p>
+							</div>
+							<h3>{song.title}</h3>
+							<p>{song.description}</p>
+							<small>{song.author}</small>
+						</a>
+					))}
+				</div>
+			) : (
+				<p class="empty-state" data-reveal>
+					Aún no hay cantos marcados para Matrimonio en el cantoral.
+				</p>
+			)}
+		</section>
+
+		<section class="authors-section">
+			<div class="section-head" data-reveal>
+				<p class="eyebrow">Repertorio</p>
+				<h2>Autores y estilos útiles</h2>
+			</div>
+
+			<div class="authors-grid">
+				{authors.map(author => (
+					<article data-reveal>
+						<h3>{author.name}</h3>
+						<p>{author.text}</p>
+					</article>
+				))}
+			</div>
+		</section>
+
+		<section id="esquemas-nupciales" class="scheme-section">
+			<div class="section-head" data-reveal>
+				<p class="eyebrow">Planeación</p>
+				<h2>Tres esquemas nupciales</h2>
+			</div>
+
+			<div class="scheme-grid">
+				{schemes.map(scheme => (
+					<article data-reveal>
+						<h3>{scheme.title}</h3>
+						<ul>
+							{scheme.items.map(item => <li>{item}</li>)}
+						</ul>
+					</article>
+				))}
+			</div>
+		</section>
+
+		<section class="priority-section">
+			<div data-reveal>
+				<p class="eyebrow">Ensayo</p>
+				<h2>Si hay poco tiempo, ensaya en este orden</h2>
+				<p>
+					Primero debe estar bien cantada la propia liturgia; después se embellecen
+					los momentos complementarios.
+				</p>
+			</div>
+
+			<ol data-reveal>
+				{priorities.map(priority => <li>{priority}</li>)}
+			</ol>
+		</section>
+
+		<section class="avoid-section" data-reveal>
+			<div>
+				<p class="eyebrow">Criterio de oro</p>
+				<h2>Lo que conviene evitar</h2>
+				<p>
+					No se trata de rechazar canciones bonitas, sino de reservar cada música
+					para el lugar donde verdaderamente sirve al rito.
+				</p>
+			</div>
+
+			<ul>
+				{avoidSongs.map(song => <li>{song}</li>)}
+			</ul>
+		</section>
+
+		<section class="theology-section" data-reveal>
+			<p class="eyebrow">Idea central</p>
+			<h2>Del “nos amamos” al “Dios nos llama”</h2>
+			<p>
+				Un repertorio matrimonial verdaderamente católico conduce a algo más grande:
+				Dios nos ha llamado a amarnos como Cristo ama a su Iglesia. La entrada,
+				la Palabra, el consentimiento, los anillos, el ofertorio, la Eucaristía,
+				la Comunión y la bendición nupcial pueden cantar ese recorrido sin perder
+				el centro sacramental.
+			</p>
+		</section>
+
+		<section class="sources-section" data-reveal>
+			<p class="eyebrow">Fuentes de consulta</p>
+			<div>
+				{sourceLinks.map(source => (
+					<a href={source.href} target="_blank" rel="noreferrer">{source.label}</a>
+				))}
+			</div>
+		</section>
+	</main>
+</Layout>
+
+<script>
+	const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+	const parallaxLayers = Array.from(document.querySelectorAll<HTMLElement>('[data-parallax-layer]'));
+
+	const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
+
+	const updateParallax = () => {
+		if (reduceMotion.matches) return;
+
+		parallaxLayers.forEach(layer => {
+			const section = layer.closest<HTMLElement>('[data-parallax]');
+			if (!section) return;
+
+			const rect = section.getBoundingClientRect();
+			const speed = Number(layer.dataset.speed ?? '0.08');
+			const sectionMidpoint = rect.top + rect.height / 2;
+			const viewportMidpoint = window.innerHeight / 2;
+			const offset = clamp((viewportMidpoint - sectionMidpoint) * speed, -70, 70);
+
+			layer.style.setProperty('--parallax-y', `${offset}px`);
+		});
+	};
+
+	let ticking = false;
+
+	const requestParallax = () => {
+		if (ticking) return;
+		ticking = true;
+		window.requestAnimationFrame(() => {
+			updateParallax();
+			ticking = false;
+		});
+	};
+
+	const revealObserver = new IntersectionObserver(
+		entries => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					entry.target.classList.add('is-visible');
+					revealObserver.unobserve(entry.target);
+				}
+			});
+		},
+		{ threshold: 0.16 }
+	);
+
+	document.querySelectorAll('[data-reveal]').forEach(element => {
+		revealObserver.observe(element);
+	});
+
+	updateParallax();
+	window.addEventListener('scroll', requestParallax, { passive: true });
+	window.addEventListener('resize', requestParallax);
+</script>
+
+<style>
+	.marriage-page {
+		--marriage-ink: #171717;
+		--marriage-muted: #655f58;
+		--marriage-gold: #b27722;
+		--marriage-brass: #d2a64c;
+		--marriage-cream: #fff8ef;
+		--marriage-ivory: #fffdfa;
+		--marriage-green: #3f5941;
+		--marriage-blush: #bd7e75;
+		width: min(1180px, calc(100% - 56px));
+		margin: 0 auto;
+		padding: 42px 0 34px;
+		color: var(--marriage-ink);
+		font-family: Inter, system-ui, sans-serif;
+	}
+
+	.marriage-page h1,
+	.marriage-page h2,
+	.marriage-page h3 {
+		margin: 0;
+		color: var(--marriage-ink);
+		font-family: Georgia, 'Times New Roman', serif;
+		font-weight: 500;
+		letter-spacing: 0;
+	}
+
+	.marriage-page p {
+		margin: 0;
+		color: var(--marriage-muted);
+		line-height: 1.72;
+	}
+
+	.eyebrow {
+		color: var(--marriage-gold);
+		font-size: 0.78rem;
+		font-weight: 900;
+		letter-spacing: 0;
+		text-transform: uppercase;
+	}
+
+	.marriage-hero {
+		position: relative;
+		display: grid;
+		min-height: 650px;
+		overflow: hidden;
+		align-items: end;
+		margin-bottom: 34px;
+		padding: 42px;
+		border-radius: 28px;
+		background: #21180f;
+		box-shadow: 0 28px 80px rgba(49, 36, 18, 0.2);
+		isolation: isolate;
+	}
+
+	.marriage-hero-bg {
+		position: absolute;
+		inset: -70px 0;
+		z-index: -2;
+		width: 100%;
+		height: calc(100% + 140px);
+		object-fit: cover;
+		transform: translate3d(0, var(--parallax-y, 0), 0) scale(1.04);
+		will-change: transform;
+	}
+
+	.marriage-hero-shade {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background:
+			linear-gradient(90deg, rgba(29, 21, 13, 0.9) 0%, rgba(59, 39, 20, 0.68) 45%, rgba(59, 39, 20, 0.14) 100%),
+			linear-gradient(0deg, rgba(24, 17, 10, 0.72) 0%, rgba(24, 17, 10, 0.04) 58%);
+	}
+
+	.marriage-hero-copy {
+		max-width: 760px;
+	}
+
+	.back-link {
+		display: inline-flex;
+		margin-bottom: 18px;
+		color: #f7dba3;
+		font-weight: 800;
+		text-decoration: none;
+	}
+
+	.marriage-hero .eyebrow,
+	.marriage-hero h1,
+	.marriage-hero p {
+		color: white;
+		text-shadow: 0 2px 24px rgba(0, 0, 0, 0.32);
+	}
+
+	.marriage-hero .eyebrow {
+		color: #f8d184;
+	}
+
+	.marriage-hero h1 {
+		max-width: 790px;
+		font-size: 4.7rem;
+		line-height: 0.96;
+	}
+
+	.marriage-hero p:not(.eyebrow) {
+		max-width: 670px;
+		margin-top: 18px;
+		color: rgba(255, 255, 255, 0.87);
+		font-size: 1.08rem;
+	}
+
+	.hero-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+		margin-top: 24px;
+	}
+
+	.hero-actions a {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 46px;
+		padding: 0.76rem 1.05rem;
+		border-radius: 999px;
+		font-weight: 900;
+		text-decoration: none;
+	}
+
+	.hero-actions a:first-child {
+		background: #f8d184;
+		color: #21180f;
+		box-shadow: 0 16px 34px rgba(248, 209, 132, 0.24);
+	}
+
+	.hero-actions a:last-child {
+		background: rgba(255, 255, 255, 0.14);
+		border: 1px solid rgba(255, 255, 255, 0.3);
+		color: white;
+		backdrop-filter: blur(12px);
+	}
+
+	.sacrament-strip {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin-top: 34px;
+	}
+
+	.sacrament-strip span {
+		display: inline-flex;
+		align-items: center;
+		min-height: 40px;
+		padding: 0.62rem 0.82rem;
+		border-radius: 999px;
+		background: rgba(255, 248, 239, 0.14);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		color: rgba(255, 255, 255, 0.88);
+		font-size: 0.88rem;
+		font-weight: 850;
+		backdrop-filter: blur(14px);
+	}
+
+	.marriage-intro,
+	.priority-section,
+	.avoid-section {
+		display: grid;
+		grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+		gap: 28px;
+		align-items: center;
+		margin-bottom: 28px;
+	}
+
+	.intro-copy,
+	.section-head,
+	.priority-section > div,
+	.avoid-section > div,
+	.theology-section {
+		display: grid;
+		gap: 12px;
+	}
+
+	.intro-copy h2,
+	.section-head h2,
+	.priority-section h2,
+	.avoid-section h2,
+	.theology-section h2 {
+		font-size: 2.45rem;
+		line-height: 1.04;
+	}
+
+	.intro-image-wrap {
+		position: relative;
+		min-height: 460px;
+		overflow: hidden;
+		border-radius: 28px;
+		background: #2f2418;
+		box-shadow: 0 24px 70px rgba(49, 36, 18, 0.13);
+	}
+
+	.intro-image-wrap img {
+		position: absolute;
+		inset: -40px 0;
+		width: 100%;
+		height: calc(100% + 80px);
+		object-fit: cover;
+		transform: translate3d(0, var(--parallax-y, 0), 0) scale(1.03);
+		will-change: transform;
+	}
+
+	.language-section,
+	.order-section,
+	.moment-section,
+	.psalm-section,
+	.antiphon-section,
+	.reading-section,
+	.marriage-songs,
+	.authors-section,
+	.scheme-section {
+		margin-bottom: 32px;
+	}
+
+	.section-head {
+		max-width: 760px;
+		margin-bottom: 16px;
+	}
+
+	.language-grid,
+	.forms-grid,
+	.order-list,
+	.moment-grid,
+	.psalm-grid,
+	.antiphon-list,
+	.reading-grid,
+	.authors-grid,
+	.scheme-grid,
+	.song-card-grid {
+		display: grid;
+		gap: 14px;
+	}
+
+	.language-grid {
+		grid-template-columns: repeat(6, minmax(0, 1fr));
+	}
+
+	.language-grid span {
+		display: inline-flex;
+		min-height: 64px;
+		align-items: center;
+		justify-content: center;
+		padding: 0.7rem;
+		border-radius: 18px;
+		background: var(--marriage-ivory);
+		border: 1px solid #eadfd2;
+		color: #5f3e12;
+		font-size: 0.88rem;
+		font-weight: 900;
+		text-align: center;
+		box-shadow: 0 14px 34px rgba(49, 36, 18, 0.05);
+	}
+
+	.forms-grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		margin-bottom: 28px;
+	}
+
+	.forms-grid article,
+	.order-list article,
+	.moment-grid article,
+	.psalm-grid article,
+	.antiphon-list article,
+	.reading-grid article,
+	.authors-grid article,
+	.scheme-grid article,
+	.song-card,
+	.priority-section ol,
+	.avoid-section,
+	.theology-section,
+	.sources-section {
+		border: 1px solid #eadfd2;
+		background: rgba(255, 248, 239, 0.88);
+		box-shadow: 0 18px 46px rgba(49, 36, 18, 0.06);
+	}
+
+	.forms-grid article {
+		display: grid;
+		gap: 10px;
+		min-height: 225px;
+		padding: 22px;
+		border-radius: 22px;
+	}
+
+	.forms-grid article span {
+		width: 44px;
+		height: 8px;
+		border-radius: 999px;
+		background: linear-gradient(90deg, var(--marriage-gold), var(--marriage-green), var(--marriage-blush));
+	}
+
+	.forms-grid h2,
+	.order-list h3,
+	.moment-grid h3,
+	.psalm-grid h3,
+	.antiphon-list h3,
+	.reading-grid h3,
+	.authors-grid h3,
+	.scheme-grid h3,
+	.song-card h3 {
+		font-size: 1.25rem;
+		line-height: 1.16;
+	}
+
+	.order-list {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	.order-list article,
+	.moment-grid article,
+	.psalm-grid article,
+	.antiphon-list article,
+	.reading-grid article,
+	.authors-grid article,
+	.scheme-grid article {
+		display: grid;
+		gap: 8px;
+		padding: 18px;
+		border-radius: 20px;
+	}
+
+	.moment-section {
+		position: relative;
+		overflow: hidden;
+		padding: 30px;
+		border-radius: 28px;
+		background:
+			linear-gradient(120deg, rgba(36, 27, 18, 0.94), rgba(86, 61, 30, 0.85)),
+			url('/assets/matrimonio-guia-hero.png') center / cover no-repeat;
+	}
+
+	.moment-section .section-head h2,
+	.moment-section .section-head p {
+		color: white;
+	}
+
+	.moment-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.moment-grid article {
+		background: rgba(255, 255, 255, 0.13);
+		border-color: rgba(255, 255, 255, 0.18);
+		backdrop-filter: blur(12px);
+	}
+
+	.moment-grid h3,
+	.moment-grid p {
+		color: white;
+	}
+
+	.psalm-grid,
+	.reading-grid {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+
+	.antiphon-list {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	.antiphon-list strong {
+		color: #5f3e12;
+		line-height: 1.55;
+	}
+
+	.song-card-grid {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+
+	.song-card {
+		display: grid;
+		gap: 10px;
+		min-height: 245px;
+		padding: 18px;
+		border-radius: 22px;
+		color: inherit;
+		text-decoration: none;
+		background:
+			linear-gradient(180deg, rgba(255, 248, 239, 0.96), rgba(255, 248, 239, 0.82)),
+			url('/assets/matrimonio-guia-hero.png') center / cover no-repeat;
+		transition:
+			transform 180ms ease,
+			box-shadow 180ms ease;
+	}
+
+	.song-card:hover {
+		transform: translateY(-3px);
+		box-shadow: 0 24px 54px rgba(49, 36, 18, 0.11);
+	}
+
+	.song-card > div {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 10px;
+	}
+
+	.song-card span {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.38rem 0.58rem;
+		border-radius: 999px;
+		background: #5f3e12;
+		color: white;
+		font-size: 0.78rem;
+		font-weight: 900;
+	}
+
+	.song-card > div p {
+		color: var(--marriage-gold);
+		font-weight: 900;
+	}
+
+	.song-card small {
+		align-self: end;
+		color: var(--marriage-muted);
+		font-weight: 850;
+	}
+
+	.authors-grid {
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+	}
+
+	.scheme-grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	.scheme-grid ul,
+	.avoid-section ul {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin: 8px 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.scheme-grid li,
+	.avoid-section li {
+		padding: 0.44rem 0.72rem;
+		border-radius: 999px;
+		background: white;
+		border: 1px solid #eadfd2;
+		color: #5f3e12;
+		font-size: 0.86rem;
+		font-weight: 850;
+	}
+
+	.priority-section {
+		padding: 28px;
+		border-radius: 28px;
+		background:
+			linear-gradient(110deg, rgba(255, 248, 239, 0.98) 0%, rgba(255, 248, 239, 0.76) 58%, rgba(178, 119, 34, 0.12) 100%),
+			url('/assets/matrimonio-guia-coro.png') center / cover no-repeat;
+		border: 1px solid #eadfd2;
+	}
+
+	.priority-section ol {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 8px;
+		margin: 0;
+		padding: 16px;
+		border-radius: 22px;
+		list-style: none;
+		counter-reset: priority;
+	}
+
+	.priority-section li {
+		display: grid;
+		grid-template-columns: 36px minmax(0, 1fr);
+		gap: 10px;
+		align-items: center;
+		color: var(--marriage-ink);
+		font-weight: 900;
+	}
+
+	.priority-section li::before {
+		counter-increment: priority;
+		content: counter(priority);
+		display: inline-flex;
+		width: 36px;
+		height: 36px;
+		align-items: center;
+		justify-content: center;
+		border-radius: 999px;
+		background: #5f3e12;
+		color: white;
+	}
+
+	.avoid-section {
+		padding: 26px;
+		border-radius: 28px;
+	}
+
+	.theology-section {
+		margin-bottom: 32px;
+		padding: 30px;
+		border-radius: 28px;
+		background:
+			linear-gradient(120deg, rgba(255, 248, 239, 0.96), rgba(255, 253, 250, 0.9)),
+			url('/assets/matrimonio-guia-hero.png') center / cover no-repeat;
+	}
+
+	.sources-section {
+		display: grid;
+		gap: 12px;
+		padding: 22px;
+		border-radius: 22px;
+	}
+
+	.sources-section div {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	.sources-section a {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.62rem 0.82rem;
+		border-radius: 999px;
+		background: white;
+		border: 1px solid #eadfd2;
+		color: #5f3e12;
+		font-weight: 850;
+		text-decoration: none;
+	}
+
+	.empty-state {
+		padding: 20px;
+		border-radius: 18px;
+		background: var(--marriage-cream);
+		border: 1px dashed #d9cabc;
+	}
+
+	[data-reveal] {
+		opacity: 0;
+		transform: translateY(18px);
+		transition:
+			opacity 680ms ease,
+			transform 680ms ease;
+	}
+
+	[data-reveal].is-visible {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	@media (max-width: 1120px) {
+		.language-grid {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+
+		.order-list,
+		.psalm-grid,
+		.reading-grid,
+		.authors-grid,
+		.song-card-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.marriage-intro,
+		.priority-section,
+		.avoid-section {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 760px) {
+		.marriage-page {
+			width: min(100% - 32px, 1180px);
+			padding-top: 28px;
+		}
+
+		.marriage-hero {
+			min-height: 750px;
+			padding: 24px;
+			border-radius: 22px;
+		}
+
+		.marriage-hero-bg {
+			object-position: 56% center;
+		}
+
+		.marriage-hero-shade {
+			background:
+				linear-gradient(180deg, rgba(29, 21, 13, 0.8) 0%, rgba(59, 39, 20, 0.62) 42%, rgba(24, 17, 10, 0.9) 100%);
+		}
+
+		.marriage-hero h1 {
+			font-size: 3.1rem;
+		}
+
+		.language-grid,
+		.forms-grid,
+		.order-list,
+		.moment-grid,
+		.psalm-grid,
+		.antiphon-list,
+		.reading-grid,
+		.authors-grid,
+		.scheme-grid,
+		.song-card-grid,
+		.priority-section ol {
+			grid-template-columns: 1fr;
+		}
+
+		.sacrament-strip span {
+			width: 100%;
+		}
+
+		.intro-copy h2,
+		.section-head h2,
+		.priority-section h2,
+		.avoid-section h2,
+		.theology-section h2 {
+			font-size: 2.1rem;
+		}
+
+		.intro-image-wrap {
+			min-height: 390px;
+			border-radius: 22px;
+		}
+
+		.moment-section,
+		.priority-section,
+		.avoid-section,
+		.theology-section {
+			padding: 22px;
+			border-radius: 22px;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.marriage-hero-bg,
+		.intro-image-wrap img,
+		[data-reveal],
+		.song-card {
+			animation: none;
+			transform: none;
+			transition: none;
+		}
+
+		[data-reveal] {
+			opacity: 1;
+		}
+	}
+</style>
