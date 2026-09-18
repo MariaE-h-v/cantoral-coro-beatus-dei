@@ -27,15 +27,13 @@ cantos:
     indice: "CD01"
     slug: "cordero-alejandro-mejia"
   - momento: "Comunión"
-    indice: "C20"
-    slug: "comunion-hambre-de-dios"
+    indice: "M23"
+    slug: "marianos-junto-a-la-cruz"
   - momento: "Salida"
-    indice: "SA05"
-    slug: "salida-danos-un-corazon"
+    indice: "M05"
+    slug: "marianos-dulce-madre"
 ---
 
 ## Notas para el coro
 
-Este esquema puede usarse como punto de partida para domingos de Tiempo Ordinario.
-Antes de la celebracion, revisa las lecturas del dia y ajusta los cantos si hay una
-solemnidad, memoria o necesidad pastoral especial.
+Este esquema para 15 de septiembre en la memoria de nuestra señora de los dolores
