@@ -30,12 +30,12 @@ Tu pueblo se reúne Señor a bendecirte,
  Bb7  A7       Gm         Bb7   A7
 a celebrar con gozo   tu paso salvador.
 
-G   Em   A7   F#m
+G                Em       A7            F#m
 Convocas a tus fieles, nacidos de las aguas,
- Em   A7   D 
+     Em       A7       D 
 a festejar unidos la nueva creación.
-Gm   C   F 
+    Gm           C        F 
 La sala del banquete se llena de invitados, 
- Bb7    A7  Gm   Bb7   A7
+ Bb7    A7   Gm        Bb7           A7
 Estamos reunidos y en medio está el Señor.
 
