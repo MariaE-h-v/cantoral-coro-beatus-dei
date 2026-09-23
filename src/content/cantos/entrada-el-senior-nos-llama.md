@@ -27,8 +27,8 @@ Por todos los caminos nos sales al encuentro,
 por todos hemos visto señales de tu amor.
 Gm           C     F 
 Tu pueblo se reúne Señor a bendecirte,
- Bb7  A7   Gm   Bb7   A7
-a celebrar con gozo a tu paso salvador.
+ Bb7  A7       Gm         Bb7   A7
+a celebrar con gozo   tu paso salvador.
 
 G   Em   A7   F#m
 Convocas a tus fieles, nacidos de las aguas,
