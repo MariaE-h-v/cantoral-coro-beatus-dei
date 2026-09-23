@@ -12,30 +12,30 @@ tags:
 description: "EL señor nos llama y nos reúne somos su pueblo..."
 youtubeUrl: "https://www.youtube.com/watch?v=TuW7WDcLjcA"
 ---
-Re           La7           Re
+D            A            D
 EL SEÑOR NOS LLAMA Y NOS REUNE,
-          fa#-  Sol         La7
+          F#m   G             A
 SOMOS SU PUEBLO SIGNO DE UNIDAD.
-Re   Sol   La7        fa#- 
+D    G     A          F#m 
 ÉL ESTA EN MEDIO DE NOSOTROS,
-Sol        Re    La7             Sol Re
+G          D     A7              G  D
 SIRVE A LA MESA, NOS REPARTE EL PAN.
 
-Sol             mi-         La7        fa#-
+G             Em           A7         F#m
 Por todos los caminos nos sales al encuentro,
-     mi-         La7    Re 
+     Em          A7     D 
 por todos hemos visto señales de tu amor.
-sol-          DO     FA 
+Gm           C     F 
 Tu pueblo se reúne Señor a bendecirte,
- Sib7 La7   sol- Sib7 LA7
+ Bb7  A7   Gm   Bb7   A7
 a celebrar con gozo a tu paso salvador.
 
-Sol mi- La7 fa#-
+G   Em   A7   F#m
 Convocas a tus fieles, nacidos de las aguas,
- mi- La7 Re 
+ Em   A7   D 
 a festejar unidos la nueva creación.
-sol- DO FA 
+Gm   C   F 
 La sala del banquete se llena de invitados, 
- Sib7 La7 sol- Sib7 LA7
+ Bb7    A7  Gm   Bb7   A7
 Estamos reunidos y en medio está el Señor.
 
