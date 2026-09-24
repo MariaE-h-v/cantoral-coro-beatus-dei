@@ -1,5 +1,6 @@
 ---
 title: "Misa de Nuestra señora de los dolores"
+date: "2026-09-15"
 description: "Esquema para memoria de Nuestra señora de los Dolores "
 tipo: "Misa memorial"
 tiempo: "Tiempo ordinario"

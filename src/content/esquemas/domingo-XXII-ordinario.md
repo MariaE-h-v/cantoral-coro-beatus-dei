@@ -1,5 +1,6 @@
 ---
 title: "Misa Domingo XXII Tiempo Ordinario"
+date: "2026-08-30"
 description: "El que quiera venir conmigo, que renuncie a sí mismo, que tome su cruz y me siga"
 tipo: "Misa dominical"
 tiempo: "Tiempo ordinario"
@@ -67,5 +68,4 @@ ANTÍFONA DE LA COMUNIÓN Mt 5, 9-10
 Dichosos los que trabajan por la paz, porque serán
 llamados hijos de Dios. Dichosos los perseguidos por
 causa de la justicia, porque de ellos es el reino de los cielos.
-
 

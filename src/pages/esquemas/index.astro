@@ -5,16 +5,53 @@ import { getLiturgicalBackground } from '../../utils/liturgicalSeason';
 
 const rawSchemes = import.meta.glob('../../content/esquemas/*.md', { eager: true });
 
+const getSchemeTimestamp = (value: unknown) => {
+	if (!value) return 0;
+	const date = value instanceof Date ? value : new Date(String(value));
+	const timestamp = date.getTime();
+	return Number.isNaN(timestamp) ? 0 : timestamp;
+};
+
+const getSchemeDateValue = (data: Record<string, unknown>) =>
+	data.date ?? data.fecha ?? data.pubDate ?? data.createdAt ?? '';
+
+const formatSchemeDate = (value: unknown) => {
+	const timestamp = getSchemeTimestamp(value);
+	if (!timestamp) return '';
+
+	return new Intl.DateTimeFormat('es-MX', {
+		day: 'numeric',
+		month: 'short',
+		year: 'numeric',
+	}).format(new Date(timestamp));
+};
+
+const normalizeFilterValue = (value: unknown) =>
+	String(value ?? '')
+		.normalize('NFD')
+		.replace(/[\u0300-\u036f]/g, '')
+		.toLowerCase()
+		.trim();
+
+const uniqueValues = (values: unknown[]) =>
+	Array.from(new Set(values.map(value => String(value ?? '').trim()).filter(Boolean))).sort((a, b) =>
+		a.localeCompare(b)
+	);
+
 const schemes = Object.entries(rawSchemes)
 	.map(([file, module]) => {
 		const data = (module as any).frontmatter ?? {};
 		const slug = path.basename(file, '.md');
 		const songs = Array.isArray(data.cantos) ? data.cantos : [];
+		const dateValue = getSchemeDateValue(data);
 
 		return {
 			title: data.title ?? slug,
 			description:
 				data.description ?? 'Esquema de cantos preparado para una celebracion liturgica.',
+			dateIso: dateValue ? String(dateValue) : '',
+			dateLabel: formatSchemeDate(dateValue),
+			dateTimestamp: getSchemeTimestamp(dateValue),
 			tipo: data.tipo ?? 'Celebracion',
 			tiempo: data.tiempo ?? 'Sin tiempo',
 			tags: Array.isArray(data.tags) ? data.tags : [],
@@ -23,7 +60,11 @@ const schemes = Object.entries(rawSchemes)
 			background: getLiturgicalBackground(data.tiempo, data.tags),
 		};
 	})
-	.sort((a, b) => a.title.localeCompare(b.title));
+	.sort((a, b) => b.dateTimestamp - a.dateTimestamp || a.title.localeCompare(b.title));
+
+const schemeTypes = uniqueValues(schemes.map(scheme => scheme.tipo));
+const schemeSeasons = uniqueValues(schemes.map(scheme => scheme.tiempo));
+const schemeTags = uniqueValues(schemes.flatMap(scheme => scheme.tags));
 ---
 
 <Layout
@@ -48,18 +89,78 @@ const schemes = Object.entries(rawSchemes)
 					<p class="schemes-label">Biblioteca</p>
 					<h2 id="schemes-title">Esquemas disponibles</h2>
 				</div>
-				<span>{schemes.length} {schemes.length === 1 ? 'esquema' : 'esquemas'}</span>
+				<span data-scheme-result-count>{schemes.length} {schemes.length === 1 ? 'esquema' : 'esquemas'}</span>
 			</div>
 
+			<form class="schemes-filters" data-scheme-filters aria-label="Filtros de esquemas">
+				<label>
+					<span>Buscar</span>
+					<input
+						type="search"
+						placeholder="Domingo, tiempo, canto..."
+						autocomplete="off"
+						data-scheme-search
+					/>
+				</label>
+
+				<label>
+					<span>Tipo</span>
+					<select data-scheme-type>
+						<option value="">Todos</option>
+						{schemeTypes.map(type => <option value={normalizeFilterValue(type)}>{type}</option>)}
+					</select>
+				</label>
+
+				<label>
+					<span>Tiempo</span>
+					<select data-scheme-season>
+						<option value="">Todos</option>
+						{schemeSeasons.map(season => <option value={normalizeFilterValue(season)}>{season}</option>)}
+					</select>
+				</label>
+
+				<label>
+					<span>Etiqueta</span>
+					<select data-scheme-tag>
+						<option value="">Todas</option>
+						{schemeTags.map(tag => <option value={normalizeFilterValue(tag)}>{tag}</option>)}
+					</select>
+				</label>
+
+				<label>
+					<span>Orden</span>
+					<select data-scheme-sort>
+						<option value="recent">Más reciente</option>
+						<option value="oldest">Más antiguo</option>
+						<option value="title">A-Z</option>
+						<option value="songs">Más cantos</option>
+					</select>
+				</label>
+
+				<button type="button" data-scheme-clear>Limpiar</button>
+			</form>
+
 			{schemes.length ? (
-				<div class="schemes-grid">
+				<div class="schemes-grid" data-scheme-grid>
 					{schemes.map(scheme => (
 						<a
 							class:list={['scheme-card', { 'has-background': Boolean(scheme.background) }]}
 							style={scheme.background ? `--scheme-card-bg: url("${scheme.background}");` : undefined}
 							href={scheme.href}
+							data-scheme-card
+							data-title={scheme.title}
+							data-description={scheme.description}
+							data-type={normalizeFilterValue(scheme.tipo)}
+							data-season={normalizeFilterValue(scheme.tiempo)}
+							data-tags={scheme.tags.map(tag => normalizeFilterValue(tag)).join('|')}
+							data-search={`${scheme.title} ${scheme.description} ${scheme.tipo} ${scheme.tiempo} ${scheme.tags.join(' ')}`}
+							data-date={scheme.dateTimestamp}
+							data-song-count={scheme.songCount}
 						>
-							<span class="scheme-card-meta">{scheme.tipo}</span>
+							<div class="scheme-card-top">
+								<span class="scheme-card-meta">{scheme.tipo}</span>
+								{scheme.dateLabel ? <time datetime={scheme.dateIso}>{scheme.dateLabel}</time> : null}
+							</div>
 							<h3>{scheme.title}</h3>
 							<p>{scheme.description}</p>
 							<div class="scheme-card-badges">
@@ -76,9 +177,109 @@ const schemes = Object.entries(rawSchemes)
 					<p>Crea archivos Markdown dentro de <code>src/content/esquemas</code>.</p>
 				</div>
 			)}
+
+			<div class="schemes-filter-empty" data-scheme-filter-empty hidden>
+				<h2>No se encontraron esquemas.</h2>
+				<p>Prueba limpiando filtros o buscando por otro tiempo, tipo o palabra clave.</p>
+			</div>
 		</section>
 	</div>
 </Layout>
+
+<script>
+	const normalizeSchemeText = (value: string) =>
+		value
+			.normalize('NFD')
+			.replace(/[\u0300-\u036f]/g, '')
+			.toLowerCase()
+			.trim();
+
+	const filters = document.querySelector<HTMLFormElement>('[data-scheme-filters]');
+	const grid = document.querySelector<HTMLElement>('[data-scheme-grid]');
+	const resultCount = document.querySelector<HTMLElement>('[data-scheme-result-count]');
+	const emptyState = document.querySelector<HTMLElement>('[data-scheme-filter-empty]');
+	const searchInput = document.querySelector<HTMLInputElement>('[data-scheme-search]');
+	const typeSelect = document.querySelector<HTMLSelectElement>('[data-scheme-type]');
+	const seasonSelect = document.querySelector<HTMLSelectElement>('[data-scheme-season]');
+	const tagSelect = document.querySelector<HTMLSelectElement>('[data-scheme-tag]');
+	const sortSelect = document.querySelector<HTMLSelectElement>('[data-scheme-sort]');
+	const clearButton = document.querySelector<HTMLButtonElement>('[data-scheme-clear]');
+	const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-scheme-card]'));
+
+	const getCardDate = (card: HTMLElement) => Number(card.dataset.date || '0');
+	const getCardSongCount = (card: HTMLElement) => Number(card.dataset.songCount || '0');
+	const getCardTitle = (card: HTMLElement) => card.dataset.title || '';
+
+	const sortCards = (items: HTMLElement[]) => {
+		const sortValue = sortSelect?.value || 'recent';
+
+		return items.sort((a, b) => {
+			const dateA = getCardDate(a);
+			const dateB = getCardDate(b);
+
+			if (sortValue === 'oldest') {
+				if (!dateA && dateB) return 1;
+				if (dateA && !dateB) return -1;
+				return dateA - dateB || getCardTitle(a).localeCompare(getCardTitle(b));
+			}
+
+			if (sortValue === 'title') {
+				return getCardTitle(a).localeCompare(getCardTitle(b));
+			}
+
+			if (sortValue === 'songs') {
+				return getCardSongCount(b) - getCardSongCount(a) || getCardTitle(a).localeCompare(getCardTitle(b));
+			}
+
+			return dateB - dateA || getCardTitle(a).localeCompare(getCardTitle(b));
+		});
+	};
+
+	const updateResultCount = (total: number) => {
+		if (!resultCount) return;
+		resultCount.textContent = `${total} ${total === 1 ? 'esquema' : 'esquemas'}`;
+	};
+
+	const applySchemeFilters = () => {
+		if (!grid) return;
+
+		const query = normalizeSchemeText(searchInput?.value || '');
+		const selectedType = typeSelect?.value || '';
+		const selectedSeason = seasonSelect?.value || '';
+		const selectedTag = tagSelect?.value || '';
+
+		const visibleCards = cards.filter(card => {
+			const searchText = normalizeSchemeText(card.dataset.search || '');
+			const matchesQuery = !query || searchText.includes(query);
+			const matchesType = !selectedType || card.dataset.type === selectedType;
+			const matchesSeason = !selectedSeason || card.dataset.season === selectedSeason;
+			const matchesTag = !selectedTag || (card.dataset.tags || '').split('|').includes(selectedTag);
+
+			return matchesQuery && matchesType && matchesSeason && matchesTag;
+		});
+
+		cards.forEach(card => {
+			card.hidden = !visibleCards.includes(card);
+		});
+
+		sortCards(visibleCards).forEach(card => {
+			grid.appendChild(card);
+		});
+
+		updateResultCount(visibleCards.length);
+		if (emptyState) emptyState.hidden = visibleCards.length > 0;
+	};
+
+	filters?.addEventListener('input', applySchemeFilters);
+	filters?.addEventListener('change', applySchemeFilters);
+	clearButton?.addEventListener('click', () => {
+		filters?.reset();
+		applySchemeFilters();
+		searchInput?.focus();
+	});
+
+	applySchemeFilters();
+</script>
 
 <style>
 	.schemes-page {
@@ -167,6 +368,63 @@ const schemes = Object.entries(rawSchemes)
 		box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
 	}
 
+	.schemes-filters {
+		display: grid;
+		grid-template-columns: minmax(220px, 1.4fr) repeat(4, minmax(140px, 1fr)) auto;
+		gap: 12px;
+		align-items: end;
+		padding: 16px;
+		border-radius: 22px;
+		background: #fffaf4;
+		border: 1px solid #f1e4d1;
+		box-shadow: 0 16px 40px rgba(15, 23, 42, 0.05);
+	}
+
+	.schemes-filters label {
+		display: grid;
+		gap: 7px;
+		min-width: 0;
+	}
+
+	.schemes-filters label span {
+		color: #7c5c32;
+		font-size: 0.76rem;
+		font-weight: 900;
+		text-transform: uppercase;
+	}
+
+	.schemes-filters input,
+	.schemes-filters select {
+		width: 100%;
+		min-height: 44px;
+		padding: 0 0.82rem;
+		border: 1px solid #e8d7c1;
+		border-radius: 14px;
+		background: white;
+		color: #111827;
+		font: inherit;
+		font-weight: 750;
+		outline: none;
+	}
+
+	.schemes-filters input:focus,
+	.schemes-filters select:focus {
+		border-color: rgba(178, 119, 34, 0.55);
+		box-shadow: 0 0 0 3px rgba(178, 119, 34, 0.12);
+	}
+
+	.schemes-filters button {
+		min-height: 44px;
+		padding: 0 1rem;
+		border: 1px solid #e8d7c1;
+		border-radius: 14px;
+		background: white;
+		color: #8f5417;
+		font: inherit;
+		font-weight: 900;
+		cursor: pointer;
+	}
+
 	.schemes-grid {
 		display: grid;
 		grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -192,6 +450,11 @@ const schemes = Object.entries(rawSchemes)
 			transform 0.18s ease;
 	}
 
+	.scheme-card[hidden],
+	.schemes-filter-empty[hidden] {
+		display: none;
+	}
+
 	.scheme-card.has-background {
 		background:
 			linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(255, 250, 244, 0.88)),
@@ -205,6 +468,13 @@ const schemes = Object.entries(rawSchemes)
 		transform: translateY(-2px);
 	}
 
+	.scheme-card-top {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 12px;
+	}
+
 	.scheme-card-meta {
 		width: fit-content;
 		padding: 0.36em 0.76em;
@@ -215,6 +485,17 @@ const schemes = Object.entries(rawSchemes)
 		font-size: 0.76rem;
 		font-weight: 900;
 		text-transform: uppercase;
+	}
+
+	.scheme-card time {
+		flex: 0 0 auto;
+		padding: 0.34em 0.72em;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.78);
+		border: 1px solid #f1e4d1;
+		color: #7c5c32;
+		font-size: 0.78rem;
+		font-weight: 900;
 	}
 
 	.scheme-card h3 {
@@ -263,12 +544,23 @@ const schemes = Object.entries(rawSchemes)
 		line-height: 1.6;
 	}
 
-	.schemes-empty h2 {
+	.schemes-filter-empty {
+		padding: 28px;
+		border-radius: 22px;
+		background: #fffaf4;
+		border: 1px dashed #d8c8af;
+		color: #64748b;
+		line-height: 1.6;
+	}
+
+	.schemes-empty h2,
+	.schemes-filter-empty h2 {
 		margin-bottom: 8px;
 		font-size: 1.6rem;
 	}
 
-	.schemes-empty p {
+	.schemes-empty p,
+	.schemes-filter-empty p {
 		margin: 0;
 	}
 
@@ -278,6 +570,15 @@ const schemes = Object.entries(rawSchemes)
 	}
 
 	@media (max-width: 980px) {
+		.schemes-filters {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.schemes-filters label:first-child,
+		.schemes-filters button {
+			grid-column: 1 / -1;
+		}
+
 		.schemes-grid {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
@@ -304,8 +605,22 @@ const schemes = Object.entries(rawSchemes)
 			flex-direction: column;
 		}
 
+		.schemes-filters {
+			grid-template-columns: 1fr;
+		}
+
+		.schemes-filters label:first-child,
+		.schemes-filters button {
+			grid-column: auto;
+		}
+
 		.schemes-grid {
 			grid-template-columns: 1fr;
+		}
+
+		.scheme-card-top {
+			flex-direction: column;
+			gap: 8px;
 		}
 	}
 </style>

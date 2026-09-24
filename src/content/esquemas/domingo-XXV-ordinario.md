@@ -1,5 +1,6 @@
 ---
 title: "Misa Domingo XXV Tiempo Ordinario"
+date: "2026-09-20"
 description: "¿Vas a tenerme rencor porque yo soy bueno?"
 tipo: "Misa dominical"
 tiempo: "Tiempo ordinario"
@@ -65,5 +66,4 @@ Del santo Evangelio según san Mateo 20, 1-16a
 ANTÍFONA DE LA COMUNIÓN Jn 10, 14
 Yo soy el buen pastor, dice el Señor; y conozco a mis
 ovejas, y ellas me conocen a mí.
-
 

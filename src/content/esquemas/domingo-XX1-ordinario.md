@@ -1,5 +1,6 @@
 ---
 title: "Misa Domingo XXI Tiempo Ordinario"
+date: "2026-08-23"
 description: " Y: «¿Ustedes quién dicen que soy yo?»… En nombre de todos, con impulso y decisión, fue Pedro quien tomó la palabra para decir: «Tú eres el Cristo, el Hijo del Dios vivo»"
 tipo: "Misa dominical"
 tiempo: "Tiempo ordinario"
@@ -66,5 +67,4 @@ En aquel tiempo, cuando llegó Jesús a la regió
 ANTÍFONA DE LA COMUNIÓN Jn 6, 54
 El que come mi carne y bebe mi sangre, tiene vida
 eterna, dice el Señor; y yo lo resucitaré en el último día.
-
 
