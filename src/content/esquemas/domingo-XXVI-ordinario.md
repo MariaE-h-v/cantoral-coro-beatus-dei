@@ -1,6 +1,6 @@
 ---
 title: "Misa Domingo XXVI Tiempo Ordinario"
-description: "¿Vas a tenerme rencor porque yo soy bueno?"
+description: "El segundo hijo se arrepintió y fue."
 tipo: "Misa dominical"
 tiempo: "Tiempo ordinario"
 tags:
