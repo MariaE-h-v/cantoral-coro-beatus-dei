@@ -41,13 +41,6 @@ export const resourceCategories = [
 		href: '/esquemas',
 		meta: 'Markdown',
 	},
-	{
-		title: 'Tipos de Misas',
-		description: 'Guía para elegir cantos en sacramentos, acción de gracias y celebraciones de la Palabra.',
-		icon: '✚',
-		href: '/tipos-de-misas',
-		meta: 'Guía',
-	},
 ];
 
 export const sheetTabs = [

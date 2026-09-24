@@ -27,21 +27,23 @@ C       Am A7    D
 ¡Reina Nuestro Dios!
 B7             Em
 ¡Reina Nuestro Dios!
-Bb         A7      D
+Bb               D
 ¡Reina Nuestro Dios!
 
 G                Em
 Grita lleno de gozo
 C               A7            D
 pregonero que traes noticias buenas
-G    D/F#    Em    C
+G         D/F#  Em  C
 se rompen las cadenas
       C        Am     A7           D
 y el sol de Cristo brilla esplendoroso.
 
 G                  Em
 Grita sin miedo grita
+    C.             A7.        D
 y denuncia a mi pueblo sus pecados
-G         
-vivimos engañados
+G        D   Em C    
+vivimos enga-ña-dos
+   C.      Am.    A7          D
 pues la belleza humana se marchita.
