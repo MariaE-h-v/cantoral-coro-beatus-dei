@@ -38,7 +38,7 @@ cantos:
     indice: "C12"
     slug: "comunion-recuerda-senior-tus-promesas"
   - momento: "Post Comunión"
-    indice: "C12"
+    indice: "C31"
     slug: "comunion-pan-de-vida"
   - momento: "Salida"
     indice: "M18"
