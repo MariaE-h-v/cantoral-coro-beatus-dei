@@ -39,16 +39,3 @@ cantos:
     slug: "salida-himno-san-lucas"
 ---
 
-ANTÍFONA DE ENTRADA (Dn 3, 31. 29. 30. 43. 42) «Todo lo que hiciste con nosotros, Señor, es verdaderamente justo, porque hemos pecado contra ti y hemos desobedecido tus mandatos; pero haz honor a tu nombre y trátanos conforme a tu inmensa misericordia»
-
-ACLAMACIÓN ANTES DEL EVANGELIO Jn 10, 27
-R. Aleluya, aleluya.
-Mis ovejas escuchan mi voz, dice el Señor; yo las
-conozco y ellas me siguen. R. Aleluya.
-
-EVANGELIO
-[El segundo hijo se arrepintió y fue. - Los publicanos y
-las prostitutas se les han adelantado en el Reino de Dios.]
-Del santo Evangelio según san Mateo 21, 28-32
-
-ANTÍFONA DE LA COMUNION: (Cfr. Sal 118, 49-50) «Recuerda, Señor, la promesa que le hiciste a tu siervo, ella me infunde esperanza y consuelo en mi dolor». O bien: 1 Jn 3, 16 «En esto hemos conocido lo que es el amor de Dios: en que dio su vida por nosotros. Por eso también nosotros debemos dar la vida por los hermanos».
