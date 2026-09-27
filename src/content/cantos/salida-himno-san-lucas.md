@@ -57,17 +57,17 @@ obtendremos por su intercesión
 
 D.                  A. D
 Cantaliente pueblo divino 
-                        G  A
+                        G  D
 que su pecho encendiera Jesús, 
     G            A         D Bm
 él te dio mil portales de rosas 
-   G           Bm          A
+   G           Em          A
 predicando el amor de la cruz.
 
 
 D                      A. D
 Inspirado por Dios la doctrina
-                        G A
+                        G D
 que el divino maestro llevó,
             G           A             D Bm
 que a los pueblos que habrían de ser hijos, 
