@@ -32,7 +32,7 @@ cantos:
     indice: "CD03"
     slug: "cordero-erdozain"
   - momento: "Comunión"
-    indice: "C60"
+    indice: "C50"
     slug: "comunion-que-hermosos-son"
   - momento: "Salida"
     indice: "SA24"

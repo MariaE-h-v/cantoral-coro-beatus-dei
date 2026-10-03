@@ -1,6 +1,6 @@
 ---
 title: "Una Espiga"
-indice: "C50"
+indice: "C49"
 categoria: "Comunión"
 tipo: "Ordinario"
 tiempo: "Ordinario"

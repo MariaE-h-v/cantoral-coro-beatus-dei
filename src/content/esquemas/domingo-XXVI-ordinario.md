@@ -35,7 +35,7 @@ cantos:
     indice: "CD03"
     slug: "cordero-erdozain"
   - momento: "Comunión"
-    indice: "C47"
+    indice: "C48"
     slug: "comunion-recuerda-senior-tus-promesas"
   - momento: "Post Comunión"
     indice: "C31"

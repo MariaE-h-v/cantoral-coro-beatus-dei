@@ -35,7 +35,7 @@ cantos:
     indice: "CD03"
     slug: "cordero-erdozain"
   - momento: "Comunión"
-    indice: "C50"
+    indice: "C49"
     slug: "comunion-una-espiga"
   - momento: "Post Comunión"
     indice: "C31"

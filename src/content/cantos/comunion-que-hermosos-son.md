@@ -1,6 +1,6 @@
 ---
 title: "Que hermosos son sobre los montes"
-indice: "C60"
+indice: "C50"
 categoria: "Comunión"
 tipo: "Comunión"
 tiempo: "Ordinario"
