@@ -1,6 +1,6 @@
 ---
 title: "Antífona de Comunión (Salmo 118, 49.50)"
-indice: "C47"
+indice: "C48"
 categoria: "Comunión"
 tipo: "Antífona"
 tiempo: "Ordinario"
