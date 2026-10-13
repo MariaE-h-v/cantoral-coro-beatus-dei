@@ -4,13 +4,14 @@ import Layout from '../../layouts/Layout.astro';
 import { getLiturgicalBackground } from '../../utils/liturgicalSeason';
 
 const rawSongs = import.meta.glob('../../content/cantos/*.md', { eager: true });
+const stripMarkdownImage = (value: string) => value.replace(/!\[[^\]]*\]\([^)]*\)\s*/g, '').trim();
 
 const songs = Object.entries(rawSongs)
 	.map(([file, module]) => {
 		const markdown = module as any;
 		const data = markdown.frontmatter ?? {};
 		const slug = path.basename(file, '.md');
-		const lyrics = typeof markdown.rawContent === 'function' ? markdown.rawContent() : '';
+		const lyrics = stripMarkdownImage(typeof markdown.rawContent === 'function' ? markdown.rawContent() : '');
 
 		return {
 			title: data.title ?? slug,

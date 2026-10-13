@@ -10,7 +10,7 @@ tags:
   - María
   - Ordinario
 description: "Salve regina mater misericordiae..."
-yotubeUrl: "https://www.youtube.com/watch?v=2e5NIRs4nek&t=7s"
+youtubeUrl: "https://www.youtube.com/watch?v=2e5NIRs4nek&t=7s"
 ---
 
 C        F C.  F/C.        Dm   G

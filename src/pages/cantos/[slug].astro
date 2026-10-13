@@ -24,7 +24,18 @@ const [, module] = entry;
 const current = module as any;
 const frontmatter = current.frontmatter ?? {};
 const lyrics = typeof current.rawContent === 'function' ? current.rawContent() : '';
-const cleanLyrics = lyrics.replace(/^\s*\n/, '').replace(/\s+$/, '');
+const stripMarkdownImage = (value: string) => value.replace(/!\[[^\]]*\]\([^)]*\)\s*/g, '').trim();
+const cleanLyrics = stripMarkdownImage(lyrics.replace(/^\s*\n/, '').replace(/\s+$/, ''));
+const embeddedImageMatch = lyrics.match(/!\[[^\]]*\]\(([^)]+)\)/);
+const embeddedImageSrc = embeddedImageMatch?.[1]?.trim() ?? '';
+const embeddedImageAlt = lyrics.match(/!\[([^\]]*)\]/)?.[1]?.trim() ?? 'Imagen del canto';
+const resolvedEmbeddedImage = embeddedImageSrc
+	? embeddedImageSrc.startsWith('http')
+		? embeddedImageSrc
+		: embeddedImageSrc.startsWith('/')
+			? embeddedImageSrc
+			: `/${embeddedImageSrc.replace(/^\.\//, '').replace(/^\.\//, '')}`
+	: '';
 const songTitle = frontmatter.title ?? slug;
 const songIndex = frontmatter.indice ?? '';
 const songCategory = frontmatter.categoria ?? 'Sin categoría';
@@ -219,6 +230,12 @@ const songJsonLd = {
 			<pre class="lyrics-sheet" data-lyrics-text><code>{cleanLyrics || 'Letra pendiente por registrar.'}</code></pre>
 		</section>
 
+		{resolvedEmbeddedImage ? (
+			<figure class="song-inline-illustration">
+				<img src={resolvedEmbeddedImage} alt={embeddedImageAlt} loading="lazy" />
+			</figure>
+		) : null}
+
 		{related.length ? (
 			<section class="related-block">
 				<h2>Otros cantos</h2>
@@ -241,6 +258,22 @@ const songJsonLd = {
 		) : null}
 	</main>
 </Layout>
+
+<style>
+	.song-inline-illustration {
+		margin: 1.5rem auto 0;
+		text-align: center;
+	}
+
+	.song-inline-illustration img {
+		display: block;
+		max-width: min(100%, 720px);
+		height: auto;
+		margin: 0 auto;
+		border-radius: 18px;
+		box-shadow: 0 14px 35px rgba(15, 23, 42, 0.12);
+	}
+</style>
 
 <script>
 const transposeLabel = document.querySelector('[data-current-key]');

@@ -7,6 +7,15 @@ const rawSchemes = import.meta.glob('../../content/esquemas/*.md', { eager: true
 
 const getSchemeTimestamp = (value: unknown) => {
 	if (!value) return 0;
+
+	if (typeof value === 'string') {
+		const isoOnlyDate = /^\d{4}-\d{2}-\d{2}$/.exec(value.trim());
+		if (isoOnlyDate) {
+			const [year, month, day] = isoOnlyDate[0].split('-').map(Number);
+			return new Date(year, month - 1, day, 12).getTime();
+		}
+	}
+
 	const date = value instanceof Date ? value : new Date(String(value));
 	const timestamp = date.getTime();
 	return Number.isNaN(timestamp) ? 0 : timestamp;

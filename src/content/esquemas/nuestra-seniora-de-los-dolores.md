@@ -31,8 +31,8 @@ cantos:
     indice: "M23"
     slug: "marianos-junto-a-la-cruz"
   - momento: "Salida"
-    indice: "M05"
-    slug: "marianos-dulce-madre"
+    indice: "M14"
+    slug: "marianos-nina-que-nacio"
 ---
 
 ## Notas para el coro

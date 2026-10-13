@@ -1,6 +1,6 @@
 ---
 title: "Quiero madre"
-indice: "C46"
+indice: "M25"
 categoria: "Comunión"
 tipo: "Marianos"
 tiempo: "Ordinario"
