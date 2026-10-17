@@ -12,7 +12,9 @@ tags:
 description: "..."
 youtubeUrl: "https://www.youtube.com/watch?v=aMEk4ueZo6s"
 ---
-Do Sol rem lam 
-Aleluya, alelu--ya, 
-Fa Do Solsus4 Sol Do
+CAPO 3
+
+G    D.  Am.     Em
+Aleluya, alelu--ya,
+C.   G.   D.                  G 
 aleluya, alelu----------------ya. (2) 

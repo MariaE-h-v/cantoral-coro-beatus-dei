@@ -2,12 +2,11 @@
 title: "Misa Acción de gracias: XV años"
 date: "2026-10-17"
 description: " Esquema de cantos para misa de acción de gracias por los XV años "
-tipo: "Misa dominical"
+tipo: "Misa Acción de gracias"
 tiempo: "Tiempo ordinario"
 tags:
   - Tiempo ordinario
   - XV años
-  - Domingo
 cantos:
   - momento: "Entrada"
     indice: "E31"
@@ -48,7 +47,7 @@ cantos:
     indice: "M17"
     slug: "marianos-piensa-en-maria"
   - momento: "Salida"
-    indice: "S25"
+    indice: "SA25"
     slug: "salida-gracias-senior.md"
 ---
 
