@@ -13,34 +13,34 @@ description: "Gracias, señor por tu amor, gracias señor por tu lealtad...."
 youtubeUrl: "https://www.youtube.com/watch?v=Q7cli3xy-tQ"
 ---
 
-D             A               Bm
+C.        G.          Am
 Gracias Señor por tu amor,
-G        Em        A
+F.          Dm.              G
 gracias, oh Dios, por tu lealtad;
-D             A               Bm
+C          G.         Am
 gracias Señor por tu amor,
-G        Em        A
+F.          Dm.       G.    C
 gracias, oh Dios, por tu lealtad.
 
-D              A             Bm
+F.      G.          C
 Tanto amó Dios al mundo,
-G              Em           A
+F         G          Am
 que le entregó a su hijo,
-D              A             Bm
+F.             Dm.           G
 para que todo aquel que en él crea,
-G                 Em           A
+F.               Dm.          G
 no muera, sino tenga vida eterna.
 
-D             A               Bm
+C.        G.          Am
 Gracias Señor por tu amor,
-G        Em        A
+F.          Dm.              G
 gracias, oh Dios, por tu lealtad;
-D             A               Bm
+C          G.         Am
 gracias Señor por tu amor,
-G        Em        A
+F.          Dm.       G.    C
 gracias, oh Dios, por tu lealtad.
 
-D                 A             Bm
+F.       G.                  C
 Cuánto amor nos ha tenido el Padre,
 G              Em           A
 para llamarnos sus hijos,
@@ -49,11 +49,11 @@ y darnos en herencia su reino,
 G                 Em           A
 para siempre habitar en su presencia.
 
-D             A               Bm
+C.        G.          Am
 Gracias Señor por tu amor,
-G        Em        A
+F.          Dm.              G
 gracias, oh Dios, por tu lealtad;
-D             A               Bm
+C          G.         Am
 gracias Señor por tu amor,
-G        Em        A
+F.          Dm.       G.    C
 gracias, oh Dios, por tu lealtad.
