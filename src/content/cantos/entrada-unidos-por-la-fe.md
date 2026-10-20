@@ -11,7 +11,8 @@ tags:
   - Ordinario
 description: "Unidos por la fé y por el amor, sintiendo su presencia entre nosotros..."
 youtubeUrl: "https://youtu.be/nKDMMSapHhw?si=tqiNGZucAJ2uXO5y"
------------------------------------------------------------------
+---
+
 F Dm  C
 
      F             Gm/ Bb       C   F
