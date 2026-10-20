@@ -1,6 +1,6 @@
 ---
 title: "El señor nos llama y nos reúne"
-indice: "E30"
+indice: "E38"
 categoria: "Entrada"
 tipo: "Ordinario"
 tiempo: "Ordinario"

@@ -13,7 +13,7 @@ cantos:
     slug: "entrada-salmo-62"
     nota: "Canto de reunión para abrir la celebración."
   - momento: "Entrada"
-    indice: "E33"
+    indice: "E39"
     slug: "entrada-unidos-por-la-fe"
     nota: "Canto de reunión para abrir la celebración."
   - momento: "Señor ten piedad"

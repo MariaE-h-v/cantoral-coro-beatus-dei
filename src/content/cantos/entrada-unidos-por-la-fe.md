@@ -1,6 +1,6 @@
 ---
 title: "Unidos por la fé y por el amor"
-indice: "E33"
+indice: "E39"
 categoria: "Entrada"
 tipo: "Entrada"
 tiempo: "Ordinario"

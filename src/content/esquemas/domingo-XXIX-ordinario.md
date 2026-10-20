@@ -10,7 +10,7 @@ tags:
   - DOMUND
 cantos:
   - momento: "Entrada"
-    indice: "E30"
+    indice: "E38"
     slug: "entrada-el-senior-nos-llama"
     nota: "Canto de reunión para abrir la celebración."
   - momento: "Señor ten piedad"

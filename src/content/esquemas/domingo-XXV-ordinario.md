@@ -9,7 +9,7 @@ tags:
   - Domingo
 cantos:
   - momento: "Entrada"
-    indice: "E30"
+    indice: "E38"
     slug: "entrada-el-senior-nos-llama"
     nota: "Canto de reunion para abrir la celebracion."
   - momento: "Señor ten piedad"
