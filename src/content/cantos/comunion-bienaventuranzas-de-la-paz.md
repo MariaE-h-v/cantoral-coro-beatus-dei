@@ -1,6 +1,6 @@
 ---
 title: "BIENAVENTURANZAS DE LA PAZ"
-indice: "C48"
+indice: "C51"
 categoria: "Comunión"
 tipo: "Propio"
 tiempo: "Ordinario"

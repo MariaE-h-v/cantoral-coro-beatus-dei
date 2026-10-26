@@ -102,6 +102,12 @@ export const sheetTabs = [
 				level: 'Intermedio',
 				href: '/recursos/pdfs/guitarra/hoy-es-tiempo-de-santos.pdf',
 			},
+			{
+				title: 'El señor es mi pastor',
+				season: 'Tiempo ordinario',
+				level: 'Intermedio',
+				href: 'https://dh8zy5a1i9xe5.cloudfront.net/shared/pdf/preview/30109347.pdf',
+			},
 		],
 	},
 	{

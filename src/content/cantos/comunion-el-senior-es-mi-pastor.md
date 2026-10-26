@@ -7,7 +7,7 @@ tiempo: "Ordinario"
 author: "Alejandro Mejía"
 liturgico: true
 tags:
-  - Marianos
+  - Ordinario
   - Salida
 description: "El señor es mi pastor la vida ha dado por mi..."
 ---
