@@ -1,5 +1,5 @@
 ---
-title: "Misa Domingo XXX Tiempo Ordinario"
+title: "Misa Domingo XXXII Tiempo Ordinario"
 date: "2026-11-08"
 description: "..."
 tipo: "Misa dominical"
@@ -29,8 +29,8 @@ cantos:
     slug: "ofertorio-llevemos-al-señor"
     nota: "Canto de ofrendas en caso de ser celebración de la palabra."
   - momento: "Adoración"
-    indice: "AD04"
-    slug: "adoracion-cantemos-al-amor-de-los-amores.md"
+    indice: "AD19"
+    slug: "adoracion-presencia-real"
     nota: "Canto de adoración en caso de ser celebración de la palabra."
   - momento: "Santo"
     indice: "S06"
@@ -39,8 +39,8 @@ cantos:
     indice: "CD03"
     slug: "cordero-erdozain"
   - momento: "Comunión"
-    indice: "C40"
-    slug: "comunion-un-mandamiento-nuevo"
+    indice: "C53"
+    slug: "comunion-el-señor-es-mi-pastor.md"
   - momento: "Comunión"
     indice: "C28"
     slug: "comunion-oh-señor-delante-de-ti"
@@ -49,4 +49,13 @@ cantos:
     slug: "marianos-salve-regina"
 ---
 
+ANTÍFONA DE ENTRADA
+Sal 87 3
+Que llegue hasta ti mi suplica, señor, inclina tu oído a mi clamor
 
+ACLAMACIÓN ANTES DEL EVANGELIO
+Estén preparados, porque no saben a qué hora va a venir el hijo del hombre
+
+ANTÍFONA DE COMUNIÓN
+Sal 22
+El señor es mi pastor nada me falta...
