@@ -42,7 +42,7 @@ cantos:
   - momento: "Comunión"
     indice: "C21"
     slug: "comunion-himno-pascual"
-  -  - momento: "Comunión"
+  - momento: "Comunión"
     indice: "C39"
     slug: "comunion-tu-reino-es-vida"
   - momento: "Salida"
